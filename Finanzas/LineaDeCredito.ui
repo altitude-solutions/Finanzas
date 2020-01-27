@@ -846,6 +846,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>empresaGrupo</tabstop>
   <tabstop>fechaFirma</tabstop>
   <tabstop>moneda</tabstop>
+  <tabstop>fechaVencimiento</tabstop>
   <tabstop>monto</tabstop>
   <tabstop>saveButton</tabstop>
   <tabstop>tableWidget</tabstop>

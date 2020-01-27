@@ -48,6 +48,9 @@ PlanDePagos::PlanDePagos(QWidget *parent): QWidget(parent) {
 	ui.fechaDesem_1->setMinimumDate (QDate::currentDate ());	// More than fechaFirma
 	//ui.fechaDesem_2->setDate (QDate::currentDate ());
 	ui.fechaDesem_2->setMinimumDate (QDate::currentDate ());	// More than fechaDesem_1
+	ui.fechaDesem_3->setMinimumDate (QDate::currentDate ());	// More than fechaDesem_2
+	ui.fechaDesem_4->setMinimumDate (QDate::currentDate ());	// More than fechaDesem_3
+	ui.fechaDesem_5->setMinimumDate (QDate::currentDate ());	// More than fechaDesem_4
 
 	// ===============================================
 	// Listen to Enter key to perform a virtual click on save buttons
@@ -57,6 +60,12 @@ PlanDePagos::PlanDePagos(QWidget *parent): QWidget(parent) {
 	connect (ui.pagoCapital, &QLineEdit::returnPressed, ui.saveCuota, &QPushButton::click);
 	connect (ui.montoDesem_1, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
 	connect (ui.montoDesem_2, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.montoDesem_3, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.montoDesem_4, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.montoDesem_5, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.interesFijo, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.interesVariable, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+
 	
 	// ===============================================
 	// When save is clicked then save data
@@ -147,6 +156,9 @@ PlanDePagos::PlanDePagos(QWidget *parent): QWidget(parent) {
 	// Pago IVA autofill
 	connect (ui.pagoCapital, &QLineEdit::textChanged, this, &PlanDePagos::pagoIvaAutofill);
 	connect (ui.pagoInteres, &QLineEdit::textChanged, this, &PlanDePagos::pagoInteresChanged);
+	// Pagos cuota changed
+	connect (ui.pagoMonto, &QLineEdit::textChanged, this, &PlanDePagos::pagoCuotaChanged);
+	connect (ui.pagoCapital, &QLineEdit::textChanged, this, &PlanDePagos::pagoCapitalChanged);
 
 	// Intereses changed
 	connect (ui.interesFijo, &QLineEdit::textChanged, this, &PlanDePagos::interesFijoChanged);
@@ -165,8 +177,6 @@ PlanDePagos::PlanDePagos(QWidget *parent): QWidget(parent) {
 	// numero de cuota changed
 	connect (ui.numeroCuota, SIGNAL (valueChanged (int)), this, SLOT (numeroCuotaChanged(int)));
 	connect (ui.moneda, &QComboBox::currentTextChanged, this, &PlanDePagos::onMonedaChanged);
-
-
 
 		
 	// Default to Caso crédito
@@ -240,6 +250,12 @@ void PlanDePagos::numeroCuotaChanged (int value) {
 		QString frequency = ui.frecuencia->currentText ();
 		int factor = frequency == "Mensual" ? 1 : frequency == "Bimensual" ? 2 : frequency == "Trimestral" ? 3 : frequency == "Semestral" ? 6 : 12;
 		ui.fechaPago->setDate (ui.fechaFirma->date ().addMonths (value * factor));
+		if (value > (ui.plazo->value () / factor)) {
+			clearFields ();
+			resetPlanValidators ();
+			ui.tipoDeOperacion->setFocus ();
+			ui.saveCuota->setEnabled (false);
+		}
 	}
 }
 
@@ -271,30 +287,41 @@ void PlanDePagos::pagoCapitalChanged (QString capital) {
 	}
 	if (ammount > 0) {
 		cuotaDataIsCorrect[2] = true;
-
-		int plazo = ui.plazo->value ();
-		QString frequency = ui.frecuencia->currentText ();
-		int factor = frequency == "Mensual" ? 1 : frequency == "Bimensual" ? 2 : frequency == "Trimestral" ? 3 : frequency == "Semestral" ? 6 : 12;
-		int currentCuota = ui.numeroCuota->value ();
-		if (currentCuota == (plazo / factor)) {
-			if ((totalPaid + ammount) == ui.monto->text ().toDouble ()) {
-				cuotaDataIsCorrect[5] = true;
-			}
-			else {
-				cuotaDataIsCorrect[5] = false;
-			}
-		}
-		else {
-			if ((totalPaid + ammount) < ui.monto->text ().toDouble ()) {
-				cuotaDataIsCorrect[5] = true;
-			}
-			else {
-				cuotaDataIsCorrect[5] = false;
-			}
-		}
+		//int plazo = ui.plazo->value ();
+		//QString frequency = ui.frecuencia->currentText ();
+		//int factor = frequency == "Mensual" ? 1 : frequency == "Bimensual" ? 2 : frequency == "Trimestral" ? 3 : frequency == "Semestral" ? 6 : 12;
+		//int currentCuota = ui.numeroCuota->value ();
+		//if (currentCuota == (plazo / factor)) {
+		//	if ((totalPaid + ammount) == ui.monto->text ().toDouble ()) {
+		//		cuotaDataIsCorrect[5] = true;
+		//	}
+		//	else {
+		//		cuotaDataIsCorrect[5] = false;
+		//	}
+		//}
+		//else {
+		//	if ((totalPaid + ammount) < ui.monto->text ().toDouble ()) {
+		//		cuotaDataIsCorrect[5] = true;
+		//	}
+		//	else {
+		//		cuotaDataIsCorrect[5] = false;
+		//	}
+		//}
 	}
 	else {
 		cuotaDataIsCorrect[2] = false;
+	}
+
+	double pagoTotal = ui.pagoMonto->text ().toDouble (),
+		pagoCapital = ui.pagoCapital->text ().toDouble (),
+		pagoInteres = ui.pagoInteres->text ().toDouble (),
+		pagoIva = ui.pagoIva->text ().toDouble ();
+
+	if (pagoTotal == (pagoCapital + pagoInteres + pagoIva)) {
+		cuotaDataIsCorrect[5] = true;
+	}
+	else {
+		cuotaDataIsCorrect[5] = false;
 	}
 }
 
@@ -312,6 +339,18 @@ void PlanDePagos::pagoIvaChanged (QString iva) {
 	}
 	else {
 		cuotaDataIsCorrect[4] = false;
+	}
+
+	double pagoTotal = ui.pagoMonto->text ().toDouble (),
+		pagoCapital = ui.pagoCapital->text().toDouble (),
+		pagoInteres = ui.pagoInteres->text ().toDouble (),
+		pagoIva = ui.pagoIva->text ().toDouble ();
+
+	if (pagoTotal == (pagoCapital + pagoInteres + pagoIva)) {
+		cuotaDataIsCorrect[5] = true;
+	}
+	else {
+		cuotaDataIsCorrect[5] = false;
 	}
 }
 
@@ -438,6 +477,18 @@ void PlanDePagos::fechaDesem1Changed (QDate date) {
 	ui.fechaDesem_2->setMinimumDate (date);
 }
 
+void PlanDePagos::fechaDesem2Changed (QDate date) {
+	ui.fechaDesem_3->setMinimumDate (date);
+}
+
+void PlanDePagos::fechaDesem3Changed (QDate date) {
+	ui.fechaDesem_4->setMinimumDate (date);
+}
+
+void PlanDePagos::fechaDesem4Changed (QDate date) {
+	ui.fechaDesem_5->setMinimumDate (date);
+}
+
 void PlanDePagos::montoChanged (QString data) {
 	bool isNumber = false;
 	double ammount = data.toDouble (&isNumber);
@@ -546,6 +597,18 @@ void PlanDePagos::pagoInteresChanged (QString interes) {
 	}
 	else {
 		cuotaDataIsCorrect[3] = false;
+	}
+
+	double pagoTotal = ui.pagoMonto->text ().toDouble (),
+		pagoCapital = ui.pagoCapital->text ().toDouble (),
+		pagoInteres = ui.pagoInteres->text ().toDouble (),
+		pagoIva = ui.pagoIva->text ().toDouble ();
+
+	if (pagoTotal == (pagoCapital + pagoInteres + pagoIva)) {
+		cuotaDataIsCorrect[5] = true;
+	}
+	else {
+		cuotaDataIsCorrect[5] = false;
 	}
 }
 
@@ -803,10 +866,16 @@ void PlanDePagos::casoCredito () {
 			}
 			else {
 				this->planID = jsonReply.object ().value ("planDePagos").toObject ().value ("id").toInt ();
-				qDebug () << "El ID del plan de pagos es " << this->planID;
+				this->saldoCapital = ui.monto->text ().toDouble ();
+				temporalVariables.insert ("empresa", ui.empresaGrupo->currentText());
+				temporalVariables.insert ("tipoEntidad", ui.tipoEntidad->currentText());
+				temporalVariables.insert ("entidad", ui.nombreEntidad->currentText());
+				temporalVariables.insert ("detalle", ui.detalle->text());
+				temporalVariables.insert ("contrato", ui.numeroContratoOperacion->text());
 				lockGeneraInfoEnableCuotaInfo ();
 				ui.pagoMonto->setFocus ();
 			}
+			reply->deleteLater ();
 		});
 
 		// Request body
@@ -861,6 +930,7 @@ void PlanDePagos::casoCredito () {
 
 		body.setObject (bodyContent);
 		nam->post (request, body.toJson ());
+		ui.savePlan->setEnabled (false);
 	}
 }
 
@@ -983,6 +1053,10 @@ void PlanDePagos::casoCreditoSetup () {
 	ui.cuotaInicial->setText ("");
 	ui.pagoIva->setText ("");
 	ui.iva->setText ("");
+
+	this->saldoCapital = 0;
+	this->saldoCapitalReal = 0;
+	this->creditoFiscal = 0;
 }
 
 void PlanDePagos::casoLineaDeCreditoSetup () {
@@ -1001,6 +1075,10 @@ void PlanDePagos::casoLineaDeCreditoSetup () {
 	ui.cuotaInicial->setText ("");
 	ui.pagoIva->setText ("");
 	ui.iva->setText ("");
+
+	this->saldoCapital = 0;
+	this->saldoCapitalReal = 0;
+	this->creditoFiscal = 0;
 }
 
 void PlanDePagos::casoLeasingSetup () {
@@ -1016,6 +1094,10 @@ void PlanDePagos::casoLeasingSetup () {
 	ui.cuotaInicial->setText ("");
 	ui.pagoIva->setText ("0.0");
 	ui.iva->setText ("");
+
+	this->saldoCapital = 0;
+	this->saldoCapitalReal = 0;
+	this->creditoFiscal = 0;
 }
 
 void PlanDePagos::casoLeaseBackSetup () {
@@ -1031,9 +1113,18 @@ void PlanDePagos::casoLeaseBackSetup () {
 	ui.cuotaInicial->setText ("");
 	ui.pagoIva->setText ("0.0");
 	ui.iva->setText ("0.0");
+
+	this->saldoCapital = 0;
+	this->saldoCapitalReal = 0;
+	this->creditoFiscal = 0;
 }
 
 bool PlanDePagos::checkCasoCredito () {
+	if (ui.numeroContratoOperacion->text () == "") {
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El número de contrato u operación es necesario"));
+		ui.numeroContratoOperacion->setFocus ();
+		return false;
+	}
 	if (!planDataIsCorrect[2]) {
 		// 3[2]  monto
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Es necesario que el monto de la operación sea mayor a cero"));
@@ -1339,6 +1430,7 @@ bool PlanDePagos::checkCasoSeguro () {
 void PlanDePagos::onMonedaChanged (QString moneda) {
 	if (moneda == "Bolivianos (BOB)") {
 		ui.label_9->setText ("Monto (Bs)");
+		ui.label_11->setText ("Cuota inicial (Bs)");
 		ui.label_16->setText ("Monto desembolso 1 (Bs)");
 		ui.label_17->setText ("Monto desembolso 2 (Bs)");
 		ui.label_20->setText ("Monto total del pago (Bs)");
@@ -1348,6 +1440,7 @@ void PlanDePagos::onMonedaChanged (QString moneda) {
 	}
 	else {
 		ui.label_9->setText ("Monto ($us)");
+		ui.label_11->setText ("Cuota inicial ($us)");
 		ui.label_16->setText ("Monto desembolso 1 ($us)");
 		ui.label_17->setText ("Monto desembolso 2 ($us)");
 		ui.label_20->setText ("Monto total del pago ($us)");
@@ -1365,33 +1458,33 @@ bool PlanDePagos::checkCuota () {
 	//	5[4] pago iva
 	//	6[5] Suma de todos los pagos debe ser igual al monto total
 	if (!cuotaDataIsCorrect[0]) {
-		QMessageBox::critical (this, "Error", "El número de cuota no puede repetirse");
+		QMessageBox::critical (this, "Error", QString::fromLatin1("El número de cuota no puede repetirse"));
 		return false;
 	}
 	if (!cuotaDataIsCorrect[1]) {
-		QMessageBox::critical (this, "Error", "El monto del pago debe ser mayor a cero y menor o igual que el saldo");
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del pago debe ser mayor a cero y menor o igual que el saldo"));
 		ui.pagoMonto->setFocus ();
 		return false;
 	}
 	if (!cuotaDataIsCorrect[2]) {
-		QMessageBox::critical (this, "Error", "El monto del capital debe ser mayor o igual que cero y menor o igual que el monto del pago");
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del capital debe ser mayor o igual que cero y menor o igual que el monto del pago"));
 		ui.pagoCapital->setFocus ();
 		return false;
 	}
 	if (!cuotaDataIsCorrect[3]) {
-		QMessageBox::critical (this, "Error", "El monto del interés debe ser mayor o igual que cero y menor o igual que el monto del pago");
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del interés debe ser mayor o igual que cero y menor o igual que el monto del pago"));
 		ui.pagoInteres->setFocus ();
 		return false;
 	}
 	if (!cuotaDataIsCorrect[4]) {
 		if (ui.tipoDeOperacion->currentText () == "Leasing" || ui.tipoDeOperacion->currentText () == "Lease Back") {
-			QMessageBox::critical (this, "Error", "El monto del IVA debe ser mayor o igual que cero y menor o igual que el monto del pago");
+			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del IVA debe ser mayor o igual que cero y menor o igual que el monto del pago"));
 			ui.pagoIva->setFocus ();
 			return false;
 		}
 	}
 	if (!cuotaDataIsCorrect[5]) {
-		QMessageBox::critical (this, "Error", "La suma de los pagos debe ser igual al monto total del pago");
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La suma de los pagos debe ser igual al monto total del pago"));
 		ui.pagoMonto->setFocus ();
 		return false;
 	}
@@ -1421,6 +1514,12 @@ void PlanDePagos::lockGeneraInfoEnableCuotaInfo () {
 	ui.montoDesem_1->setEnabled (false);
 	ui.fechaDesem_2->setEnabled (false);
 	ui.montoDesem_2->setEnabled (false);
+	ui.fechaDesem_3->setEnabled (false);
+	ui.montoDesem_3->setEnabled (false);
+	ui.fechaDesem_4->setEnabled (false);
+	ui.montoDesem_4->setEnabled (false);
+	ui.fechaDesem_5->setEnabled (false);
+	ui.montoDesem_5->setEnabled (false);
 	ui.savePlan->setEnabled (false);
 
 	ui.numeroCuota->setEnabled (false);
@@ -1430,6 +1529,9 @@ void PlanDePagos::lockGeneraInfoEnableCuotaInfo () {
 	ui.pagoInteres->setEnabled (true);
 	ui.saveCuota->setEnabled (true);
 	ui.pagoIva->setEnabled (false);
+
+	// enable first cuota
+	cuotaDataIsCorrect[0] = true;
 }
 
 
@@ -1457,6 +1559,12 @@ void PlanDePagos::clearFields () {
 	ui.montoDesem_1->setEnabled (true);
 	ui.fechaDesem_2->setEnabled (true);
 	ui.montoDesem_2->setEnabled (true);
+	ui.fechaDesem_3->setEnabled (true);
+	ui.montoDesem_3->setEnabled (true);
+	ui.fechaDesem_4->setEnabled (true);
+	ui.montoDesem_4->setEnabled (true);
+	ui.fechaDesem_5->setEnabled (true);
+	ui.montoDesem_5->setEnabled (true);
 	ui.savePlan->setEnabled (true);
 
 	ui.numeroCuota->setEnabled (false);
@@ -1506,7 +1614,6 @@ void PlanDePagos::resetPlanValidators () {
 		planDataIsCorrect[i] = false;
 	}
 	this->planID = -1;
-	this->totalPaid = 0;
 }
 
 void PlanDePagos::resetCuotaValidators () {
@@ -1517,11 +1624,87 @@ void PlanDePagos::resetCuotaValidators () {
 
 void PlanDePagos::onSaveCouta () {
 	if (checkCuota ()) {
-		QMessageBox::information (this, "Sin implementar", QString::fromLatin1 ("Cuota") + QString::number(this->planID));
-		ui.numeroCuota->setValue (ui.numeroCuota->value () + 1);
-	}
-	else {
-		QMessageBox::critical(this, "Error", "validation failed");
+		// Network manager and request
+		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+		QNetworkRequest request;
+		request.setUrl (QUrl (this->targetAddress + "/cuotaPlanDePagos"));
+		request.setRawHeader ("Content-Type", "application/json");
+		request.setRawHeader ("token", this->token.toUtf8 ());
+
+		// On response lambda
+		connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+			QJsonDocument jsonReply = QJsonDocument::fromJson (reply->readAll ());
+			if (reply->error ()) {
+				if (jsonReply.object ().value ("err").toObject ().contains ("message")) {
+					// If there is a known error
+					QMessageBox::critical (this, "Error", QString::fromLatin1 (jsonReply.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
+				}
+				else {
+					if (reply->error () == QNetworkReply::ConnectionRefusedError) {
+						QMessageBox::critical (this, QString::fromLatin1 ("Error de conexión"), QString::fromLatin1 ("No se pudo establecer conexión con el servidor"));
+					}
+					else {
+						// If there is a server error
+						QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (jsonReply.toJson ().toStdString ()));
+					}
+				}
+			}
+			else {
+				// increment numero de cuota
+				ui.numeroCuota->setValue (ui.numeroCuota->value () + 1);
+				ui.pagoMonto->setFocus ();
+				ui.pagoMonto->setText ("");
+				ui.pagoCapital->setText ("");
+				ui.pagoInteres->setText ("");
+				ui.pagoIva->setText ("");
+
+				ui.tableWidget->insertRow (ui.tableWidget->rowCount ());
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 0, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("numeroDeCuota").toInt ())));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 1, new QTableWidgetItem (temporalVariables["empresa"]));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 2, new QTableWidgetItem (temporalVariables["tipoEntidad"]));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 3, new QTableWidgetItem (temporalVariables["entidad"]));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 4, new QTableWidgetItem (temporalVariables["detalle"]));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 5, new QTableWidgetItem (temporalVariables["contrato"]));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 6, new QTableWidgetItem (QString::number (QDateTime::fromMSecsSinceEpoch (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("fechaDePago").toVariant ().toLongLong ()).date ().year ())));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 7, new QTableWidgetItem (QDate::shortMonthName (QDateTime::fromMSecsSinceEpoch (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("fechaDePago").toVariant ().toLongLong ()).date ().month ()) + "/" + QString::number (QDateTime::fromMSecsSinceEpoch (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("fechaDePago").toVariant ().toLongLong ()).date ().year ())));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 8, new QTableWidgetItem (QDateTime::fromMSecsSinceEpoch (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("fechaDePago").toVariant ().toLongLong ()).toString ("dd/MM/yyyy")));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 9, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("montoTotalDelPago").toDouble (), 'g', 15)));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 10, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeCapital").toDouble (), 'g', 15)));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 11, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeInteres").toDouble (), 'g', 15)));
+				if (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().contains ("pagoDeIva")) {
+					ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 12, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeIva").toDouble (), 'g', 15)));
+				}
+				else {
+					ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 12, new QTableWidgetItem (QString::number (0.0, 'g', 15)));
+				}
+				this->saldoCapital -= jsonReply.object().value("cuotaPlanDePagos").toObject().value("pagoDeCapital").toDouble();
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 13, new QTableWidgetItem (QString::number (this->saldoCapital, 'g', 15)));	// saldo capital
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 14, new QTableWidgetItem (QString::number (0.0, 'g', 15)));	// credito fiscal
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 15, new QTableWidgetItem (QString::number (this->saldoCapital, 'g', 15)));	// saldo capital real
+			}
+			ui.saveCuota->setEnabled (true);
+			reply->deleteLater ();
+		});
+
+		// Request body
+		// if tipoTasa == Variable load interesVariable
+		// if enableDesem_2 is checked load Desem_2
+		QJsonDocument body;
+		QJsonObject bodyContent;
+
+		bodyContent.insert ("numeroDeCuota", ui.numeroCuota->value());
+		bodyContent.insert ("fechaDePago", ui.fechaPago->dateTime().toMSecsSinceEpoch());
+		bodyContent.insert ("montoTotalDelPago", ui.pagoMonto->text().toDouble());
+		bodyContent.insert ("pagoDeCapital", ui.pagoCapital->text().toDouble());
+		bodyContent.insert ("pagoDeInteres", ui.pagoInteres->text().toDouble());
+		if (ui.pagoIva->text () != "") {
+			bodyContent.insert ("pagoDeIva", ui.pagoIva->text ().toDouble ());
+		}
+		bodyContent.insert ("parent", this->planID);
+
+		body.setObject (bodyContent);
+		nam->post (request, body.toJson ());
+		ui.saveCuota->setEnabled (false);
 	}
 }
 

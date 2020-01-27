@@ -35,6 +35,9 @@ private slots:
 	// Datepickers slots
 	void fechaFirmaChanged (QDate date);
 	void fechaDesem1Changed (QDate date);
+	void fechaDesem2Changed (QDate date);
+	void fechaDesem3Changed (QDate date);
+	void fechaDesem4Changed (QDate date);
 	// Monto operación changed
 	void montoChanged (QString monto);
 	// Tipo tasa changed slot
@@ -136,9 +139,12 @@ private:
 
 	// Current plan data
 	int planID;
-	double totalPaid;
+	double saldoCapital;
+	double saldoCapitalReal;
+	double creditoFiscal;
 	QList<int> paidCuotas;
 	QDate lastDate;
+	QHash<QString, QString> temporalVariables;
 
 
 	// Validation flags

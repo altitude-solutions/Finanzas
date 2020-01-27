@@ -706,7 +706,7 @@ QLineEdit::focus {
           <item row="12" column="0">
            <widget class="QLabel" name="label_11">
             <property name="text">
-             <string>Cuota Inicial</string>
+             <string>Cuota Inicial (Bs)</string>
             </property>
             <property name="buddy">
              <cstring>cuotaInicial</cstring>
@@ -2643,6 +2643,12 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>montoDesem_1</tabstop>
   <tabstop>fechaDesem_2</tabstop>
   <tabstop>montoDesem_2</tabstop>
+  <tabstop>fechaDesem_3</tabstop>
+  <tabstop>montoDesem_3</tabstop>
+  <tabstop>fechaDesem_4</tabstop>
+  <tabstop>montoDesem_4</tabstop>
+  <tabstop>fechaDesem_5</tabstop>
+  <tabstop>montoDesem_5</tabstop>
   <tabstop>savePlan</tabstop>
   <tabstop>numeroCuota</tabstop>
   <tabstop>fechaPago</tabstop>
