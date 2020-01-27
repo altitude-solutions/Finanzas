@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LineaDeCredito</class>
+ <widget class="QWidget" name="LineaDeCredito">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1228</width>
+    <height>774</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>LineaDeCredito</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white;</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>9</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QFormLayout" name="formLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_26">
+          <property name="text">
+           <string>Código Línea de Crédito</string>
+          </property>
+          <property name="buddy">
+           <cstring>codigoLinea</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="codigoLinea">
+          <property name="styleSheet">
+           <string notr="true">QLineEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover {
+	border-color: black;
+}
+
+QLineEdit::focus {
+	background-color: #b5b5b5;
+}</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_27">
+          <property name="text">
+           <string>Nombre de la Entidad</string>
+          </property>
+          <property name="buddy">
+           <cstring>nombreEntidad</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="nombreEntidad">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QComboBox {
+	background-color:#EBEDED;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover {
+	border-color: black;
+}
+
+QComboBox::focus {
+	background-color: #b5b5b5;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(Resources/img/downArrow.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_28">
+          <property name="text">
+           <string>Entidad</string>
+          </property>
+          <property name="buddy">
+           <cstring>tipoEntidad</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="tipoEntidad">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="cursor">
+           <cursorShape>ArrowCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QComboBox {
+	background-color:#EBEDED;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover {
+	border-color: black;
+}
+
+QComboBox::focus {
+	background-color: #b5b5b5;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(Resources/img/downArrow.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_29">
+          <property name="text">
+           <string>Empresa Grupo</string>
+          </property>
+          <property name="buddy">
+           <cstring>empresaGrupo</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="empresaGrupo">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QComboBox {
+	background-color:#EBEDED;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover {
+	border-color: black;
+}
+
+QComboBox::focus {
+	background-color: #b5b5b5;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(Resources/img/downArrow.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Fecha Firma</string>
+          </property>
+          <property name="buddy">
+           <cstring>fechaFirma</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QDateEdit" name="fechaFirma">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QDateEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover {
+	border-color: black;
+}
+
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+
+QDateEdit::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QDateEdit::down-arrow {
+    image: url(Resources/img/downArrow.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+
+/*
+QDateEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover {
+	border-color: black;
+}
+
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QCalendarWidget QToolButton {
+/*	height: 35px;*/
+  	/*width: parent;*/
+  	color: black;
+  	font-size: 14px;
+  	icon-size: 20px, 20px;
+  	background-color: #ebeded
+}
+
+QCalendarWidget QMenu {
+  	/*width: 150px;*/
+  	left: 20px;
+  	color: black;
+  	font-size: 14px;
+  	background-color: #ebeded;
+}
+
+
+QCalendarWidget QSpinBox { 
+  	background-color: #EBEDED;
+	border-style: outset;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	padding: 2px;
+}
+
+/*
+QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
+QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
+QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
+QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
+*/
+
+/* header row */
+QCalendarWidget QWidget {
+	alternate-background-color: #d7d7d7;
+}
+
+/* normal days */
+QCalendarWidget QAbstractItemView:enabled {
+	font-size:14px;
+	color: black;
+	background-color: #ebeded;
+	selection-background-color: #d7d7d7; 
+	selection-color: black;
+}
+
+QCalendarWidget QAbstractItemView:!enabled {
+	background-color: red;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+	background-color: #ebeded;
+	color: gray;
+}
+
+</string>
+          </property>
+          <property name="calendarPopup">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_30">
+          <property name="text">
+           <string>Moneda</string>
+          </property>
+          <property name="buddy">
+           <cstring>moneda</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="moneda">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QComboBox {
+	background-color:#EBEDED;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover {
+	border-color: black;
+}
+
+QComboBox::focus {
+	background-color: #b5b5b5;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(Resources/img/downArrow.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Bolivianos (BOB)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Dólares (USD)</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="monto">
+          <property name="styleSheet">
+           <string notr="true">QLineEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover {
+	border-color: black;
+}
+
+QLineEdit::focus {
+	background-color: #b5b5b5;
+}</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_31">
+          <property name="text">
+           <string>Monto (Bs)</string>
+          </property>
+          <property name="buddy">
+           <cstring>monto</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Fecha Vencimiento</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QDateEdit" name="fechaVencimiento">
+          <property name="styleSheet">
+           <string notr="true">QDateEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover {
+	border-color: black;
+}
+
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+
+QDateEdit::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QDateEdit::down-arrow {
+    image: url(Resources/img/downArrow.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+
+/*
+QDateEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover {
+	border-color: black;
+}
+
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QCalendarWidget QToolButton {
+/*	height: 35px;*/
+  	/*width: parent;*/
+  	color: black;
+  	font-size: 14px;
+  	icon-size: 20px, 20px;
+  	background-color: #ebeded
+}
+
+QCalendarWidget QMenu {
+  	/*width: 150px;*/
+  	left: 20px;
+  	color: black;
+  	font-size: 14px;
+  	background-color: #ebeded;
+}
+
+
+QCalendarWidget QSpinBox { 
+  	background-color: #EBEDED;
+	border-style: outset;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	padding: 2px;
+}
+
+/*
+QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
+QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
+QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
+QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
+*/
+
+/* header row */
+QCalendarWidget QWidget {
+	alternate-background-color: #d7d7d7;
+}
+
+/* normal days */
+QCalendarWidget QAbstractItemView:enabled {
+	font-size:14px;
+	color: black;
+	background-color: #ebeded;
+	selection-background-color: #d7d7d7; 
+	selection-color: black;
+}
+
+QCalendarWidget QAbstractItemView:!enabled {
+	background-color: red;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+	background-color: #ebeded;
+	color: gray;
+}
+
+</string>
+          </property>
+          <property name="calendarPopup">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <spacer name="horizontalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveButton">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: #1D8680;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 2em;
+	max-width:10em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #109491;
+	border-color: #ededef;
+}</string>
+       </property>
+       <property name="text">
+        <string>Crear Línea de Crédito</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_9">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame_1">
+     <property name="styleSheet">
+      <string notr="true">background-color: #ebeded;</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>37</width>
+          <height>17</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Líneas de Crédito</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <spacer name="horizontalSpacer_7">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QTableWidget" name="tableWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="cursor" stdset="0">
+        <cursorShape>ArrowCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QTableWidget{
+background-color: #EBEDED;
+border-top: 2.5px solid white;
+border-bottom: 2.5px solid white;
+border-right: 2.5px solid white;
+border-left: 2.5px solid white;
+gridline-color: white;
+font: 9pt &quot;MS Shell Dlg 2&quot;;
+}</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_8">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>codigoLinea</tabstop>
+  <tabstop>nombreEntidad</tabstop>
+  <tabstop>tipoEntidad</tabstop>
+  <tabstop>empresaGrupo</tabstop>
+  <tabstop>fechaFirma</tabstop>
+  <tabstop>moneda</tabstop>
+  <tabstop>monto</tabstop>
+  <tabstop>saveButton</tabstop>
+  <tabstop>tableWidget</tabstop>
+ </tabstops>
+ <resources>
+  <include location="Login.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TabsWindow</class>
+ <widget class="QMainWindow" name="TabsWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1920</width>
+    <height>971</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TabsWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="styleSheet">
+       <string notr="true">QTabWidget::tab-bar {
+    left: 20px;
+}
+
+QTabBar::tab {
+    background: #B3B3B3;
+    border: 2px solid #B3B3B3;
+    border-bottom-color: #B3B3B3; /* same as the pane color */
+    border-top-right-radius: 15px;
+	border-top-left-radius: 5px;
+	min-width:60ex;
+    padding: 2px;
+	font-color:333333;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+}
+
+QTabBar::tab:selected {
+    background: #EBEDED;
+    border: 2px solid #EBEDED;
+    border-bottom-color: #EBEDED; /* same as the pane color */
+    border-top-right-radius: 15px;
+	border-top-left-radius: 5px;
+	min-width:60ex;
+    padding: 2px;
+	font-color:333333;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+}
+
+QTabBar::tab:!selected {
+    margin-top: 5px; /* make non-selected tabs look smaller */
+}background-color:#EBEDED;</string>
+      </property>
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1920</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuArchivo">
+    <property name="title">
+     <string>Archivo</string>
+    </property>
+    <addaction name="actionExportar_a_CSV"/>
+   </widget>
+   <addaction name="menuArchivo"/>
+  </widget>
+  <action name="actionExportar_a_CSV">
+   <property name="text">
+    <string>Exportar a CSV</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

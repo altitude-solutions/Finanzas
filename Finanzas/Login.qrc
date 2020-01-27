@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file>Resources/img/Logo-LPL.png</file>
+    <file>Resources/img/downArrow.png</file>
+  </qresource>
+</RCC>
