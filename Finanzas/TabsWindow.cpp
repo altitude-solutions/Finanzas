@@ -1,6 +1,5 @@
 #include "TabsWindow.h"
-#include <QFileDialog>
-#include <QDir>
+
 
 
 TabsWindow::TabsWindow(QWidget *parent): QMainWindow(parent) {
@@ -19,6 +18,7 @@ TabsWindow::TabsWindow(QWidget *parent): QMainWindow(parent) {
 	firstTab->setLayout (layout);
 	ui.tabWidget->addTab (firstTab, QString::fromLatin1("Línea de Crédito") );
 	connect (firtsTabHeader, &AppHeader::logoutButton, this, &TabsWindow::logout);
+	connect (this, &TabsWindow::lineasDeCreditoSelected, lineaDeCredito, &LineaDeCredito::onTabSelected);
 
 	// ==========================================
 	// Plan de pagos tab configuration
@@ -34,6 +34,7 @@ TabsWindow::TabsWindow(QWidget *parent): QMainWindow(parent) {
 	secondTab->setLayout (secondLayout);
 	ui.tabWidget->addTab (secondTab, QString::fromLatin1 ("Plan de Pagos"));
 	connect (secondTabHeader, &AppHeader::logoutButton, this, &TabsWindow::logout);
+	connect (this, &TabsWindow::planesDePagoSelected, planDePagos, &PlanDePagos::onTabSelected);
 
 	// ==========================================
 	// Plan de pagos tab configuration
@@ -49,6 +50,7 @@ TabsWindow::TabsWindow(QWidget *parent): QMainWindow(parent) {
 	thirdTab->setLayout (thirdLayout);
 	ui.tabWidget->addTab (thirdTab, QString::fromLatin1 ("Pagos Efectivos"));
 	connect (thirdTabHeader, &AppHeader::logoutButton, this, &TabsWindow::logout);
+	connect (this, &TabsWindow::pagosEfectivosSelected, pagosEfectivos, &PagosEfectivos::onTabSelected);
 
 
 	this->setWindowTitle (QString::fromLatin1 ("Líneas de Crédito"));
@@ -60,14 +62,17 @@ TabsWindow::TabsWindow(QWidget *parent): QMainWindow(parent) {
 		case 0:
 			// linaes de credito
 			this->setWindowTitle (QString::fromLatin1("Líneas de Crédito"));
+			emit lineasDeCreditoSelected ();
 			break;
 		case 1:
 			// plan de pagos
 			this->setWindowTitle (QString::fromLatin1("PLanes de Pago"));
+			emit planesDePagoSelected ();
 			break;
 		case 2:
 			// pagos efectivos
 			this->setWindowTitle (QString::fromLatin1 ("Pagos Efectivos"));
+			emit pagosEfectivosSelected ();
 			break;
 		}
 	});
@@ -81,8 +86,8 @@ void TabsWindow::onLoginSuccess (QString address, QString userName, QString real
 	// ==========================================
 	// First tab auth data
 	// ==========================================
-	firtsTabHeader->setUserName (realName);
 	lineaDeCredito->setAuthData (address, token, userName);
+	firtsTabHeader->setUserName (realName);
 	// ==========================================
 	// Second tab auth data
 	// ==========================================
@@ -91,7 +96,6 @@ void TabsWindow::onLoginSuccess (QString address, QString userName, QString real
 	// ==========================================
 	// Third tab auth data
 	// ==========================================
-	pagosEfectivos->setUserName (userName);
+	pagosEfectivos->setAuthData (address, token, userName);
 	thirdTabHeader->setUserName (realName);
-	pagosEfectivos->setAuthToken (token);
 }

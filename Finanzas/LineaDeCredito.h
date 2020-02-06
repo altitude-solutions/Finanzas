@@ -13,6 +13,9 @@ public:
 	// Auth data setter
 	void setAuthData (QString address, QString token, QString userName);
 
+public slots:
+	void onTabSelected ();
+
 private slots:
 	void onSaveClicked ();
 

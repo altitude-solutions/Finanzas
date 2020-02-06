@@ -19,6 +19,9 @@ public slots:
 
 signals:
 	void logout ();
+	void lineasDeCreditoSelected ();
+	void planesDePagoSelected ();
+	void pagosEfectivosSelected ();
 
 private:
 	Ui::TabsWindow ui;

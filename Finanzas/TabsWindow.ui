@@ -72,23 +72,6 @@ QTabBar::tab:!selected {
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1920</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuArchivo">
-    <property name="title">
-     <string>Archivo</string>
-    </property>
-    <addaction name="actionExportar_a_CSV"/>
-   </widget>
-   <addaction name="menuArchivo"/>
-  </widget>
   <action name="actionExportar_a_CSV">
    <property name="text">
     <string>Exportar a CSV</string>

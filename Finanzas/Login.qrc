@@ -1,6 +1,10 @@
 <RCC>
-  <qresource prefix="/">
-    <file>Resources/img/Logo-LPL.png</file>
-    <file>Resources/img/downArrow.png</file>
-  </qresource>
+    <qresource prefix="/">
+        <file>Resources/img/Logo-LPL.png</file>
+        <file>Resources/icon/icon.ico</file>
+        <file>Resources/img/calendar.png</file>
+        <file>Resources/img/down.png</file>
+        <file>Resources/img/dropdown.png</file>
+        <file>Resources/img/up.png</file>
+    </qresource>
 </RCC>

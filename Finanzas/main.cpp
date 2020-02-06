@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 	Login w;
 	w.show();
 
-	QIcon icon (":/Resources/img/Logo-LPL.png");
+	QIcon icon (":/Resources/icon/icon.ico");
 	a.setApplicationDisplayName ("Operaciones Financieras LPL");
 	a.setWindowIcon (icon);
 

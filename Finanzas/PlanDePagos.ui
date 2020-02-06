@@ -84,7 +84,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -162,7 +162,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -218,7 +218,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -306,7 +306,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -391,7 +391,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -615,7 +615,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -783,7 +783,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -902,7 +902,9 @@ QLineEdit::focus {
 	font: 10pt &quot;MS Shell Dlg 2&quot;;
 	color: #333333;
 	min-width: 8em;
-	padding: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 3px;
 }
 
 QSpinBox::hover {
@@ -913,19 +915,19 @@ QSpinBox::focus {
 	background-color: #b5b5b5;
 }
 
-/*
+
 QSpinBox::up-button {
-	 image: url(Resources/img/up.png);
-    width: 24px;
+	 image: url(:/Resources/img/up.png);
+    width: 20px;
     height: 10px;
 }
 
 QSpinBox::down-button {
-	 image: url(Resources/img/down.png);
-    width: 24px;
+	 image: url(:/Resources/img/down.png);
+    width: 20px;
     height: 10px;
 }
-*/
+
 </string>
               </property>
               <property name="minimum">
@@ -981,7 +983,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -1056,7 +1058,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -1207,7 +1209,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -1393,7 +1395,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -1546,6 +1548,9 @@ QLineEdit::focus {
             </item>
             <item row="7" column="1">
              <widget class="QDateEdit" name="fechaDesem_3">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
               <property name="styleSheet">
                <string notr="true">QDateEdit {
 	background-color: #EBEDED;
@@ -1573,7 +1578,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -1723,6 +1728,9 @@ QLineEdit::focus {
             </item>
             <item row="9" column="1">
              <widget class="QDateEdit" name="fechaDesem_4">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
               <property name="styleSheet">
                <string notr="true">QDateEdit {
 	background-color: #EBEDED;
@@ -1750,7 +1758,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -1900,6 +1908,9 @@ QLineEdit::focus {
             </item>
             <item row="11" column="1">
              <widget class="QDateEdit" name="fechaDesem_5">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
               <property name="styleSheet">
                <string notr="true">QDateEdit {
 	background-color: #EBEDED;
@@ -1927,7 +1938,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -2039,7 +2050,7 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
             <item row="12" column="0">
              <widget class="QLabel" name="label_36">
               <property name="text">
-               <string>TextLabel</string>
+               <string>Monto desembolso 5 (Bs)</string>
               </property>
              </widget>
             </item>
@@ -2174,7 +2185,9 @@ QPushButton::hover {
 	font: 10pt &quot;MS Shell Dlg 2&quot;;
 	color: #333333;
 	min-width: 8em;
-	padding: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 3px;
 }
 
 QSpinBox::hover {
@@ -2183,7 +2196,22 @@ QSpinBox::hover {
 
 QSpinBox::focus {
 	background-color: #b5b5b5;
-}</string>
+}
+
+
+QSpinBox::up-button {
+	 image: url(:/Resources/img/up.png);
+    width: 20px;
+    height: 10px;
+}
+
+QSpinBox::down-button {
+	 image: url(:/Resources/img/down.png);
+    width: 20px;
+    height: 10px;
+}
+
+</string>
               </property>
               <property name="minimum">
                <number>1</number>
@@ -2235,7 +2263,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;

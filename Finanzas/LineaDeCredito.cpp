@@ -111,6 +111,12 @@ LineaDeCredito::~LineaDeCredito() {
 	delete[] dataIsCorrect;
 }
 
+// On tab selected slot
+// Use it to setup the current tab
+void LineaDeCredito::onTabSelected () {
+	// Tab setup
+}
+
 // Set authentication data
 void LineaDeCredito::setAuthData (QString address, QString token, QString userName) {
 	this->targetAddress = address;

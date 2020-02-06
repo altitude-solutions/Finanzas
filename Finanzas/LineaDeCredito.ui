@@ -132,7 +132,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -187,7 +187,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -239,7 +239,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -308,7 +308,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -461,7 +461,7 @@ QComboBox::drop-down  {
 
 
 QComboBox::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/dropdown.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;
@@ -523,6 +523,9 @@ QLineEdit::focus {
         </item>
         <item row="2" column="1">
          <widget class="QDateEdit" name="fechaVencimiento">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
           <property name="styleSheet">
            <string notr="true">QDateEdit {
 	background-color: #EBEDED;
@@ -550,7 +553,7 @@ QDateEdit::drop-down  {
 
 
 QDateEdit::down-arrow {
-    image: url(Resources/img/downArrow.png);
+    image: url(:/Resources/img/calendar.png);
     width: 24px;
     height: 24px;
 	margin-right: 6px;

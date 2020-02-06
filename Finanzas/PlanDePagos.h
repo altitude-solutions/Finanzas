@@ -29,6 +29,10 @@ public:
 	// Auth data setter
 	void setAuthData (QString address, QString token, QString userName);
 
+public slots:
+	// Current tab selected
+	void onTabSelected ();
+
 private slots:
 	// Operation type changed slot
 	void onOperationTypeChanged (int type);
@@ -75,7 +79,7 @@ private slots:
 	void pagoIvaChanged (QString iva);
 	// Save slots
 	void onSavePlan ();
-	void onSaveCouta ();
+	void onSaveCuota ();
 private:
 	// data loaders
 	void loadEntidadesFinancieras ();

@@ -1,5 +1,9 @@
 #include "PagosEfectivos.h"
 
+// Network imports
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 // Json imports
 #include <QJsonDocument>
@@ -7,10 +11,48 @@
 #include <QJsonArray>
 #include <QJsonValue>
 
+// Other imports
+#include <QMessageBox>
+
 
 PagosEfectivos::PagosEfectivos(QWidget *parent): QWidget(parent) {
 	ui.setupUi(this);
 
+	// ==================================================================
+	// Load planes de pago info
+	// ==================================================================
+}
+
+PagosEfectivos::~PagosEfectivos(){
+
+}
+
+void PagosEfectivos::setAuthData (QString address, QString token, QString userName) {
+	this->targetAddress = address;
+	this->token = token;
+	this->userName = userName;
+
+	loadEmpresasGrupo ();
+	loadEntidadesFinancieras ();
+}
+
+// On Tab selected
+// Use it to setup current tab
+void PagosEfectivos::onTabSelected () {
+	// Tab setup
+}
+
+// Finish cycle
+void PagosEfectivos::saveButtonClicked () {
+
+}
+
+// Start cycle
+void PagosEfectivos::findButtonClicked () {
+
+}
+
+void PagosEfectivos::setTableHeaders () {
 	// ==================================================================
 	// Set table headers
 	// ==================================================================
@@ -24,33 +66,62 @@ PagosEfectivos::PagosEfectivos(QWidget *parent): QWidget(parent) {
 		QString::fromLatin1 ("Crédito fiscal"), QString::fromLatin1 ("Saldo Capital Real")
 	};
 	ui.tableWidget->setHorizontalHeaderLabels (headers);
-
-	// ==================================================================
-	// Load planes de pago info
-	// ==================================================================
 }
 
-PagosEfectivos::~PagosEfectivos(){
+void PagosEfectivos::loadEmpresasGrupo () {
+	listaEmpresas.clear ();
+	ui.grupo->clear ();
+	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+	connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+		QByteArray resBin = reply->readAll ();
+		if (reply->error ()) {
+			QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+			QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+			return;
+		}
+		QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+		foreach (QJsonValue entidad, okJson.object ().value ("empresas").toArray ()) {
+			ui.grupo->addItem (entidad.toObject ().value ("empresa").toString ());
+			listaEmpresas.insert (entidad.toObject ().value ("empresa").toString (), QString::number (entidad.toObject ().value ("id").toInt ()));
+		}
+		reply->deleteLater ();
+	});
+	QNetworkRequest request;
+	request.setUrl (QUrl (targetAddress + "/empresas?status=1"));
 
+	request.setRawHeader ("token", this->token.toUtf8 ());
+	request.setRawHeader ("Content-Type", "application/json");
+	nam->get (request);
 }
 
-// get authentication data
-void PagosEfectivos::setAuthToken (QString token) {
-	this->token = token;
-}
+void PagosEfectivos::loadEntidadesFinancieras () {
+	listaEntidades.clear ();
+	ui.entidad->clear ();
+	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+	connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+		QByteArray resBin = reply->readAll ();
+		if (reply->error ()) {
+			QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+			QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+			return;
+		}
+		QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+		foreach (QJsonValue entidad, okJson.object ().value ("entidades").toArray ()) {
+			ui.entidad->addItem (entidad.toObject ().value ("nombreEntidad").toString ());
+			QHash<QString, QString> current;
+			current.insert ("id", QString::number (entidad.toObject ().value ("id").toInt ()));
+			current.insert ("nombreEntidad", entidad.toObject ().value ("nombreEntidad").toString ());
+			current.insert ("tipoDeEntidad", QString::number (entidad.toObject ().value ("tipoDeEntidad").toInt ()));
+			listaEntidades.insert (entidad.toObject ().value ("nombreEntidad").toString (), current);
+		}
+		reply->deleteLater ();
+	});
+	QNetworkRequest request;
+	request.setUrl (QUrl (targetAddress + "/entidadFinanciera?status=1"));
 
-void PagosEfectivos::setUserName (QString userName) {
-	this->userName = userName;
-}
-
-// Finish cycle
-void PagosEfectivos::saveButtonClicked () {
-
-}
-
-// Start cycle
-void PagosEfectivos::findButtonClicked () {
-
+	request.setRawHeader ("token", this->token.toUtf8 ());
+	request.setRawHeader ("Content-Type", "application/json");
+	nam->get (request);
 }
 
 void PagosEfectivos::loadPlanesData () {
