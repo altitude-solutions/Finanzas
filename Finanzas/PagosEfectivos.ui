@@ -39,6 +39,19 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QGroupBox" name="groupBox">
@@ -55,6 +68,9 @@
            </item>
            <item row="0" column="1">
             <widget class="QComboBox" name="grupo">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="styleSheet">
               <string notr="true">QComboBox {
 	background-color:#EBEDED;
@@ -101,6 +117,9 @@ QComboBox::down-arrow {
            </item>
            <item row="1" column="1">
             <widget class="QComboBox" name="entidad">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="styleSheet">
               <string notr="true">QComboBox {
 	background-color:#EBEDED;
@@ -147,6 +166,9 @@ QComboBox::down-arrow {
            </item>
            <item row="2" column="1">
             <widget class="QComboBox" name="contratoOperacion">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="styleSheet">
               <string notr="true">QComboBox {
 	background-color:#EBEDED;
@@ -254,6 +276,9 @@ padding: 3px  6px 3px 6px;
            </item>
            <item row="0" column="1">
             <widget class="QSpinBox" name="cuota">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="styleSheet">
               <string notr="true">QSpinBox {
 	background-color: #EBEDED;
@@ -309,6 +334,9 @@ QSpinBox::down-button {
            </item>
            <item row="1" column="1">
             <widget class="QComboBox" name="parcialToral">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="styleSheet">
               <string notr="true">QComboBox {
 	background-color:#EBEDED;
@@ -355,6 +383,9 @@ QComboBox::down-arrow {
            </item>
            <item row="2" column="1">
             <widget class="QDateEdit" name="fechaPago">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="styleSheet">
               <string notr="true">QDateEdit {
 	background-color: #EBEDED;
