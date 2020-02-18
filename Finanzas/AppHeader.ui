@@ -188,6 +188,9 @@ color: #333333</string>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
 	background-color: #B3B3B3;

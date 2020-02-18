@@ -157,7 +157,7 @@ PlanDePagos::PlanDePagos(QWidget *parent): QWidget(parent) {
 	connect (ui.monto, &QLineEdit::textChanged, this, &PlanDePagos::montoChanged);
 
 	// Pago IVA autofill
-	connect (ui.pagoCapital, &QLineEdit::textChanged, this, &PlanDePagos::pagoIvaAutofill);
+	connect (ui.pagoMonto, &QLineEdit::textChanged, this, &PlanDePagos::pagoIvaAutofill);
 	connect (ui.pagoInteres, &QLineEdit::textChanged, this, &PlanDePagos::pagoInteresChanged);
 	connect (ui.pagoIva, &QLineEdit::textChanged, this, &PlanDePagos::pagoIvaChanged);
 	// Pagos cuota changed
@@ -309,8 +309,11 @@ void PlanDePagos::pagoCapitalChanged (QString capital) {
 
 	double pagoTotal = ui.pagoMonto->text ().toDouble (),
 		pagoCapital = ui.pagoCapital->text ().toDouble (),
-		pagoInteres = ui.pagoInteres->text ().toDouble (),
 		pagoIva = ui.pagoIva->text ().toDouble ();
+
+	ui.pagoInteres->setText (QString::number (pagoTotal - (pagoCapital + pagoIva), 'g', 5));
+
+	double pagoInteres = ui.pagoInteres->text ().toDouble ();
 
 	if (pagoTotal == (pagoCapital + pagoInteres + pagoIva)) {
 		cuotaDataIsCorrect[5] = true;
@@ -455,6 +458,7 @@ void PlanDePagos::loadEmpresasGrupo () {
 			ui.empresaGrupo->addItem (entidad.toObject ().value ("empresa").toString ());
 			listaEmpresas.insert (entidad.toObject ().value ("empresa").toString (), QString::number (entidad.toObject ().value ("id").toInt ()));
 		}
+		clearFields ();
 		reply->deleteLater ();
 	});
 	QNetworkRequest request;
@@ -556,7 +560,7 @@ void PlanDePagos::ivaAutoFill (QString monto) {
 void PlanDePagos::pagoIvaAutofill (QString monto) {
 	if (ui.tipoDeOperacion->currentText () == QString::fromLatin1 ("Leasing") || ui.tipoDeOperacion->currentText () == QString::fromLatin1 ("Lease Back")) {
 		double usable = monto.toDouble ();
-		double computado = 0.13 * usable / 0.87;
+		double computado = 0.13 * usable;
 		ui.pagoIva->setText (QString::number (computado));
 	}
 }
@@ -595,9 +599,12 @@ void PlanDePagos::pagoInteresChanged (QString interes) {
 	}
 
 	double pagoTotal = ui.pagoMonto->text ().toDouble (),
-		pagoCapital = ui.pagoCapital->text ().toDouble (),
 		pagoInteres = ui.pagoInteres->text ().toDouble (),
 		pagoIva = ui.pagoIva->text ().toDouble ();
+
+	ui.pagoCapital->setText (QString::number ( pagoTotal - (pagoInteres + pagoIva), 'g', 5 ));
+
+	double pagoCapital = ui.pagoCapital->text ().toDouble ();
 
 	if (pagoTotal == (pagoCapital + pagoInteres + pagoIva)) {
 		cuotaDataIsCorrect[5] = true;
@@ -1924,25 +1931,26 @@ void PlanDePagos::clearFields () {
 	//ui.pagoIva->setEnabled (false);
 
 	// Set Crédito as initial state for next input
-	ui.tipoDeOperacion->setCurrentText (QString::fromLatin1 ("Crédito"));
+	ui.tipoDeOperacion->setCurrentIndex (-1);
 
 	// Erase everything
 	ui.codigoLineaCredito->setText ("");
-	ui.empresaGrupo->setCurrentIndex (0);
-	ui.nombreEntidad->setCurrentIndex (0);
+	ui.empresaGrupo->setCurrentIndex (-1);
+	ui.nombreEntidad->setCurrentIndex (-1);
+	ui.tipoEntidad->setCurrentIndex (-1);
 	ui.numeroContratoOperacion->setText ("");
 	ui.fechaFirma->setDate(QDate::currentDate());
 	ui.concepto->setText ("");
 	ui.detalle->setText ("");
-	ui.moneda->setCurrentIndex (0);
+	ui.moneda->setCurrentIndex (-1);
 	ui.monto->setText ("");
 	ui.iva->setText ("");
 	ui.cuotaInicial->setText ("");
-	ui.tipoTasa->setCurrentIndex (0);
+	ui.tipoTasa->setCurrentIndex (-1);
 	ui.interesFijo->setText ("");
 	ui.interesVariable->setText ("");
-	ui.plazo->setValue (0);
-	ui.frecuencia->setCurrentIndex (0);
+	ui.plazo->setValue (-1);
+	ui.frecuencia->setCurrentIndex (-1);
 	ui.fechaVencimiento->setDate (QDate::currentDate ());
 	ui.fechaDesem_1->setDate (QDate::currentDate ());
 	ui.montoDesem_1->setText ("");

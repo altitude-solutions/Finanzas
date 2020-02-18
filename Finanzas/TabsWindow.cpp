@@ -16,7 +16,7 @@ TabsWindow::TabsWindow(QWidget *parent): QMainWindow(parent) {
 	layout->addWidget (lineaDeCredito, 8);
 	layout->setMargin (0);
 	firstTab->setLayout (layout);
-	ui.tabWidget->addTab (firstTab, QString::fromLatin1("Línea de Crédito") );
+	ui.tabWidget->addTab (firstTab, QString::fromLatin1("Líneas de Crédito") );
 	connect (firtsTabHeader, &AppHeader::logoutButton, this, &TabsWindow::logout);
 	connect (this, &TabsWindow::lineasDeCreditoSelected, lineaDeCredito, &LineaDeCredito::onTabSelected);
 

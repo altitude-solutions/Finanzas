@@ -18,6 +18,9 @@ public slots:
 
 private slots:
 	void onSaveClicked ();
+	void onCancelClicked ();
+	void onEditClicked ();
+	void onDeleteClicked ();
 
 private:
 	void loadEntidadesFinancieras ();
@@ -53,4 +56,8 @@ private:
 
 	// Validation flags
 	bool *dataIsCorrect;
+
+	// Edit flag
+	bool editing;
+	int editingID;
 };
