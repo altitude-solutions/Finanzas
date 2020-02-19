@@ -76,6 +76,12 @@ PlanDePagos::PlanDePagos(QWidget *parent): QWidget(parent) {
 	connect (ui.savePlan, &QPushButton::clicked, this, &PlanDePagos::onSavePlan);
 	connect (ui.saveCuota, &QPushButton::clicked, this, &PlanDePagos::onSaveCuota);
 
+
+	// ===============================================
+	// New operation
+	// ===============================================
+	connect (ui.newButton, &QPushButton::clicked, this, &PlanDePagos::onNewOperation);
+
 	// ===============================================
 	// Refresh tipo de entidad
 	// ===============================================
@@ -83,6 +89,32 @@ PlanDePagos::PlanDePagos(QWidget *parent): QWidget(parent) {
 		ui.tipoEntidad->setCurrentText (listaTiposEntidades[listaEntidades[data]["tipoDeEntidad"]]);
 		if (ui.tipoDeOperacion->currentText () == QString::fromLatin1("Operación de Línea de Crédito")) {
 			loadLineasDeCredito (listaEntidades[data]["id"].toInt());
+		}
+		if (ui.tipoDeOperacion->currentText () == QString::fromLatin1 ("Crédito")) {
+			if (data == "Impuestos Nacionales") {
+				ui.fechaDesem_1->setEnabled (false);
+				ui.montoDesem_1->setEnabled (false);
+				ui.fechaDesem_2->setEnabled (false);
+				ui.montoDesem_2->setEnabled (false);
+				ui.fechaDesem_3->setEnabled (false);
+				ui.montoDesem_3->setEnabled (false);
+				ui.fechaDesem_4->setEnabled (false);
+				ui.montoDesem_4->setEnabled (false);
+				ui.fechaDesem_5->setEnabled (false);
+				ui.montoDesem_5->setEnabled (false);
+			}
+			else {
+				ui.fechaDesem_1->setEnabled (true);
+				ui.montoDesem_1->setEnabled (true);
+				ui.fechaDesem_2->setEnabled (true);
+				ui.montoDesem_2->setEnabled (true);
+				ui.fechaDesem_3->setEnabled (true);
+				ui.montoDesem_3->setEnabled (true);
+				ui.fechaDesem_4->setEnabled (true);
+				ui.montoDesem_4->setEnabled (true);
+				ui.fechaDesem_5->setEnabled (true);
+				ui.montoDesem_5->setEnabled (true);
+			}
 		}
 	});
 
@@ -205,23 +237,29 @@ void PlanDePagos::setTableHeaders () {
 		<< QString::fromLatin1 ("Fecha de Pago") << QString::fromLatin1 ("Pago Total") << QString::fromLatin1 ("Pago de Capital") << QString::fromLatin1 ("Pago de Interes")
 		<< QString::fromLatin1 ("IVA") << QString::fromLatin1 ("Saldo del Capital") << QString::fromLatin1 ("Crédito Fiscal") << QString::fromLatin1 ("Saldo Capital Real");
 	ui.tableWidget->setHorizontalHeaderLabels (headers);
-	// Set column width to a proper size	// TODO: Dynamic sizes
-	ui.tableWidget->setColumnWidth (0, 50);
-	ui.tableWidget->setColumnWidth (1, 120);
-	ui.tableWidget->setColumnWidth (2, 80);
-	ui.tableWidget->setColumnWidth (3, 120);
-	ui.tableWidget->setColumnWidth (4, 165);
-	ui.tableWidget->setColumnWidth (5, 158);
-	ui.tableWidget->setColumnWidth (6, 55);
-	ui.tableWidget->setColumnWidth (7, 120);
-	ui.tableWidget->setColumnWidth (8, 120);
-	ui.tableWidget->setColumnWidth (9, 120);
-	ui.tableWidget->setColumnWidth (10, 120);
-	ui.tableWidget->setColumnWidth (11, 120);
-	ui.tableWidget->setColumnWidth (12, 120);
-	ui.tableWidget->setColumnWidth (13, 120);
-	ui.tableWidget->setColumnWidth (14, 120);
-	ui.tableWidget->setColumnWidth (15, 120);
+
+	// Get table widget size
+	QSize tableSize = ui.tableWidget->size ();
+
+	double totalWidth = tableSize.width ();
+	// Set column width to a proper size
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (0, QHeaderView::ResizeMode::ResizeToContents);	// cuota
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (1, QHeaderView::ResizeMode::ResizeToContents);	// empresa
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (2, QHeaderView::ResizeMode::ResizeToContents);	// entidad financiera
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (3, QHeaderView::ResizeMode::Stretch);			// empresa
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (4, QHeaderView::ResizeMode::ResizeToContents);	// detalle
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (5, QHeaderView::ResizeMode::Stretch);			// numero de contrato
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (6, QHeaderView::ResizeMode::ResizeToContents);	// año
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (7, QHeaderView::ResizeMode::Stretch);			// mes
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (8, QHeaderView::ResizeMode::Stretch);			// fecha de pago
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (9, QHeaderView::ResizeMode::Stretch);			// pago total
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (10, QHeaderView::ResizeMode::Stretch);			// pago capital
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (11, QHeaderView::ResizeMode::Stretch);			// pago interes
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (12, QHeaderView::ResizeMode::Stretch);			// pago iva
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (13, QHeaderView::ResizeMode::Stretch);			// saldo capital
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (14, QHeaderView::ResizeMode::Stretch);			// credito fiscal
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (15, QHeaderView::ResizeMode::Stretch);			// saldo  capital real
+	//ui.tableWidget->setColumnWidth (0, 0.03 * totalWidth);
 
 	// hide vertical headers
 	ui.tableWidget->verticalHeader ()->hide ();
@@ -249,6 +287,7 @@ void PlanDePagos::lookForLineaCredito (QString codigo) {
 	if (lineasDeCredito.contains (codigo)) {
 		planDataIsCorrect[0] = true;
 		ui.empresaGrupo->setCurrentText (lineasDeCredito[codigo]["empresa"]);
+		ui.moneda->setCurrentText (lineasDeCredito[codigo]["moneda"]);
 	}
 	else {
 		planDataIsCorrect[0] = false;
@@ -265,11 +304,12 @@ void PlanDePagos::numeroCuotaChanged (int value) {
 		int factor = frequency == "Mensual" ? 1 : frequency == "Bimensual" ? 2 : frequency == "Trimestral" ? 3 : frequency == "Semestral" ? 6 : 12;
 		ui.fechaPago->setDate (ui.fechaFirma->date ().addMonths (value * factor));
 		if (value > (ui.plazo->value () / factor)) {
-			clearFields ();
-			ui.tipoDeOperacion->setFocus ();
+			ui.numeroCuota->setEnabled (false);
+			ui.fechaPago->setEnabled (false);
+			ui.pagoMonto->setEnabled (false);
+			ui.pagoCapital->setEnabled (false);
+			ui.pagoInteres->setEnabled (false);
 			ui.saveCuota->setEnabled (false);
-			resetPlanValidators ();
-			resetCuotaValidators ();
 		}
 	}
 }
@@ -300,7 +340,7 @@ void PlanDePagos::pagoCapitalChanged (QString capital) {
 		ui.pagoCapital->setText (capital);
 		return;
 	}
-	if (ammount > 0) {
+	if (ammount > 0 && ammount <= saldoCapital) {
 		cuotaDataIsCorrect[2] = true;
 	}
 	else {
@@ -311,7 +351,7 @@ void PlanDePagos::pagoCapitalChanged (QString capital) {
 		pagoCapital = ui.pagoCapital->text ().toDouble (),
 		pagoIva = ui.pagoIva->text ().toDouble ();
 
-	ui.pagoInteres->setText (QString::number (pagoTotal - (pagoCapital + pagoIva), 'g', 5));
+	ui.pagoInteres->setText (QString::number (pagoTotal - (pagoCapital + pagoIva), 'g', 15));
 
 	double pagoInteres = ui.pagoInteres->text ().toDouble ();
 
@@ -427,6 +467,7 @@ void PlanDePagos::loadLineasDeCredito (int entidad_id) {
 			current.insert ("monto", QString::number (linea.toObject ().value ("monto").toDouble (), 'g', 15));
 			current.insert ("empresa", linea.toObject ().value ("empresas_grupo").toObject ().value ("empresa").toString ());
 			current.insert ("entidad", linea.toObject ().value ("entidades_financiera").toObject ().value ("nombreEntidad").toString ());
+			current.insert ("moneda", linea.toObject ().value ("moneda").toString());
 			lineasDeCredito.insert (linea.toObject ().value ("codigo").toString (), current);
 		}
 		QCompleter* lineasCompleter = new QCompleter (listaLineas, this);
@@ -574,7 +615,7 @@ void PlanDePagos::cuotaInicialChanged (QString cuotaInicial) {
 		ui.cuotaInicial->setText (cuotaInicial);
 		return;
 	}
-	if (ammount > 0) {
+	if (ammount > 0 && ammount < ui.monto->text().toDouble()) {
 		planDataIsCorrect[4] = true;
 	}
 	else {
@@ -602,7 +643,7 @@ void PlanDePagos::pagoInteresChanged (QString interes) {
 		pagoInteres = ui.pagoInteres->text ().toDouble (),
 		pagoIva = ui.pagoIva->text ().toDouble ();
 
-	ui.pagoCapital->setText (QString::number ( pagoTotal - (pagoInteres + pagoIva), 'g', 5 ));
+	ui.pagoCapital->setText (QString::number ( pagoTotal - (pagoInteres + pagoIva), 'g', 15 ));
 
 	double pagoCapital = ui.pagoCapital->text ().toDouble ();
 
@@ -626,7 +667,6 @@ void PlanDePagos::onDesem1Changed (QString desem1) {
 		planDataIsCorrect[7] = false;
 		desem1.truncate (desem1.length () - 1);
 		ui.montoDesem_1->setText (desem1);
-		return;
 	}
 	if (ammount > 0) {
 		planDataIsCorrect[7] = true;
@@ -656,7 +696,6 @@ void PlanDePagos::onDesem2Changed (QString desem2) {
 		planDataIsCorrect[8] = false;
 		desem2.truncate (desem2.length () - 1);
 		ui.montoDesem_2->setText (desem2);
-		return;
 	}
 	if (ammount > 0) {
 		planDataIsCorrect[8] = true;
@@ -687,7 +726,6 @@ void PlanDePagos::onDesem3Changed (QString desem3) {
 		planDataIsCorrect[9] = false;
 		desem3.truncate (desem3.length () - 1);
 		ui.montoDesem_3->setText (desem3);
-		return;
 	}
 	if (ammount > 0) {
 		planDataIsCorrect[9] = true;
@@ -718,7 +756,6 @@ void PlanDePagos::onDesem4Changed (QString desem4) {
 		planDataIsCorrect[10] = false;
 		desem4.truncate (desem4.length () - 1);
 		ui.montoDesem_4->setText (desem4);
-		return;
 	}
 	if (ammount > 0) {
 		planDataIsCorrect[10] = true;
@@ -749,7 +786,6 @@ void PlanDePagos::onDesem5Changed (QString desem5) {
 		planDataIsCorrect[11] = false;
 		desem5.truncate (desem5.length () - 1);
 		ui.montoDesem_5->setText (desem5);
-		return;
 	}
 	if (ammount > 0) {
 		planDataIsCorrect[11] = true;
@@ -786,6 +822,8 @@ void PlanDePagos::fechaFirmaChanged (QDate date) {
 	}
 	ui.fechaDesem_1->setMinimumDate (date);
 	ui.fechaVencimiento->setMinimumDate (date);
+	ui.fechaPago->setMinimumDate (date);
+
 	QDate plazo = date.addMonths (ui.plazo->value ());
 	ui.fechaVencimiento->setDate (plazo);
 
@@ -816,11 +854,14 @@ void PlanDePagos::onOperationTypeChanged (int type) {
 		// Seguro
 
 		break;
+	default:
+		clearFields ();
+		break;
 	}
 }
 
 void PlanDePagos::casoCredito () {
-	if (checkCasoCredito ()) {
+	if (checkGeneral() && checkCasoCredito ()) {
 		// General info
 		QString tipoOperacion = ui.tipoDeOperacion->currentText ();
 		QString numeroDeContratoOperacion = ui.numeroContratoOperacion->text ();
@@ -863,7 +904,6 @@ void PlanDePagos::casoCredito () {
 						QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (jsonReply.toJson ().toStdString ()));
 					}
 				}
-				casoCreditoSetup ();
 				ui.savePlan->setEnabled (true);
 			}
 			else {
@@ -900,33 +940,38 @@ void PlanDePagos::casoCredito () {
 		bodyContent.insert ("plazo", plazo);
 		bodyContent.insert ("frecuenciaDePagos", frecuenciaDePagos);
 		bodyContent.insert ("fechaVencimiento", fechaVencimiento.toMSecsSinceEpoch());
-		bodyContent.insert ("fechaDesembolso_1", fechaDesembolso_1.toMSecsSinceEpoch());
-		bodyContent.insert ("montoDesembolso_1", montoDesembolso_1);
+		if (ui.nombreEntidad->currentText () != "Impuestos Nacionales") {
+			bodyContent.insert ("fechaDesembolso_1", fechaDesembolso_1.toMSecsSinceEpoch());
+			bodyContent.insert ("montoDesembolso_1", montoDesembolso_1);
+		}
+
 		bodyContent.insert ("empresaGrupo", empresaGrupo);
 		bodyContent.insert ("entidadFinanciera", entidadFinanciera);
-		if (ui.montoDesem_2->text() != "") {
-			QDateTime fechaDesem_2 = ui.fechaDesem_2->dateTime ();
-			double montoDesem_2 = ui.montoDesem_2->text ().toDouble ();
-			bodyContent.insert ("fechaDesembolso_2", fechaDesem_2.toMSecsSinceEpoch());
-			bodyContent.insert ("montoDesembolso_2", montoDesem_2);
-		}
-		if (ui.montoDesem_3->text() != "") {
-			QDateTime fechaDesem_3 = ui.fechaDesem_3->dateTime ();
-			double montoDesem_3 = ui.montoDesem_3->text ().toDouble ();
-			bodyContent.insert ("fechaDesembolso_3", fechaDesem_3.toMSecsSinceEpoch());
-			bodyContent.insert ("montoDesembolso_3", montoDesem_3);
-		}
-		if (ui.montoDesem_4->text() != "") {
-			QDateTime fechaDesem_4 = ui.fechaDesem_4->dateTime ();
-			double montoDesem_4 = ui.montoDesem_4->text ().toDouble ();
-			bodyContent.insert ("fechaDesembolso_4", fechaDesem_4.toMSecsSinceEpoch());
-			bodyContent.insert ("montoDesembolso_4", montoDesem_4);
-		}
-		if (ui.montoDesem_5->text() != "") {
-			QDateTime fechaDesem_5 = ui.fechaDesem_5->dateTime ();
-			double montoDesem_5 = ui.montoDesem_5->text ().toDouble ();
-			bodyContent.insert ("fechaDesembolso_5", fechaDesem_5.toMSecsSinceEpoch());
-			bodyContent.insert ("montoDesembolso_5", montoDesem_5);
+		if (ui.nombreEntidad->currentText () != "Impuestos Nacionales") {
+			if (ui.montoDesem_2->text() != "") {
+				QDateTime fechaDesem_2 = ui.fechaDesem_2->dateTime ();
+				double montoDesem_2 = ui.montoDesem_2->text ().toDouble ();
+				bodyContent.insert ("fechaDesembolso_2", fechaDesem_2.toMSecsSinceEpoch());
+				bodyContent.insert ("montoDesembolso_2", montoDesem_2);
+			}
+			if (ui.montoDesem_3->text() != "") {
+				QDateTime fechaDesem_3 = ui.fechaDesem_3->dateTime ();
+				double montoDesem_3 = ui.montoDesem_3->text ().toDouble ();
+				bodyContent.insert ("fechaDesembolso_3", fechaDesem_3.toMSecsSinceEpoch());
+				bodyContent.insert ("montoDesembolso_3", montoDesem_3);
+			}
+			if (ui.montoDesem_4->text() != "") {
+				QDateTime fechaDesem_4 = ui.fechaDesem_4->dateTime ();
+				double montoDesem_4 = ui.montoDesem_4->text ().toDouble ();
+				bodyContent.insert ("fechaDesembolso_4", fechaDesem_4.toMSecsSinceEpoch());
+				bodyContent.insert ("montoDesembolso_4", montoDesem_4);
+			}
+			if (ui.montoDesem_5->text() != "") {
+				QDateTime fechaDesem_5 = ui.fechaDesem_5->dateTime ();
+				double montoDesem_5 = ui.montoDesem_5->text ().toDouble ();
+				bodyContent.insert ("fechaDesembolso_5", fechaDesem_5.toMSecsSinceEpoch());
+				bodyContent.insert ("montoDesembolso_5", montoDesem_5);
+			}
 		}
 
 
@@ -937,7 +982,7 @@ void PlanDePagos::casoCredito () {
 }
 
 void PlanDePagos::casoLineaDeCredito () {
-	if (checkCasoLineaDeCredito ()) {
+	if (checkGeneral() && checkCasoLineaDeCredito ()) {
 		// General info
 		QString tipoOperacion = ui.tipoDeOperacion->currentText ();
 		int codigoLinea_ID = lineasDeCredito[ui.codigoLineaCredito->text ()]["id"].toInt();
@@ -982,7 +1027,7 @@ void PlanDePagos::casoLineaDeCredito () {
 						QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (jsonReply.toJson ().toStdString ()));
 					}
 				}
-				casoLineaDeCreditoSetup ();
+				//casoLineaDeCreditoSetup ();
 				ui.savePlan->setEnabled (true);
 			}
 			else {
@@ -1057,7 +1102,7 @@ void PlanDePagos::casoLineaDeCredito () {
 }
 
 void PlanDePagos::casoLeasing () {
-	if (checkCasoLeasing ()) {
+	if (checkGeneral() && checkCasoLeasing ()) {
 		// General info
 		QString tipoOperacion = ui.tipoDeOperacion->currentText ();
 		int empresaGrupo_ID = listaEmpresas[ui.empresaGrupo->currentText ()].toInt ();
@@ -1074,8 +1119,6 @@ void PlanDePagos::casoLeasing () {
 		int plazo = ui.plazo->value ();
 		QDateTime fechaVencimiento_date = ui.fechaVencimiento->dateTime ();
 		QString frecuenciaDePagos = ui.frecuencia->currentText ();
-		QDateTime fechaDesem_1_date = ui.fechaDesem_1->dateTime ();
-		double montoDesem_1 = ui.montoDesem_1->text ().toDouble ();
 
 		// Network manager and request
 		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
@@ -1101,7 +1144,6 @@ void PlanDePagos::casoLeasing () {
 						QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (jsonReply.toJson ().toStdString ()));
 					}
 				}
-				casoLeasingSetup ();
 				ui.savePlan->setEnabled (true);
 			}
 			else {
@@ -1139,35 +1181,15 @@ void PlanDePagos::casoLeasing () {
 		bodyContent.insert ("plazo", plazo);
 		bodyContent.insert ("frecuenciaDePagos", frecuenciaDePagos);
 		bodyContent.insert ("fechaVencimiento", fechaVencimiento_date.toMSecsSinceEpoch ());
-		bodyContent.insert ("fechaDesembolso_1", fechaDesem_1_date.toMSecsSinceEpoch ());
-		bodyContent.insert ("montoDesembolso_1", montoDesem_1);
 		bodyContent.insert ("empresaGrupo", empresaGrupo_ID);
 		bodyContent.insert ("entidadFinanciera", entidad_ID);
 
-		if (ui.montoDesem_2->text () != "") {
-			QDateTime fechaDesem_2 = ui.fechaDesem_2->dateTime ();
-			double montoDesem_2 = ui.montoDesem_2->text ().toDouble ();
-			bodyContent.insert ("fechaDesembolso_2", fechaDesem_2.toMSecsSinceEpoch ());
-			bodyContent.insert ("montoDesembolso_2", montoDesem_2);
-		}
-		if (ui.montoDesem_3->text () != "") {
-			QDateTime fechaDesem_3 = ui.fechaDesem_3->dateTime ();
-			double montoDesem_3 = ui.montoDesem_3->text ().toDouble ();
-			bodyContent.insert ("fechaDesembolso_3", fechaDesem_3.toMSecsSinceEpoch ());
-			bodyContent.insert ("montoDesembolso_3", montoDesem_3);
-		}
-		if (ui.montoDesem_4->text () != "") {
-			QDateTime fechaDesem_4 = ui.fechaDesem_4->dateTime ();
-			double montoDesem_4 = ui.montoDesem_4->text ().toDouble ();
-			bodyContent.insert ("fechaDesembolso_4", fechaDesem_4.toMSecsSinceEpoch ());
-			bodyContent.insert ("montoDesembolso_4", montoDesem_4);
-		}
-		if (ui.montoDesem_5->text () != "") {
-			QDateTime fechaDesem_5 = ui.fechaDesem_5->dateTime ();
-			double montoDesem_5 = ui.montoDesem_5->text ().toDouble ();
-			bodyContent.insert ("fechaDesembolso_5", fechaDesem_5.toMSecsSinceEpoch ());
-			bodyContent.insert ("montoDesembolso_5", montoDesem_5);
-		}
+		//if (ui.montoDesem_2->text () != "") {
+		//	QDateTime fechaDesem_2 = ui.fechaDesem_2->dateTime ();
+		//	double montoDesem_2 = ui.montoDesem_2->text ().toDouble ();
+		//	bodyContent.insert ("fechaDesembolso_2", fechaDesem_2.toMSecsSinceEpoch ());
+		//	bodyContent.insert ("montoDesembolso_2", montoDesem_2);
+		//}
 
 		body.setObject (bodyContent);
 		nam->post (request, body.toJson ());
@@ -1176,7 +1198,7 @@ void PlanDePagos::casoLeasing () {
 }
 
 void PlanDePagos::casoLeaseBack () {
-	if (checkCasoLeaseBack ()) {
+	if (checkGeneral() && checkCasoLeaseBack ()) {
 		QString tipoOperacion = ui.tipoDeOperacion->currentText ();
 		int empresaGrupo_ID = listaEmpresas[ui.empresaGrupo->currentText ()].toInt ();
 		int entidad_ID = listaEntidades[ui.nombreEntidad->currentText ()]["id"].toInt ();
@@ -1219,7 +1241,6 @@ void PlanDePagos::casoLeaseBack () {
 						QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (jsonReply.toJson ().toStdString ()));
 					}
 				}
-				casoLeaseBackSetup ();
 				ui.savePlan->setEnabled (true);
 			}
 			else {
@@ -1311,6 +1332,17 @@ void PlanDePagos::casoCreditoSetup () {
 	ui.cuotaInicial->setText ("");
 	ui.pagoIva->setText ("");
 	ui.iva->setText ("");
+
+	ui.fechaDesem_1->setEnabled (true);
+	ui.montoDesem_1->setEnabled (true);
+	ui.fechaDesem_2->setEnabled (true);
+	ui.montoDesem_2->setEnabled (true);
+	ui.fechaDesem_3->setEnabled (true);
+	ui.montoDesem_3->setEnabled (true);
+	ui.fechaDesem_4->setEnabled (true);
+	ui.montoDesem_4->setEnabled (true);
+	ui.fechaDesem_5->setEnabled (true);
+	ui.montoDesem_5->setEnabled (true);
 }
 
 void PlanDePagos::casoLineaDeCreditoSetup () {
@@ -1320,6 +1352,8 @@ void PlanDePagos::casoLineaDeCreditoSetup () {
 	// Disable and autofill with data from linea de crédito
 	ui.empresaGrupo->setEnabled (false);
 	ui.empresaGrupo->setEnabled (false);
+	ui.moneda->setEnabled (false);
+
 	ui.nombreEntidad->setEnabled (true);
 	// Disable
 	ui.iva->setEnabled (false);
@@ -1329,6 +1363,17 @@ void PlanDePagos::casoLineaDeCreditoSetup () {
 	ui.cuotaInicial->setText ("");
 	ui.pagoIva->setText ("");
 	ui.iva->setText ("");
+
+	ui.fechaDesem_1->setEnabled (true);
+	ui.montoDesem_1->setEnabled (true);
+	ui.fechaDesem_2->setEnabled (true);
+	ui.montoDesem_2->setEnabled (true);
+	ui.fechaDesem_3->setEnabled (true);
+	ui.montoDesem_3->setEnabled (true);
+	ui.fechaDesem_4->setEnabled (true);
+	ui.montoDesem_4->setEnabled (true);
+	ui.fechaDesem_5->setEnabled (true);
+	ui.montoDesem_5->setEnabled (true);
 }
 
 void PlanDePagos::casoLeasingSetup () {
@@ -1339,6 +1384,17 @@ void PlanDePagos::casoLeasingSetup () {
 	ui.cuotaInicial->setEnabled (true);
 	ui.codigoLineaCredito->setEnabled (false);
 	ui.interesVariable->setEnabled (false);
+
+	ui.fechaDesem_1->setEnabled (false);
+	ui.montoDesem_1->setEnabled (false);
+	ui.fechaDesem_2->setEnabled (false);
+	ui.montoDesem_2->setEnabled (false);
+	ui.fechaDesem_3->setEnabled (false);
+	ui.montoDesem_3->setEnabled (false);
+	ui.fechaDesem_4->setEnabled (false);
+	ui.montoDesem_4->setEnabled (false);
+	ui.fechaDesem_5->setEnabled (false);
+	ui.montoDesem_5->setEnabled (false);
 
 	ui.codigoLineaCredito->setText ("");
 	ui.cuotaInicial->setText ("");
@@ -1359,77 +1415,65 @@ void PlanDePagos::casoLeaseBackSetup () {
 	ui.cuotaInicial->setText ("");
 	ui.pagoIva->setText ("0.0");
 	ui.iva->setText ("0.0");
+
+	ui.fechaDesem_1->setEnabled (true);
+	ui.montoDesem_1->setEnabled (true);
+	ui.fechaDesem_2->setEnabled (true);
+	ui.montoDesem_2->setEnabled (true);
+	ui.fechaDesem_3->setEnabled (true);
+	ui.montoDesem_3->setEnabled (true);
+	ui.fechaDesem_4->setEnabled (true);
+	ui.montoDesem_4->setEnabled (true);
+	ui.fechaDesem_5->setEnabled (true);
+	ui.montoDesem_5->setEnabled (true);
 }
 
 bool PlanDePagos::checkCasoCredito () {
-	if (ui.numeroContratoOperacion->text () == "") {
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El número de contrato u operación es necesario"));
-		ui.numeroContratoOperacion->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[2]) {
-		// 3[2]  monto
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Es necesario que el monto de la operación sea mayor a cero"));
-		ui.monto->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[5]) {
-		// 6[5]  interes fijo
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa fija debe ser mayor a cero"));
-		ui.interesFijo->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[6]) {
-		//7  [6]  interes variable
-		if (ui.tipoTasa->currentText () != "Fijo") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa variable debe ser mayor o igual a cero"));
-			ui.interesVariable->setFocus ();
+	if (ui.nombreEntidad->currentText () != QString::fromLatin1 ("Impuestos Nacionales")) {
+		if (!planDataIsCorrect[7]) {
+			//8  [7]  Monto Desem 1
+			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 1 debe ser mayor a cero"));
+			ui.montoDesem_1->setFocus ();
 			return false;
 		}
-	}
-	if (!planDataIsCorrect[7]) {
-		//8  [7]  Monto Desem 1
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 1 debe ser mayor a cero"));
-		ui.montoDesem_1->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[8]) {
-		//9  [8]  Monto Desem 2
-		if (ui.montoDesem_2->text () != "") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 2 debe ser mayor a cero"));
-			ui.montoDesem_2->setFocus ();
+		if (!planDataIsCorrect[8]) {
+			//9  [8]  Monto Desem 2
+			if (ui.montoDesem_2->text () != "") {
+				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 2 debe ser mayor a cero"));
+				ui.montoDesem_2->setFocus ();
+				return false;
+			}
+		}
+		if (!planDataIsCorrect[9]) {
+			//10  [9]  Monto Desem 3
+			if (ui.montoDesem_3->text () != "") {
+				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 3 debe ser mayor a cero"));
+				ui.montoDesem_2->setFocus ();
+				return false;
+			}
+		}
+		if (!planDataIsCorrect[10]) {
+			//11  [10]  Monto Desem 4
+			if (ui.montoDesem_4->text () != "") {
+				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 4 debe ser mayor a cero"));
+				ui.montoDesem_2->setFocus ();
+				return false;
+			}
+		}
+		if (!planDataIsCorrect[11]) {
+			//12  [11]  Monto Desem 5
+			if (ui.montoDesem_5->text () != "") {
+				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 5 debe ser mayor a cero"));
+				ui.montoDesem_2->setFocus ();
+				return false;
+			}
+		}
+		if (!planDataIsCorrect[12]) {
+			//13[12]  Suma Montos Desem
+			QMessageBox::critical (this, "Error", QString::fromLatin1 ("La suma de los desembolsos debe ser igual al monto de la operación"));
+			ui.montoDesem_1->setFocus ();
 			return false;
 		}
-	}
-	if (!planDataIsCorrect[9]) {
-		//10  [9]  Monto Desem 3
-		if (ui.montoDesem_3->text () != "") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 3 debe ser mayor a cero"));
-			ui.montoDesem_2->setFocus ();
-			return false;
-		}
-	}
-	if (!planDataIsCorrect[10]) {
-		//11  [10]  Monto Desem 4
-		if (ui.montoDesem_4->text () != "") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 4 debe ser mayor a cero"));
-			ui.montoDesem_2->setFocus ();
-			return false;
-		}
-	}
-	if (!planDataIsCorrect[11]) {
-		//12  [11]  Monto Desem 5
-		if (ui.montoDesem_5->text () != "") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 5 debe ser mayor a cero"));
-			ui.montoDesem_2->setFocus ();
-			return false;
-		}
-	}
-	if (!planDataIsCorrect[12]) {
-		//13[12]  Suma Montos Desem
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La suma de los desembolsos debe ser igual al monto de la operación"));
-		ui.montoDesem_1->setFocus ();
-		return false;
 	}
 	double interesFijo = ui.interesFijo->text ().toDouble ();
 	if (interesFijo >= 20) {
@@ -1447,32 +1491,6 @@ bool PlanDePagos::checkCasoLineaDeCredito () {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La línea de crédito no existe"));
 		ui.codigoLineaCredito->setFocus ();
 		return false;
-	}
-	if (ui.numeroContratoOperacion->text () == "") {
-		// Numero de contrato u operación
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El número de contrato u operación es necesario"));
-		ui.numeroContratoOperacion->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[2]) {
-		// 3[2]  monto
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Es necesario que el monto de la operación sea mayor a cero"));
-		ui.monto->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[5]) {
-		// 6[5]  interes fijo
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa fija debe ser mayor a cero"));
-		ui.interesFijo->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[6]) {
-		//7  [6]  interes variable
-		if (ui.tipoTasa->currentText () != "Fijo") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa variable debe ser mayor o igual a cero"));
-			ui.interesVariable->setFocus ();
-			return false;
-		}
 	}
 	if (!planDataIsCorrect[7]) {
 		//8  [7]  Monto Desem 1
@@ -1529,80 +1547,10 @@ bool PlanDePagos::checkCasoLineaDeCredito () {
 }
 
 bool PlanDePagos::checkCasoLeasing () {
-	if (ui.numeroContratoOperacion->text () == "") {
-		// Numero de contrato u operación
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El número de contrato u operación es necesario"));
-		ui.numeroContratoOperacion->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[2]) {
-		// 3[2]  monto
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Es necesario que el monto de la operación sea mayor a cero"));
-		ui.monto->setFocus ();
-		return false;
-	}
 	if (!planDataIsCorrect[4]) {
 		// 5[4]  cuota inicial
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La cuota inicial debe ser mayor a cero"));
 		ui.cuotaInicial->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[5]) {
-		// 6[5]  interes fijo
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa fija debe ser mayor a cero"));
-		ui.interesFijo->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[6]) {
-		//7  [6]  interes variable
-		if (ui.tipoTasa->currentText () != "Fijo") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa variable debe ser mayor o igual a cero"));
-			ui.interesVariable->setFocus ();
-			return false;
-		}
-	}
-	if (!planDataIsCorrect[7]) {
-		//8  [7]  Monto Desem 1
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 1 debe ser mayor a cero"));
-		ui.montoDesem_1->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[8]) {
-		//9  [8]  Monto Desem 2
-		if (ui.montoDesem_2->text () != "") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 2 debe ser mayor a cero"));
-			ui.montoDesem_2->setFocus ();
-			return false;
-		}
-	}
-	if (!planDataIsCorrect[9]) {
-		//10  [9]  Monto Desem 3
-		if (ui.montoDesem_3->text () != "") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 3 debe ser mayor a cero"));
-			ui.montoDesem_2->setFocus ();
-			return false;
-		}
-	}
-	if (!planDataIsCorrect[10]) {
-		//11  [10]  Monto Desem 4
-		if (ui.montoDesem_4->text () != "") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 4 debe ser mayor a cero"));
-			ui.montoDesem_2->setFocus ();
-			return false;
-		}
-	}
-	if (!planDataIsCorrect[11]) {
-		//12  [11]  Monto Desem 5
-		if (ui.montoDesem_5->text () != "") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso 5 debe ser mayor a cero"));
-			ui.montoDesem_2->setFocus ();
-			return false;
-		}
-	}
-	if (!planDataIsCorrect[12]) {
-		//13[12]  Suma Montos Desem
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La suma de los desembolsos debe ser igual al monto de la operación"));
-		ui.montoDesem_1->setFocus ();
 		return false;
 	}
 	double cuotaInicial = ui.cuotaInicial->text ().toDouble ();
@@ -1623,35 +1571,11 @@ bool PlanDePagos::checkCasoLeasing () {
 }
 
 bool PlanDePagos::checkCasoLeaseBack () {
-	if (ui.numeroContratoOperacion->text () == "") {
-		// Numero de contrato u operación
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El número de contrato u operación es necesario"));
-		ui.numeroContratoOperacion->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[2]) {
-		// 3[2]  monto
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Es necesario que el monto de la operación sea mayor a cero"));
-		ui.monto->setFocus ();
-		return false;
-	}
 	if (!planDataIsCorrect[4]) {
 		// 5[4]  cuota inicial
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La cuota inicial debe ser mayor a cero"));
-		ui.cuotaInicial->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[5]) {
-		// 6[5]  interes fijo
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa fija debe ser mayor a cero"));
-		ui.interesFijo->setFocus ();
-		return false;
-	}
-	if (!planDataIsCorrect[6]) {
-		//7  [6]  interes variable
-		if (ui.tipoTasa->currentText () != "Fijo") {
-			QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa variable debe ser mayor o igual a cero"));
-			ui.interesVariable->setFocus ();
+		if (ui.cuotaInicial->text () != "") {
+			QMessageBox::critical (this, "Error", QString::fromLatin1 ("La cuota inicial debe ser mayor a cero y menor que el monto"));
+			ui.cuotaInicial->setFocus ();
 			return false;
 		}
 	}
@@ -1717,63 +1641,70 @@ bool PlanDePagos::checkCasoLeaseBack () {
 }
 
 bool PlanDePagos::checkCasoSeguro () {
-	if (!planDataIsCorrect[0]) {
-		// 1[0]  codigo linea de credito no existe
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La línea de crédito no existe"));
-		ui.codigoLineaCredito->setFocus ();
+	//  TODO("Caso seguro")
+	return false;
+}
+
+bool PlanDePagos::checkGeneral () {
+	if (ui.tipoDeOperacion->currentText () == "") {
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Por favor seleccione un tipo de operación"));
+		ui.tipoDeOperacion->setFocus ();
 		return false;
 	}
-	else if (!planDataIsCorrect[2]) {
+	if (ui.nombreEntidad->currentText () == "") {
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Por favor seleccione una entidad financiera"));
+		ui.nombreEntidad->setFocus ();
+		return false;
+	}
+	if (ui.empresaGrupo->currentText () == "") {
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Por favor seleccione una empresa"));
+		ui.empresaGrupo->setFocus ();
+		return false;
+	}
+	if (ui.moneda->currentText () == "") {
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Por favor seleccione una moneda"));
+		ui.moneda->setFocus ();
+		return false;
+	}
+	if (ui.tipoTasa->currentText () == "") {
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Por favor seleccione un tipo de tasa de interés"));
+		ui.tipoTasa->setFocus ();
+		return false;
+	}
+	if (ui.frecuencia->currentText () == "") {
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Por favor seleccione una frecuencia de pagos"));
+		ui.frecuencia->setFocus ();
+		return false;
+	}
+
+
+	if (ui.numeroContratoOperacion->text () == "") {
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El número de contrato u operación es necesario"));
+		ui.numeroContratoOperacion->setFocus ();
+		return false;
+	}
+	if (!planDataIsCorrect[2]) {
 		// 3[2]  monto
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Es necesario que el monto de la operación sea mayor a cero"));
 		ui.monto->setFocus ();
 		return false;
 	}
-	else if (!planDataIsCorrect[3]) {
-		// 4[3]  iva
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Es necesario que el IVA sea mayor a cero"));
-		ui.iva->setFocus ();
-		return false;
-	}
-	else if (!planDataIsCorrect[4]) {
-		// 5[4]  cuota inicial
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La cuota inicial debe ser mayor a cero"));
-		ui.cuotaInicial->setFocus ();
-		return false;
-	}
-	else if (!planDataIsCorrect[5]) {
+	if (!planDataIsCorrect[5]) {
 		// 6[5]  interes fijo
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa fija debe ser mayor a cero"));
 		ui.interesFijo->setFocus ();
 		return false;
 	}
-	else if (!planDataIsCorrect[6]) {
+	if (!planDataIsCorrect[6]) {
 		//7  [6]  interes variable
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa variable debe ser mayor o igual a cero"));
-		ui.interesVariable->setFocus ();
-		return false;
+		if (ui.tipoTasa->currentText () != "Fijo") {
+			QMessageBox::critical (this, "Error", QString::fromLatin1 ("La tasa variable debe ser mayor o igual a cero"));
+			ui.interesVariable->setFocus ();
+			return false;
+		}
 	}
-	else if (!planDataIsCorrect[7]) {
-		//8  [7]  Monto Desem 1
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso debe ser mayor a cero"));
-		ui.montoDesem_1->setFocus ();
-		return false;
-	}
-	else if (!planDataIsCorrect[8]) {
-		//9  [8]  Monto Desem 2
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del desembolso debe ser mayor a cero"));
-		ui.montoDesem_2->setFocus ();
-		return false;
-	}
-	else if (!planDataIsCorrect[9]) {
-		//10[9]  Suma Montos Desem
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La suma de los desembolsos debe ser igual al monto de la operación"));
-		ui.montoDesem_1->setFocus ();
-		return false;
-	}
-	else {
-		return true;
-	}
+
+	return true;
 }
 
 void PlanDePagos::onMonedaChanged (QString moneda) {
@@ -1791,17 +1722,32 @@ void PlanDePagos::onMonedaChanged (QString moneda) {
 		ui.label_23->setText ("Pago de IVA (Bs)");
 	}
 	else {
-		ui.label_9->setText ("Monto ($us)");
-		ui.label_11->setText ("Cuota inicial ($us)");
-		ui.label_16->setText ("Monto desembolso 1 ($us)");
-		ui.label_17->setText ("Monto desembolso 2 ($us)");
-		ui.label_32->setText ("Monto desembolso 3 ($us)");
-		ui.label_34->setText ("Monto desembolso 4 ($us)");
-		ui.label_36->setText ("Monto desembolso 5 ($us)");
-		ui.label_20->setText ("Monto total del pago ($us)");
-		ui.label_21->setText ("Pago de capital ($us)");
-		ui.label_22->setText (QString::fromLatin1("Pago de interés ($us)"));
-		ui.label_23->setText ("Pago de IVA ($us)");
+		if (moneda == QString::fromLatin1( "Dólares (USD)")) {
+			ui.label_9->setText ("Monto ($us)");
+			ui.label_11->setText ("Cuota inicial ($us)");
+			ui.label_16->setText ("Monto desembolso 1 ($us)");
+			ui.label_17->setText ("Monto desembolso 2 ($us)");
+			ui.label_32->setText ("Monto desembolso 3 ($us)");
+			ui.label_34->setText ("Monto desembolso 4 ($us)");
+			ui.label_36->setText ("Monto desembolso 5 ($us)");
+			ui.label_20->setText ("Monto total del pago ($us)");
+			ui.label_21->setText ("Pago de capital ($us)");
+			ui.label_22->setText (QString::fromLatin1("Pago de interés ($us)"));
+			ui.label_23->setText ("Pago de IVA ($us)");
+		}
+		else {
+			ui.label_9->setText ("Monto (-)");
+			ui.label_11->setText ("Cuota inicial (-)");
+			ui.label_16->setText ("Monto desembolso 1 (-)");
+			ui.label_17->setText ("Monto desembolso 2 (-)");
+			ui.label_32->setText ("Monto desembolso 3 (-)");
+			ui.label_34->setText ("Monto desembolso 4 (-)");
+			ui.label_36->setText ("Monto desembolso 5 (-)");
+			ui.label_20->setText ("Monto total del pago (-)");
+			ui.label_21->setText ("Pago de capital (-)");
+			ui.label_22->setText (QString::fromLatin1 ("Pago de interés (-)"));
+			ui.label_23->setText ("Pago de IVA (-)");
+		}
 	}
 }
 
@@ -1819,7 +1765,7 @@ bool PlanDePagos::checkCuota () {
 	}
 	if (!cuotaDataIsCorrect[2]) {
 		//	3[2] pago capital
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del capital debe ser mayor o igual que cero y menor o igual que el monto del pago"));
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto del capital debe ser mayor o igual que cero, menor o igual que el saldo y menor o igual que el monto del pago"));
 		ui.pagoCapital->setFocus ();
 		return false;
 	}
@@ -1949,9 +1895,9 @@ void PlanDePagos::clearFields () {
 	ui.tipoTasa->setCurrentIndex (-1);
 	ui.interesFijo->setText ("");
 	ui.interesVariable->setText ("");
-	ui.plazo->setValue (-1);
+	ui.plazo->setValue (1);
 	ui.frecuencia->setCurrentIndex (-1);
-	ui.fechaVencimiento->setDate (QDate::currentDate ());
+	ui.fechaVencimiento->setDate (QDate::currentDate ().addMonths(ui.plazo->value()));
 	ui.fechaDesem_1->setDate (QDate::currentDate ());
 	ui.montoDesem_1->setText ("");
 	ui.fechaDesem_2->setDate (QDate::currentDate ());
@@ -2069,6 +2015,14 @@ void PlanDePagos::onSaveCuota () {
 	}
 }
 
+void PlanDePagos::onNewOperation () {
+	clearFields ();
+	ui.tipoDeOperacion->setFocus ();
+	ui.saveCuota->setEnabled (false);
+	resetPlanValidators ();
+	resetCuotaValidators ();
+}
+
 void PlanDePagos::onSavePlan () {
 	int tipoOperacion = ui.tipoDeOperacion->currentIndex ();
 
@@ -2089,7 +2043,8 @@ void PlanDePagos::onSavePlan () {
 		casoSeguro ();
 		break;
 	default:
-		QMessageBox::information (this, "Sin implementar", QString::fromLatin1 ("No implementado aún"));
+		QMessageBox::information (this, "", QString::fromLatin1 ("Por favor seleccione un tipo de operación"));
+		ui.tipoDeOperacion->setFocus ();
 		break;
 	}
 }

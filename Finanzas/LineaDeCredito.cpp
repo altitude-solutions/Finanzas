@@ -26,7 +26,6 @@ LineaDeCredito::LineaDeCredito(QWidget *parent): QWidget(parent) {
 	connect (ui.monto, &QLineEdit::returnPressed, ui.saveButton, &QPushButton::click);
 	connect (ui.saveButton, &QPushButton::clicked, this, &LineaDeCredito::onSaveClicked);
 
-
 	// ===============================================
 	// Setup date picker to use a calendar popup and it's current, maximum date 
 	// ===============================================
@@ -157,68 +156,69 @@ void LineaDeCredito::onTabSelected () {
 // save linea de credito
 void LineaDeCredito::onSaveClicked () {
 	if ( check() ) {
-		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
-		connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
-			QByteArray binReply = reply->readAll ();
-			if (reply->error ()) {
-				QJsonDocument errorJson = QJsonDocument::fromJson (binReply);
-				if (errorJson.object ().value ("err").toObject ().contains ("message")) {
-					QMessageBox::critical (this, "Error", QString::fromLatin1 (errorJson.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
-				} else {
-					QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (errorJson.toJson ().toStdString ()));
+		QMessageBox::StandardButton answer = QMessageBox::StandardButton::No;
+		if (editing) {
+			answer = QMessageBox::question (this, QString::fromLatin1 ("Actualizar"), QString::fromLatin1 ("¿Actualizar la línea de crédito \"") + lineasDeCredito[editingID].object ().value ("codigo").toString () + "\"?");
+		}
+		if (answer == QMessageBox::StandardButton::Yes || !editing) {
+			QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+			connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+				QByteArray binReply = reply->readAll ();
+				if (reply->error ()) {
+					QJsonDocument errorJson = QJsonDocument::fromJson (binReply);
+					if (errorJson.object ().value ("err").toObject ().contains ("message")) {
+						QMessageBox::critical (this, "Error", QString::fromLatin1 (errorJson.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
+					} else {
+						QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (errorJson.toJson ().toStdString ()));
+					}
+					ui.saveButton->setEnabled (true);
+					return;
 				}
+				// everything went right then i have a response with the new row of the table
+				// FIXME: Should be other methond
+				loadLineasDeCredito ();
+
+				resetValidarors ();
 				ui.saveButton->setEnabled (true);
-				return;
+				clearFields ();
+				reply->deleteLater ();
+			});
+			QNetworkRequest request;
+			if (editing) {
+				request.setUrl (QUrl (targetAddress + "/lineaDeCredito/" + QString::number(editingID)));
 			}
-			// everything went right then i have a response with the new row of the table
-			// FIXME: Should be other methond
-			loadLineasDeCredito ();
+			else {
+				request.setUrl (QUrl (targetAddress + "/lineaDeCredito"));
+			}
+			request.setRawHeader ("token", token.toUtf8 ());
+			request.setRawHeader ("Content-Type", "application/json");
 
-			resetValidarors ();
-			ui.saveButton->setEnabled (true);
-			clearFields ();
-			reply->deleteLater ();
-		});
-		QNetworkRequest request;
-		if (editing) {
-			request.setUrl (QUrl (targetAddress + "/lineaDeCredito/" + QString::number(editingID)));
-		}
-		else {
-			request.setUrl (QUrl (targetAddress + "/lineaDeCredito"));
-		}
-		request.setRawHeader ("token", token.toUtf8 ());
-		request.setRawHeader ("Content-Type", "application/json");
+			QJsonDocument body;
+			QJsonObject bodyContent;
+			bodyContent.insert ("codigo", ui.codigoLinea->text ());
+			bodyContent.insert ("moneda", ui.moneda->currentText ());
+			QDateTime fecha = QDateTime (ui.fechaFirma->date ());
+			bodyContent.insert ("fechaFirma", fecha.toMSecsSinceEpoch ());
+			QDateTime fecha2 = QDateTime (ui.fechaVencimiento->date ());
+			bodyContent.insert ("fechaVencimiento", fecha2.toMSecsSinceEpoch ());
+			bodyContent.insert ("monto", ui.monto->text ().toDouble ());
+			bodyContent.insert ("entidad", listaEntidades[ui.nombreEntidad->currentText ()]["id"].toInt ());
+			bodyContent.insert ("empresaGrupo", listaEmpresas[ui.empresaGrupo->currentText ()].toInt ());
 
-		QJsonDocument body;
-		QJsonObject bodyContent;
-		bodyContent.insert ("codigo", ui.codigoLinea->text ());
-		bodyContent.insert ("moneda", ui.moneda->currentText ());
-		QDateTime fecha = QDateTime (ui.fechaFirma->date ());
-		bodyContent.insert ("fechaFirma", fecha.toMSecsSinceEpoch ());
-		QDateTime fecha2 = QDateTime (ui.fechaVencimiento->date ());
-		bodyContent.insert ("fechaVencimiento", fecha2.toMSecsSinceEpoch ());
-		bodyContent.insert ("monto", ui.monto->text ().toDouble ());
-		bodyContent.insert ("entidad", listaEntidades[ui.nombreEntidad->currentText ()]["id"].toInt ());
-		bodyContent.insert ("empresaGrupo", listaEmpresas[ui.empresaGrupo->currentText ()].toInt ());
-
-		body.setObject (bodyContent);
-		if (editing) {
-			nam->put (request, body.toJson ());
+			body.setObject (bodyContent);
+			if (editing) {
+				nam->put (request, body.toJson ());
+			}
+			else {
+				nam->post (request, body.toJson ());
+			}
+			ui.saveButton->setEnabled (false);
 		}
-		else {
-			nam->post (request, body.toJson ());
-		}
-
-		ui.saveButton->setEnabled (false);
 	}
 }
 
 void LineaDeCredito::onCancelClicked () {
-	QMessageBox::StandardButton answer = QMessageBox::question (this, "Cancelar registro", QString::fromLatin1 ("¿Está seguro?") );
-
-	if (answer == QMessageBox::StandardButton::Yes) {
-		clearFields ();
-	}
+	clearFields ();
 }
 
 void LineaDeCredito::onEditClicked () {
@@ -243,21 +243,24 @@ void LineaDeCredito::onDeleteClicked () {
 	if(ui.tableWidget->selectedItems().length() > 0) {
 		int row = ui.tableWidget->selectedItems ().at (0)->row ();
 		int id = ui.tableWidget->item (row, 8)->text ().toInt ();
-		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
-		connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
-			if (reply->error ()) {
-				QMessageBox::critical (this, "Error", QString::fromStdString ("No se pudo borrar la línea de crédito"));
-			}
-			else {
-				QMessageBox::information (this, QString::fromLatin1("Éxito"), QString::fromLatin1 ("Línea de crédito borrada con éxito"));
-			}
-			loadLineasDeCredito ();
-			reply->deleteLater ();
-		});
-		QNetworkRequest request;
-		request.setUrl (QUrl (this->targetAddress + "/lineaDeCredito/" + QString::number(id) ));
-		request.setRawHeader ("token", this->token.toUtf8 ());
-		nam->deleteResource (request);
+		QMessageBox::StandardButton answer = QMessageBox::question (this, QString::fromLatin1("Eliminar"), QString::fromLatin1("¿Eliminar la línea de crédito \"") + ui.tableWidget->item(row,2)->text() + "\"?" );
+		if (answer == QMessageBox::StandardButton::Yes) {
+			QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+			connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+				if (reply->error ()) {
+					QMessageBox::critical (this, "Error", QString::fromStdString ("No se pudo borrar la línea de crédito"));
+				}
+				else {
+					QMessageBox::information (this, QString::fromLatin1("Éxito"), QString::fromLatin1 ("Línea de crédito borrada con éxito"));
+				}
+				loadLineasDeCredito ();
+				reply->deleteLater ();
+			});
+			QNetworkRequest request;
+			request.setUrl (QUrl (this->targetAddress + "/lineaDeCredito/" + QString::number(id) ));
+			request.setRawHeader ("token", this->token.toUtf8 ());
+			nam->deleteResource (request);
+		}
 	}
 	else {
 		QMessageBox::warning (this, QString::fromLatin1("Línea de crédito sin seleccionar"), QString::fromLatin1("Por favor seleccione la línea de crédito que desea borrar"));
@@ -390,15 +393,25 @@ void LineaDeCredito::setTableHeaders () {
 
 	double totalWidth = tableSize.width ();
 	// Set column width to a proper size
-	ui.tableWidget->setColumnWidth (0, 0.13 * totalWidth ); // fecha firma
-	ui.tableWidget->setColumnWidth (1, 0.13 * totalWidth ); // fecha vencimiento
-	ui.tableWidget->setColumnWidth (2, 0.12 * totalWidth ); // codigo linea de credito
-	ui.tableWidget->setColumnWidth (3, 0.19 * totalWidth ); // nombre entidad
-	ui.tableWidget->setColumnWidth (4, 0.10 * totalWidth ); // tipo de entidad
-	ui.tableWidget->setColumnWidth (5, 0.10 * totalWidth ); // empresa grupo
-	ui.tableWidget->setColumnWidth (6, 0.08 * totalWidth ); // moneda
-	ui.tableWidget->setColumnWidth (7, 0.148 * totalWidth ); // monto
-	ui.tableWidget->setColumnWidth (8, 0);   // ID
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (0, QHeaderView::ResizeMode::Stretch);
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (1, QHeaderView::ResizeMode::Stretch);
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (2, QHeaderView::ResizeMode::Stretch);
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (3, QHeaderView::ResizeMode::Stretch);
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (4, QHeaderView::ResizeMode::Stretch);
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (5, QHeaderView::ResizeMode::Stretch);
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (6, QHeaderView::ResizeMode::Stretch);
+	ui.tableWidget->horizontalHeader ()->setSectionResizeMode (7, QHeaderView::ResizeMode::Stretch);
+
+	//ui.tableWidget->setColumnWidth (0, 0.13 * totalWidth ); // fecha firma
+	//ui.tableWidget->setColumnWidth (1, 0.13 * totalWidth ); // fecha vencimiento
+	//ui.tableWidget->setColumnWidth (2, 0.12 * totalWidth ); // codigo linea de credito
+	//ui.tableWidget->setColumnWidth (3, 0.19 * totalWidth ); // nombre entidad
+	//ui.tableWidget->setColumnWidth (4, 0.10 * totalWidth ); // tipo de entidad
+	//ui.tableWidget->setColumnWidth (5, 0.10 * totalWidth ); // empresa grupo
+	//ui.tableWidget->setColumnWidth (6, 0.08 * totalWidth ); // moneda
+	//ui.tableWidget->setColumnWidth (7, 0.15 * totalWidth ); // monto
+	//ui.tableWidget->setColumnWidth (8, 0);   // ID
+	ui.tableWidget->hideColumn (8);
 
 	// Remove row numbers
 	ui.tableWidget->verticalHeader ()->hide ();
@@ -429,7 +442,9 @@ void LineaDeCredito::refreshTable (QJsonDocument data) {
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 5, new QTableWidgetItem (row.toObject ().value ("empresas_grupo").toObject ().value ("empresa").toString ()));
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 6, new QTableWidgetItem (row.toObject ().value ("moneda").toString ()));
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 7, new QTableWidgetItem (QString::number (row.toObject ().value ("monto").toDouble (), 'g', 15)));
+		
 		ui.tableWidget->item (ui.tableWidget->rowCount () - 1, 7)->setTextAlignment (Qt::AlignmentFlag::AlignRight);	// Align monto to the right
+
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 8, new QTableWidgetItem (QString::number (row.toObject ().value ("id").toInt ())));
 
 		// TODO: color the ones that have reached its limit
@@ -493,8 +508,7 @@ void LineaDeCredito::clearFields () {
 	ui.fechaVencimiento->setDate (QDate::currentDate ());
 
 	ui.codigoLinea->setFocus ();
-	if (editing) {
-		editing = false;
-		editingID = 0;
-	}
+
+	editing = false;
+	editingID = 0;
 }

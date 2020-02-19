@@ -70,7 +70,7 @@ void PagosEfectivos::setTableHeaders () {
 
 void PagosEfectivos::loadEmpresasGrupo () {
 	listaEmpresas.clear ();
-	ui.grupo->clear ();
+	//ui.grupo->clear ();
 	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
 	connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
 		QByteArray resBin = reply->readAll ();
@@ -81,7 +81,7 @@ void PagosEfectivos::loadEmpresasGrupo () {
 		}
 		QJsonDocument okJson = QJsonDocument::fromJson (resBin);
 		foreach (QJsonValue entidad, okJson.object ().value ("empresas").toArray ()) {
-			ui.grupo->addItem (entidad.toObject ().value ("empresa").toString ());
+			//ui.grupo->addItem (entidad.toObject ().value ("empresa").toString ());
 			listaEmpresas.insert (entidad.toObject ().value ("empresa").toString (), QString::number (entidad.toObject ().value ("id").toInt ()));
 		}
 		reply->deleteLater ();
@@ -96,7 +96,7 @@ void PagosEfectivos::loadEmpresasGrupo () {
 
 void PagosEfectivos::loadEntidadesFinancieras () {
 	listaEntidades.clear ();
-	ui.entidad->clear ();
+	//ui.entidad->clear ();
 	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
 	connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
 		QByteArray resBin = reply->readAll ();
@@ -107,7 +107,7 @@ void PagosEfectivos::loadEntidadesFinancieras () {
 		}
 		QJsonDocument okJson = QJsonDocument::fromJson (resBin);
 		foreach (QJsonValue entidad, okJson.object ().value ("entidades").toArray ()) {
-			ui.entidad->addItem (entidad.toObject ().value ("nombreEntidad").toString ());
+			//ui.entidad->addItem (entidad.toObject ().value ("nombreEntidad").toString ());
 			QHash<QString, QString> current;
 			current.insert ("id", QString::number (entidad.toObject ().value ("id").toInt ()));
 			current.insert ("nombreEntidad", entidad.toObject ().value ("nombreEntidad").toString ());

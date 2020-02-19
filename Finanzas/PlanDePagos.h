@@ -80,6 +80,8 @@ private slots:
 	// Save slots
 	void onSavePlan ();
 	void onSaveCuota ();
+	// New operation
+	void onNewOperation ();
 private:
 	// data loaders
 	void loadEntidadesFinancieras ();
@@ -117,6 +119,7 @@ private:
 	bool checkCasoLeasing ();
 	bool checkCasoLeaseBack ();
 	bool checkCasoSeguro ();
+	bool checkGeneral ();
 
 	// moneda changed
 	void onMonedaChanged (QString moneda);
@@ -149,7 +152,6 @@ private:
 	QList<int> paidCuotas;
 	QDate lastDate;
 	QHash<QString, QString> temporalVariables;
-
 
 	// Validation flags
 	bool* planDataIsCorrect;

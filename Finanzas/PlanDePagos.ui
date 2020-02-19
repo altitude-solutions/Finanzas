@@ -2107,51 +2107,6 @@ QLineEdit::focus {
             </property>
            </spacer>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <spacer name="horizontalSpacer_5">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="savePlan">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QPushButton {
-	background-color: #1D8680;
-	border-style: outset;
-	border-radius: 12px;
-	font: 12pt &quot;MS Shell Dlg 2&quot;;
-	color: white;
-	min-width: 2em;
-	max-width:10em;
-	padding: 3px  6px 3px 6px;
-}
-
-QPushButton::focus,
-QPushButton::hover {
-	background-color: #109491;
-	border-color: #ededef;
-}</string>
-              </property>
-              <property name="text">
-               <string>Guardar Plan de Pagos</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </item>
        </layout>
@@ -2527,52 +2482,6 @@ QLineEdit::focus {
             </item>
            </layout>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="saveCuota">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QPushButton {
-	background-color: #1D8680;
-	border-style: outset;
-	border-radius: 12px;
-	font: 12pt &quot;MS Shell Dlg 2&quot;;
-	color: white;
-	min-width: 2em;
-	max-width:10em;
-	padding: 3px  6px 3px 6px;
-}
-
-QPushButton::focus,
-QPushButton::hover {
-	background-color: #109491;
-	border-color: #ededef;
-}
-</string>
-              </property>
-              <property name="text">
-               <string>Añadir cuota</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
        </item>
@@ -2593,6 +2502,132 @@ QPushButton::hover {
      </item>
      <item>
       <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="savePlan">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: #1D8680;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 2em;
+	max-width:10em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #109491;
+	border-color: #ededef;
+}</string>
+       </property>
+       <property name="text">
+        <string>Guardar Plan de Pagos</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="newButton">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: #1D8680;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:10em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #109491;
+	border-color: #ededef;
+}
+</string>
+       </property>
+       <property name="text">
+        <string>Nuevo</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_7">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveCuota">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: #1D8680;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:10em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #109491;
+	border-color: #ededef;
+}
+</string>
+       </property>
+       <property name="text">
+        <string>Añadir cuota</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_5">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -2690,14 +2725,12 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>montoDesem_4</tabstop>
   <tabstop>fechaDesem_5</tabstop>
   <tabstop>montoDesem_5</tabstop>
-  <tabstop>savePlan</tabstop>
   <tabstop>numeroCuota</tabstop>
   <tabstop>fechaPago</tabstop>
   <tabstop>pagoMonto</tabstop>
   <tabstop>pagoCapital</tabstop>
   <tabstop>pagoInteres</tabstop>
   <tabstop>pagoIva</tabstop>
-  <tabstop>saveCuota</tabstop>
   <tabstop>tableWidget</tabstop>
  </tabstops>
  <resources>
