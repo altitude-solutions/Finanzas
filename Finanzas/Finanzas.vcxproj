@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddCuotaEfectiva.cpp" />
     <ClCompile Include="AppHeader.cpp" />
     <ClCompile Include="LineaDeCredito.cpp" />
     <ClCompile Include="Login.cpp" />
@@ -100,6 +101,7 @@
     <QtMoc Include="Login.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="AddCuotaEfectiva.ui" />
     <QtUic Include="AppHeader.ui" />
     <QtUic Include="LineaDeCredito.ui" />
     <QtUic Include="Login.ui" />
@@ -126,6 +128,7 @@
     <QtMoc Include="PagosEfectivos.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="AddCuotaEfectiva.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

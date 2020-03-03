@@ -269,6 +269,9 @@ void PlanDePagos::setTableHeaders () {
 // Use it to setup current tab
 void PlanDePagos::onTabSelected () {
 	// Tab setup
+	loadTiposDeEntidad ();
+	loadEntidadesFinancieras ();
+	loadEmpresasGrupo ();
 }
 
 // Set auth data
@@ -351,7 +354,7 @@ void PlanDePagos::pagoCapitalChanged (QString capital) {
 		pagoCapital = ui.pagoCapital->text ().toDouble (),
 		pagoIva = ui.pagoIva->text ().toDouble ();
 
-	ui.pagoInteres->setText (QString::number (pagoTotal - (pagoCapital + pagoIva), 'g', 15));
+	ui.pagoInteres->setText (QString::number (pagoTotal - (pagoCapital + pagoIva), 'f', 2));
 
 	double pagoInteres = ui.pagoInteres->text ().toDouble ();
 
@@ -464,7 +467,7 @@ void PlanDePagos::loadLineasDeCredito (int entidad_id) {
 			listaLineas << linea.toObject().value("codigo").toString();
 			QHash <QString, QString> current;
 			current.insert ("id", QString::number (linea.toObject ().value ("id").toInt ()));
-			current.insert ("monto", QString::number (linea.toObject ().value ("monto").toDouble (), 'g', 15));
+			current.insert ("monto", QString::number (linea.toObject ().value ("monto").toDouble (), 'f', 2));
 			current.insert ("empresa", linea.toObject ().value ("empresas_grupo").toObject ().value ("empresa").toString ());
 			current.insert ("entidad", linea.toObject ().value ("entidades_financiera").toObject ().value ("nombreEntidad").toString ());
 			current.insert ("moneda", linea.toObject ().value ("moneda").toString());
@@ -591,10 +594,12 @@ void PlanDePagos::interesVariableChanged (QString interes) {
 }
 
 void PlanDePagos::ivaAutoFill (QString monto) {
-	if (ui.tipoDeOperacion->currentText () == QString::fromLatin1 ("Lease Back")) {
+	if (ui.tipoDeOperacion->currentText () == QString::fromLatin1 ("Lease Back") || ui.tipoDeOperacion->currentText () == QString::fromLatin1 ("Leasing")) {
 		double usable = monto.toDouble ();
 		double computado = usable * 0.13;
-		ui.iva->setText (QString::number (computado));
+		ui.iva->setText (QString::number (computado, 'f', 2));
+
+		this->creditoFiscal = computado;
 	}
 }
 
@@ -602,7 +607,7 @@ void PlanDePagos::pagoIvaAutofill (QString monto) {
 	if (ui.tipoDeOperacion->currentText () == QString::fromLatin1 ("Leasing") || ui.tipoDeOperacion->currentText () == QString::fromLatin1 ("Lease Back")) {
 		double usable = monto.toDouble ();
 		double computado = 0.13 * usable;
-		ui.pagoIva->setText (QString::number (computado));
+		ui.pagoIva->setText (QString::number (computado, 'f', 2));
 	}
 }
 
@@ -643,7 +648,7 @@ void PlanDePagos::pagoInteresChanged (QString interes) {
 		pagoInteres = ui.pagoInteres->text ().toDouble (),
 		pagoIva = ui.pagoIva->text ().toDouble ();
 
-	ui.pagoCapital->setText (QString::number ( pagoTotal - (pagoInteres + pagoIva), 'g', 15 ));
+	ui.pagoCapital->setText (QString::number ( pagoTotal - (pagoInteres + pagoIva), 'f', 2 ));
 
 	double pagoCapital = ui.pagoCapital->text ().toDouble ();
 
@@ -1113,6 +1118,7 @@ void PlanDePagos::casoLeasing () {
 		QString detalle = ui.detalle->text ();
 		QString moneda = ui.moneda->currentText ();
 		double monto = ui.monto->text ().toDouble ();
+		double iva = ui.iva->text ().toDouble ();
 		double cuotaInicial = ui.cuotaInicial->text ().toDouble(); // Cuota inicial
 		QString tipoTasa = ui.tipoTasa->currentText ();
 		double interesFijo = ui.interesFijo->text ().toDouble ();
@@ -1172,6 +1178,7 @@ void PlanDePagos::casoLeasing () {
 		bodyContent.insert ("detalle", detalle);
 		bodyContent.insert ("moneda", moneda);
 		bodyContent.insert ("monto", monto);
+		bodyContent.insert ("iva", iva);
 		bodyContent.insert ("cuotaInicial", cuotaInicial);
 		bodyContent.insert ("tipoDeTasa", tipoTasa);
 		bodyContent.insert ("interesFijo", interesFijo);
@@ -1208,6 +1215,7 @@ void PlanDePagos::casoLeaseBack () {
 		QString detalle = ui.detalle->text ();
 		QString moneda = ui.moneda->currentText ();
 		double monto = ui.monto->text ().toDouble ();
+		double iva = ui.iva->text ().toDouble ();
 		double cuotaInicial = ui.cuotaInicial->text ().toDouble (); // Cuota inicial
 		QString tipoTasa = ui.tipoTasa->currentText ();
 		double interesFijo = ui.interesFijo->text ().toDouble ();
@@ -1269,6 +1277,7 @@ void PlanDePagos::casoLeaseBack () {
 		bodyContent.insert ("detalle", detalle);
 		bodyContent.insert ("moneda", moneda);
 		bodyContent.insert ("monto", monto);
+		bodyContent.insert ("iva", iva);
 		bodyContent.insert ("cuotaInicial", cuotaInicial);
 		bodyContent.insert ("tipoDeTasa", tipoTasa);
 		bodyContent.insert ("interesFijo", interesFijo);
@@ -1327,6 +1336,7 @@ void PlanDePagos::casoCreditoSetup () {
 	ui.cuotaInicial->setEnabled (false);
 	ui.codigoLineaCredito->setEnabled (false);
 	ui.interesVariable->setEnabled (false);
+	ui.moneda->setEnabled (true);
 
 	ui.codigoLineaCredito->setText ("");
 	ui.cuotaInicial->setText ("");
@@ -1384,6 +1394,7 @@ void PlanDePagos::casoLeasingSetup () {
 	ui.cuotaInicial->setEnabled (true);
 	ui.codigoLineaCredito->setEnabled (false);
 	ui.interesVariable->setEnabled (false);
+	ui.moneda->setEnabled (true);
 
 	ui.fechaDesem_1->setEnabled (false);
 	ui.montoDesem_1->setEnabled (false);
@@ -1399,6 +1410,7 @@ void PlanDePagos::casoLeasingSetup () {
 	ui.codigoLineaCredito->setText ("");
 	ui.cuotaInicial->setText ("");
 	ui.pagoIva->setText ("0.0");
+	ui.iva->setText ("0.0");
 	ui.iva->setText ("");
 }
 
@@ -1410,6 +1422,7 @@ void PlanDePagos::casoLeaseBackSetup () {
 	ui.cuotaInicial->setEnabled (true);
 	ui.codigoLineaCredito->setEnabled (false);
 	ui.interesVariable->setEnabled (false);
+	ui.moneda->setEnabled (true);
 
 	ui.codigoLineaCredito->setText ("");
 	ui.cuotaInicial->setText ("");
@@ -1976,19 +1989,23 @@ void PlanDePagos::onSaveCuota () {
 				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 6, new QTableWidgetItem (QString::number (QDateTime::fromMSecsSinceEpoch (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("fechaDePago").toVariant ().toLongLong ()).date ().year ())));
 				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 7, new QTableWidgetItem (QDate::shortMonthName (QDateTime::fromMSecsSinceEpoch (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("fechaDePago").toVariant ().toLongLong ()).date ().month ()) + "/" + QString::number (QDateTime::fromMSecsSinceEpoch (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("fechaDePago").toVariant ().toLongLong ()).date ().year ())));
 				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 8, new QTableWidgetItem (QDateTime::fromMSecsSinceEpoch (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("fechaDePago").toVariant ().toLongLong ()).toString ("dd/MM/yyyy")));
-				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 9, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("montoTotalDelPago").toDouble (), 'g', 15)));
-				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 10, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeCapital").toDouble (), 'g', 15)));
-				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 11, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeInteres").toDouble (), 'g', 15)));
-				if (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().contains ("pagoDeIva")) {
-					ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 12, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeIva").toDouble (), 'g', 15)));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 9, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("montoTotalDelPago").toDouble (), 'f', 2)));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 10, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeCapital").toDouble (), 'f', 2)));
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 11, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeInteres").toDouble (), 'f', 2)));
+				if (!jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeIva").isNull()) {
+					ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 12, new QTableWidgetItem (QString::number (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeIva").toDouble (), 'f', 2)));
 				}
 				else {
-					ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 12, new QTableWidgetItem (QString::number (0.0, 'g', 15)));
+					ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 12, new QTableWidgetItem (QString::number (0.0, 'f', 2)));
 				}
-				this->saldoCapital -= jsonReply.object().value("cuotaPlanDePagos").toObject().value("pagoDeCapital").toDouble();
-				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 13, new QTableWidgetItem (QString::number (this->saldoCapital, 'g', 15)));	// saldo capital
-				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 14, new QTableWidgetItem (QString::number (0.0, 'g', 15)));	// credito fiscal
-				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 15, new QTableWidgetItem (QString::number (this->saldoCapital, 'g', 15)));	// saldo capital real
+				this->saldoCapital -= (jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeCapital").toDouble () + this->creditoFiscal);
+				if (!jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeIva").isNull ()) {
+					this->creditoFiscal -= jsonReply.object ().value ("cuotaPlanDePagos").toObject ().value ("pagoDeIva").toDouble ();
+				}
+				this->saldoCapitalReal = this->saldoCapital + this->creditoFiscal;
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 13, new QTableWidgetItem (QString::number (this->saldoCapital, 'f', 2)));		// saldo capital
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 14, new QTableWidgetItem (QString::number (this->creditoFiscal, 'f', 2)));		// credito fiscal
+				ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 15, new QTableWidgetItem (QString::number (this->saldoCapitalReal, 'f', 2)));	// saldo capital real
 			}
 			ui.saveCuota->setEnabled (true);
 			ui.numeroCuota->setValue (ui.numeroCuota->value () + 1);

@@ -151,6 +151,11 @@ void LineaDeCredito::setAuthData (QString address, QString token, QString userNa
 // Use it to setup the current tab
 void LineaDeCredito::onTabSelected () {
 	// Tab setup
+	loadEntidadesFinancieras ();
+	loadTiposDeEntidad ();
+	loadEmpresasGrupo ();
+
+	loadLineasDeCredito ();
 }
 
 // save linea de credito
@@ -441,7 +446,7 @@ void LineaDeCredito::refreshTable (QJsonDocument data) {
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 4, new QTableWidgetItem (row.toObject ().value ("entidades_financiera").toObject ().value ("tipos_de_entidad").toObject ().value ("tipoDeEntidad").toString ()));
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 5, new QTableWidgetItem (row.toObject ().value ("empresas_grupo").toObject ().value ("empresa").toString ()));
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 6, new QTableWidgetItem (row.toObject ().value ("moneda").toString ()));
-		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 7, new QTableWidgetItem (QString::number (row.toObject ().value ("monto").toDouble (), 'g', 15)));
+		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 7, new QTableWidgetItem (QString::number (row.toObject ().value ("monto").toDouble (), 'f', 2)));
 		
 		ui.tableWidget->item (ui.tableWidget->rowCount () - 1, 7)->setTextAlignment (Qt::AlignmentFlag::AlignRight);	// Align monto to the right
 

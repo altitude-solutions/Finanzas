@@ -15,8 +15,10 @@
 #include <QPixMap>
 #include <QMessageBox>
 
+
 Login::Login(QWidget *parent): QWidget(parent) {
 	ui.setupUi(this);
+
 	// Create and hide second window
 	mainWindow.hide ();
 	this->setFixedSize ( QSize(301, 200) );
@@ -111,7 +113,6 @@ void Login::onLoginButtonClicked () {
 		foreach (QJsonValue perm, response.object ().value ("user").toObject ().value ("permisos").toArray ()) {
 			permissions << perm.toString ();
 		}
-		//qDebug () << "Permisos" << permissions;
 
 		// enable login button
 		ui.loginButton->setEnabled (true);

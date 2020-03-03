@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AddCuotaEfectiva</class>
+ <widget class="QDialog" name="AddCuotaEfectiva">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>452</width>
+    <height>289</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>AddCuotaEfectiva</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white;</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="styleSheet">
+        <string notr="true">font: 20pt &quot;MS Shell Dlg 2&quot;;
+color: #333333</string>
+       </property>
+       <property name="text">
+        <string>Añadir Cuota</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QFormLayout" name="formLayout_3">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_19">
+       <property name="text">
+        <string>Número de Cuota</string>
+       </property>
+       <property name="buddy">
+        <cstring>numeroCuota</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="numeroCuota">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QSpinBox {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 3px;
+}
+
+QSpinBox::hover {
+	border-color: black;
+}
+
+QSpinBox::focus {
+	background-color: #b5b5b5;
+}
+
+
+QSpinBox::up-button {
+	 image: url(:/Resources/img/up.png);
+    width: 20px;
+    height: 10px;
+}
+
+QSpinBox::down-button {
+	 image: url(:/Resources/img/down.png);
+    width: 20px;
+    height: 10px;
+}
+
+</string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_29">
+       <property name="text">
+        <string>Fecha del Pago</string>
+       </property>
+       <property name="buddy">
+        <cstring>fechaPago</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDateEdit" name="fechaPago">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QDateEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover {
+	border-color: black;
+}
+
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+
+QDateEdit::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QDateEdit::down-arrow {
+    image: url(:/Resources/img/calendar.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+
+/*
+QDateEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover {
+	border-color: black;
+}
+
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+QCalendarWidget QToolButton {
+/*	height: 35px;*/
+  	/*width: parent;*/
+  	color: black;
+  	font-size: 14px;
+  	icon-size: 20px, 20px;
+  	background-color: #ebeded
+}
+
+QCalendarWidget QMenu {
+  	/*width: 150px;*/
+  	left: 20px;
+  	color: black;
+  	font-size: 14px;
+  	background-color: #ebeded;
+}
+
+
+QCalendarWidget QSpinBox { 
+  	background-color: #EBEDED;
+	border-style: outset;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	padding: 2px;
+}
+
+/*
+QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
+QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
+QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
+QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
+*/
+
+/* header row */
+QCalendarWidget QWidget {
+	alternate-background-color: #d7d7d7;
+}
+
+/* normal days */
+QCalendarWidget QAbstractItemView:enabled {
+	font-size:14px;
+	color: black;
+	background-color: #ebeded;
+	selection-background-color: #d7d7d7; 
+	selection-color: black;
+}
+
+QCalendarWidget QAbstractItemView:!enabled {
+	background-color: red;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+	background-color: #ebeded;
+	color: gray;
+}
+
+</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_20">
+       <property name="text">
+        <string>Monto total del pago (Bs)</string>
+       </property>
+       <property name="buddy">
+        <cstring>pagoMonto</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="pagoMonto">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover {
+	border-color: black;
+}
+
+QLineEdit::focus {
+	background-color: #b5b5b5;
+}</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_21">
+       <property name="text">
+        <string>Pago de capital (Bs)</string>
+       </property>
+       <property name="buddy">
+        <cstring>pagoCapital</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="pagoCapital">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover {
+	border-color: black;
+}
+
+QLineEdit::focus {
+	background-color: #b5b5b5;
+}</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_22">
+       <property name="text">
+        <string>Pago de interés (Bs)</string>
+       </property>
+       <property name="buddy">
+        <cstring>pagoInteres</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="pagoInteres">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover {
+	border-color: black;
+}
+
+QLineEdit::focus {
+	background-color: #b5b5b5;
+}</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_23">
+       <property name="text">
+        <string>Pago de IVA (Bs)</string>
+       </property>
+       <property name="buddy">
+        <cstring>pagoIva</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="pagoIva">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover {
+	border-color: black;
+}
+
+QLineEdit::focus {
+	background-color: #b5b5b5;
+}</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addButton">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: #1D8680;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:7em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #109491;
+	border-color: #ededef;
+}
+</string>
+       </property>
+       <property name="text">
+        <string>text</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: #EB403E;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:7em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #EB553E;
+	border-color: #EB403E;
+}</string>
+       </property>
+       <property name="text">
+        <string>Cancelar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

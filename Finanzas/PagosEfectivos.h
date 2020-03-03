@@ -3,6 +3,9 @@
 #include <QWidget>
 #include "ui_PagosEfectivos.h"
 #include <QHash>
+#include <QStringListModel>
+
+#include "AddCuotaEfectiva.h"
 
 class PagosEfectivos : public QWidget {
 	Q_OBJECT
@@ -19,13 +22,14 @@ public slots:
 private slots:
 	void saveButtonClicked ();
 	void findButtonClicked ();
+	void searchPlan (QString  filter);
+	void loadSelectedPlan (int id);
 
 private:
-	void setTableHeaders ();
 	void loadEmpresasGrupo ();
 	void loadEntidadesFinancieras ();
-	void loadPlanesData ();
-
+	void loadPlanesData (QString query = "");
+	void setPlanTableHeaders ();
 
 	Ui::PagosEfectivos ui;
 
@@ -38,6 +42,9 @@ private:
 	QHash <QString, QString> listaEmpresas;
 	QHash <QString, QHash<QString, QString>> listaEntidades;
 
+	QStringListModel *planesDePagoModel;
+	QHash<QString, int> planesDePagoData;
 
-	QHash<QString, QJsonDocument> planesDePagoData;
+	int currentPlan;
+	bool planLoaded;
 };

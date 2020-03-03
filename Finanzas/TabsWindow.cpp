@@ -47,6 +47,7 @@ TabsWindow::TabsWindow(QWidget *parent): QMainWindow(parent) {
 	thirdLayout->addWidget (thirdTabHeader, 1);
 	thirdLayout->addWidget (pagosEfectivos, 8);
 	thirdLayout->setMargin (0);
+	thirdLayout->setSpacing (0); // remove space between header and body
 	thirdTab->setLayout (thirdLayout);
 	ui.tabWidget->addTab (thirdTab, QString::fromLatin1 ("Pagos Efectivos"));
 	connect (thirdTabHeader, &AppHeader::logoutButton, this, &TabsWindow::logout);
