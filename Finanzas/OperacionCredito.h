@@ -13,8 +13,8 @@ public:
 
 	bool validate ();
 	void save ();
-	void load (QJsonDocument object);
-	void update (QJsonDocument object);
+	void load (int id);
+	void update ();
 
 
 private:
@@ -29,6 +29,4 @@ private:
 	double montoDesem_4;
 	QDate fechaDesem_5;
 	double montoDesem_5;
-
-
 };

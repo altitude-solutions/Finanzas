@@ -13,6 +13,8 @@
 // completer imports
 #include <QCompleter>
 
+// custom widgets
+#include "NumberInput.h"
 
 PlanDePagos::PlanDePagos (QWidget* parent) : QWidget (parent) {
 	ui.setupUi (this);
@@ -31,6 +33,99 @@ PlanDePagos::PlanDePagos (QWidget* parent) : QWidget (parent) {
 PlanDePagos::~PlanDePagos () {
 
 }
+
+void PlanDePagos::currencySelected (QString currency) {
+	OperacionesFinancieras::Moneda selectedCurrency = OperacionesFinancieras::MapMonedaString (currency);
+	currentOperation->setCurrency (selectedCurrency);
+	ui.label_7->setText ("Monto (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
+	ui.label_15->setText ("IVA (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
+	ui.label_19->setText ("Cuota Inicial (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
+	ui.label_26->setText ("Monto Desembolso 1 (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
+	ui.label_27->setText ("Monto Desembolso 2 (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
+	ui.label_28->setText ("Monto Desembolso 3 (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
+	ui.label_29->setText ("Monto Desembolso 4 (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
+	ui.label_30->setText ("Monto Desembolso 5 (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
+}
+
+void PlanDePagos::rateTypeSelected (QString rateType) {
+	OperacionesFinancieras::TipoTasa selectedRateType = OperacionesFinancieras::MapTipoTasaString (rateType);
+	currentOperation->setRateType (selectedRateType);
+	switch (selectedRateType)
+	{
+	case OperacionesFinancieras::TipoTasa::Fijo:
+		ui.interesFijo->setEnabled (true);
+		ui.interesVariable->setEnabled (false);
+		ui.interesVariable->setText ("");
+		break;
+	case OperacionesFinancieras::TipoTasa::Variable:
+		ui.interesFijo->setEnabled (true);
+		ui.interesVariable->setEnabled (true);
+		break;
+	case OperacionesFinancieras::TipoTasa::NONE:
+		ui.interesFijo->setEnabled (false);
+		ui.interesVariable->setEnabled (false);
+		ui.interesFijo->setText ("");
+		ui.interesVariable->setText ("");
+		break;
+	default:
+		break;
+	}
+}
+
+//==================================================================
+//========= Enable desembolso only when previous has data ==========
+void PlanDePagos::desem_1_changed (QString desem1) {
+	if (desem1 == "") {
+		ui.fechaDesem_2->setEnabled (false);
+		ui.montoDesem_2->setEnabled (false);
+		ui.fechaDesem_2->setDate (QDate::currentDate ());
+		ui.montoDesem_2->setText ("");
+	}
+	else {
+		ui.fechaDesem_2->setEnabled (true);
+		ui.montoDesem_2->setEnabled (true);
+	}
+}
+
+void PlanDePagos::desem_2_changed (QString desem2) {
+	if (desem2 == "") {
+		ui.fechaDesem_3->setEnabled (false);
+		ui.montoDesem_3->setEnabled (false);
+		ui.fechaDesem_3->setDate (QDate::currentDate ());
+		ui.montoDesem_3->setText ("");
+	}
+	else {
+		ui.fechaDesem_3->setEnabled (true);
+		ui.montoDesem_3->setEnabled (true);
+	}
+}
+
+void PlanDePagos::desem_3_changed (QString desem3) {
+	if (desem3 == "") {
+		ui.fechaDesem_4->setEnabled (false);
+		ui.montoDesem_4->setEnabled (false);
+		ui.fechaDesem_4->setDate (QDate::currentDate ());
+		ui.montoDesem_4->setText ("");
+	}
+	else {
+		ui.fechaDesem_4->setEnabled (true);
+		ui.montoDesem_4->setEnabled (true);
+	}
+}
+
+void PlanDePagos::desem_4_changed (QString desem4) {
+	if (desem4 == "") {
+		ui.fechaDesem_5->setEnabled (false);
+		ui.montoDesem_5->setEnabled (false);
+		ui.fechaDesem_5->setDate (QDate::currentDate ());
+		ui.montoDesem_5->setText ("");
+	}
+	else {
+		ui.fechaDesem_5->setEnabled (true);
+		ui.montoDesem_5->setEnabled (true);
+	}
+}
+//==================================================================
 
 //==================================================================
 //========================== Data loaders ==========================
@@ -185,8 +280,7 @@ void PlanDePagos::setTableHeaders () {
 	ui.plannedFee->verticalHeader ()->hide ();
 }
 
-// On tab selected
-// Use it to setup current tab
+// On tab selected, reload data to refresh tab
 void PlanDePagos::onTabSelected () {
 	// Tab setup
 	loadEmpresasGrupo ();
@@ -220,6 +314,41 @@ void PlanDePagos::operationTypeSelected (QString operation) {
 	//	// back to credito
 	//	ui.tipoOperacion->setCurrentText (OperacionesFinancieras::MapOperationEnum (OperacionesFinancieras::TiposDeOperacion::CasoCredito));
 	//}
+
+	// enable and disable desembolsos on caso
+	switch (caso)
+	{
+	case OperacionesFinancieras::TiposDeOperacion::CasoCredito:
+		ui.fechaDesem_1->setEnabled (true);
+		ui.montoDesem_1->setEnabled (true);
+		break;
+	case OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito:
+		ui.fechaDesem_1->setEnabled (true);
+		ui.montoDesem_1->setEnabled (true);
+		break;
+	case OperacionesFinancieras::TiposDeOperacion::CasoLeasing:
+		ui.fechaDesem_1->setEnabled (false);
+		ui.montoDesem_1->setEnabled (false);
+		ui.fechaDesem_1->setDate (QDate::currentDate ());
+		ui.montoDesem_1->setText ("");
+		break;
+	case OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack:
+		ui.fechaDesem_1->setEnabled (true);
+		ui.montoDesem_1->setEnabled (true);
+		break;
+	case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
+		ui.fechaDesem_1->setEnabled (true);
+		ui.montoDesem_1->setEnabled (true);
+		break;
+	case OperacionesFinancieras::TiposDeOperacion::NONE:
+		ui.fechaDesem_1->setEnabled (false);
+		ui.montoDesem_1->setEnabled (false);
+		ui.fechaDesem_1->setDate (QDate::currentDate ());
+		ui.montoDesem_1->setText ("");
+		break;
+	default:
+		break;
+	}
 }
 
 //==================================================================
@@ -317,11 +446,10 @@ void PlanDePagos::unlockField () {
 	ui.fechaFirma->setEnabled (true);
 	ui.empresa->setEnabled (true);
 	ui.entidad->setEnabled (true);
-	// second column, except interes variable and cuota inicial
+	// second column, except rates and cuota inicial
 	ui.monto->setEnabled (true);
 	ui.moneda->setEnabled (true);
 	ui.tipoTasa->setEnabled (true);
-	ui.interesFijo->setEnabled (true);
 	// third column
 	ui.frecuencia->setEnabled (true);
 	ui.plazo->setEnabled (true);
@@ -342,12 +470,38 @@ void PlanDePagos::onNewClicked () {
 	unlockField ();
 }
 
+void PlanDePagos::onClearClicked () {
+	resetFields ();
+	delete currentOperation;
+	currentOperation = nullptr;
+}
+
 void PlanDePagos::setupConnections () {
 	// new operation clicked
 	connect (ui.newPlan, &QPushButton::clicked, this, &PlanDePagos::onNewClicked);
+
+	// "borrar" cliced
+	connect (ui.clearButton, &QPushButton::clicked, this, &PlanDePagos::onClearClicked);
 }
 
 void PlanDePagos::setupUiConnections () {
 	// user selected an operation type
 	connect (ui.tipoOperacion, &QComboBox::currentTextChanged, this, &PlanDePagos::operationTypeSelected);
+	
+	// moneda changed, update moneda everywhere
+	connect (ui.moneda, &QComboBox::currentTextChanged, this, &PlanDePagos::currencySelected);
+
+	// rate type changed, update rate type
+	connect (ui.tipoTasa, &QComboBox::currentTextChanged, this, &PlanDePagos::rateTypeSelected);
+
+	// desembolsos changed: enable next if there is data or disable next if there is a blank
+	connect (ui.montoDesem_1, &QLineEdit::textChanged, this, &PlanDePagos::desem_1_changed);
+	connect (ui.montoDesem_2, &QLineEdit::textChanged, this, &PlanDePagos::desem_2_changed);
+	connect (ui.montoDesem_3, &QLineEdit::textChanged, this, &PlanDePagos::desem_3_changed);
+	connect (ui.montoDesem_4, &QLineEdit::textChanged, this, &PlanDePagos::desem_4_changed);
+
+	// Monto changed, then changes iva if leasing or leaseback
+	connect (ui.monto, &NumberInput::valueChanged, this, [&](double value) {
+
+		});
 }

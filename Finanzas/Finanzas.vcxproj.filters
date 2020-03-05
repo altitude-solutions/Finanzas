@@ -61,6 +61,9 @@
     <ClCompile Include="CuotasEfectivas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NumberInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Login.h">
@@ -94,6 +97,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="CuotasEfectivas.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="NumberInput.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

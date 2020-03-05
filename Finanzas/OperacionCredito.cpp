@@ -26,10 +26,10 @@ void OperacionCredito::save () {
 
 }
 
-void OperacionCredito::load (QJsonDocument object) {
+void OperacionCredito::load (int id) {
 
 }
 
-void OperacionCredito::update (QJsonDocument object) {
+void OperacionCredito::update () {
 
 }

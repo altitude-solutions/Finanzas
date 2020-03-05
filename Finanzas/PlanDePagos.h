@@ -35,6 +35,15 @@ public slots:
 private slots:
 	// operation type selected
 	void operationTypeSelected (QString operation);
+	// currency selected
+	void currencySelected (QString currency);
+	// interest rate type selected
+	void rateTypeSelected (QString rateType);
+	// enable and diable desembolsos
+	void desem_1_changed (QString desem1);
+	void desem_2_changed (QString desem2);
+	void desem_3_changed (QString desem3);
+	void desem_4_changed (QString desem4);
 
 private:
 	// data loaders
@@ -52,6 +61,8 @@ private:
 	void unlockField ();
 	// new button clicked event
 	void onNewClicked ();
+	// void on "borrar" clicked event: resetFiels
+	void onClearClicked ();
 	// setup callback(buttons) connections
 	void setupConnections ();
 	// setup ui connections (autofills, number checkers, some validators and desembolsos enable/disable behavior)

@@ -95,6 +95,7 @@
     <ClCompile Include="LineaDeCredito.cpp" />
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NumberInput.cpp" />
     <ClCompile Include="Operacion.cpp" />
     <ClCompile Include="OperacionCredito.cpp" />
     <ClCompile Include="PagosEfectivos.cpp" />
@@ -137,6 +138,7 @@
     <QtMoc Include="OperacionCredito.h" />
     <QtMoc Include="CuotasPlanDePagos.h" />
     <QtMoc Include="CuotasEfectivas.h" />
+    <QtMoc Include="NumberInput.h" />
     <ClInclude Include="OperacionesFinancieras.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

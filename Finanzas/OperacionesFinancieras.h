@@ -6,12 +6,14 @@
 namespace OperacionesFinancieras {
 	enum class Moneda {
 		Bolivianos,
-		Dolares
+		Dolares,
+		NONE
 	};
 
 	enum class TipoTasa {
 		Fijo,
-		Variable
+		Variable,
+		NONE
 	};
 
 	enum class FrecuenciaDePagos {
@@ -19,7 +21,8 @@ namespace OperacionesFinancieras {
 		Bimensual,
 		Trimestral,
 		Semestral,
-		Anual
+		Anual,
+		NONE
 	};
 
 	enum class TiposDeOperacion {
@@ -27,13 +30,15 @@ namespace OperacionesFinancieras {
 		CasoLineaDeCredito,
 		CasoLeasing,
 		CasoLeaseBack,
-		CasoSeguro
+		CasoSeguro,
+		NONE
 	};
 
 	inline TiposDeOperacion MapOperationString (QString op);
 	inline QString MapOperationEnum (TiposDeOperacion op);
 	inline Moneda MapMonedaString (QString currency);
 	inline QString MapMonedaEnum (Moneda currency);
+	inline QString MapMonedaEnum_Short (Moneda currency);
 	inline FrecuenciaDePagos MapFrecuenciaString (QString freq);
 	inline QString MapFrecuenciaEnum (FrecuenciaDePagos freq);
 	inline TipoTasa MapTipoTasaString (QString tipo);
@@ -54,8 +59,12 @@ OperacionesFinancieras::TiposDeOperacion OperacionesFinancieras::MapOperationStr
 	if (op == QString::fromLatin1 ("Lease Back")) {
 		return OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack;
 	}
-	return OperacionesFinancieras::TiposDeOperacion::CasoSeguro;
+	if (op == QString::fromLatin1 ("Seguro")) {
+		return OperacionesFinancieras::TiposDeOperacion::CasoSeguro;
+	}
+	return OperacionesFinancieras::TiposDeOperacion::NONE;
 }
+
 QString OperacionesFinancieras::MapOperationEnum (TiposDeOperacion op) {
 	if (op == OperacionesFinancieras::TiposDeOperacion::CasoCredito) {
 		return QString::fromLatin1 ("Crédito");
@@ -69,20 +78,42 @@ QString OperacionesFinancieras::MapOperationEnum (TiposDeOperacion op) {
 	if (op == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
 		return QString::fromLatin1 ("Lease Back");
 	}
-	return QString::fromLatin1 ("Seguro");
+	if (op == OperacionesFinancieras::TiposDeOperacion::CasoSeguro) {
+		return QString::fromLatin1 ("Seguro");
+	}
+	return QString::fromLatin1 ("-");
 }
+
 OperacionesFinancieras::Moneda OperacionesFinancieras::MapMonedaString (QString currency) {
 	if (currency == QString::fromLatin1 ("Bolivianos (BOB)")) {
 		return Moneda::Bolivianos;
 	}
-	return Moneda::Dolares;
+	if (currency == QString::fromLatin1 ("Dólares ($us)")) {
+		return Moneda::Dolares;
+	}
+	return Moneda::NONE;
 }
+
 QString OperacionesFinancieras::MapMonedaEnum (OperacionesFinancieras::Moneda currency) {
 	if (currency == OperacionesFinancieras::Moneda::Bolivianos) {
 		return QString::fromLatin1 ("Bolivianos (BOB)");
 	}
-	return QString::fromLatin1 ("Dólares ($us)");
+	if (currency == OperacionesFinancieras::Moneda::Dolares) {
+		return QString::fromLatin1 ("Dólares ($us)");
+	}
+	return QString::fromLatin1 ("-");
 }
+
+QString OperacionesFinancieras::MapMonedaEnum_Short (OperacionesFinancieras::Moneda currency) {
+	if (currency == OperacionesFinancieras::Moneda::Bolivianos) {
+		return QString::fromLatin1 ("Bs");
+	}
+	if (currency == OperacionesFinancieras::Moneda::Dolares) {
+		return QString::fromLatin1 ("$us");
+	}
+	return QString::fromLatin1 ("-");
+}
+
 OperacionesFinancieras::FrecuenciaDePagos OperacionesFinancieras::MapFrecuenciaString (QString freq) {
 	if (freq == QString::fromLatin1 ("Mensual")) {
 		return OperacionesFinancieras::FrecuenciaDePagos::Mensual;
@@ -96,8 +127,12 @@ OperacionesFinancieras::FrecuenciaDePagos OperacionesFinancieras::MapFrecuenciaS
 	if (freq == QString::fromLatin1 ("Semestral")) {
 		return OperacionesFinancieras::FrecuenciaDePagos::Semestral;
 	}
-	return OperacionesFinancieras::FrecuenciaDePagos::Anual;
+	if (freq == QString::fromLatin1 ("Anual")) {
+		return OperacionesFinancieras::FrecuenciaDePagos::Anual;
+	}
+	return OperacionesFinancieras::FrecuenciaDePagos::NONE;
 }
+
 QString OperacionesFinancieras::MapFrecuenciaEnum (OperacionesFinancieras::FrecuenciaDePagos freq) {
 	if (freq == OperacionesFinancieras::FrecuenciaDePagos::Mensual) {
 		return QString::fromLatin1 ("Mensual");
@@ -111,17 +146,28 @@ QString OperacionesFinancieras::MapFrecuenciaEnum (OperacionesFinancieras::Frecu
 	if (freq == OperacionesFinancieras::FrecuenciaDePagos::Semestral) {
 		return QString::fromLatin1 ("Semestral");
 	}
-	return QString::fromLatin1 ("Anual");
+	if (freq == OperacionesFinancieras::FrecuenciaDePagos::Anual) {
+		return QString::fromLatin1 ("Anual");
+	}
+	return QString::fromLatin1 ("-");
 }
+
 OperacionesFinancieras::TipoTasa OperacionesFinancieras::MapTipoTasaString (QString tipo) {
 	if (tipo == QString::fromLatin1 ("Fijo")) {
 		return OperacionesFinancieras::TipoTasa::Fijo;
 	}
-	return OperacionesFinancieras::TipoTasa::Variable;
+	if (tipo == QString::fromLatin1 ("Variable")) {
+		return OperacionesFinancieras::TipoTasa::Variable;
+	}
+	return OperacionesFinancieras::TipoTasa::NONE;
 }
+
 QString OperacionesFinancieras::MapTipoTasaEnum (OperacionesFinancieras::TipoTasa tipo) {
 	if (tipo == OperacionesFinancieras::TipoTasa::Fijo) {
 		return QString::fromLatin1 ("Fijo");
 	}
-	return QString::fromLatin1 ("Variable");
+	if (tipo == OperacionesFinancieras::TipoTasa::Variable) {
+		return QString::fromLatin1 ("Variable");
+	}
+	return QString::fromLatin1 ("-");
 }

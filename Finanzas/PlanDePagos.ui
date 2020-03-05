@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1196</width>
+    <width>1220</width>
     <height>789</height>
    </rect>
   </property>
@@ -880,10 +880,115 @@ QComboBox::disabled {
                   <property name="verticalSpacing">
                    <number>6</number>
                   </property>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_9">
+                    <property name="text">
+                     <string>Moneda:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="moneda">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QComboBox {
+	background-color:#ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover,
+QComboBox::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(:/Resources/img/dropdown.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+QComboBox::disabled {
+	background-color: #f4f4f4;
+}
+
+</string>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Bolivianos (BOB)</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Dólares ($us)</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_7">
+                    <property name="text">
+                     <string>Monto (-):</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="NumberInput" name="monto">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
+QLineEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="2" column="0">
                    <widget class="QLabel" name="label_15">
                     <property name="text">
-                     <string>IVA:</string>
+                     <string>IVA (-):</string>
                     </property>
                    </widget>
                   </item>
@@ -914,28 +1019,7 @@ QComboBox::disabled {
                   <item row="3" column="0">
                    <widget class="QLabel" name="label_19">
                     <property name="text">
-                     <string>Cuota Inicial:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="4" column="0">
-                   <widget class="QLabel" name="label_24">
-                    <property name="text">
-                     <string>Tipo Tasa:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="5" column="0">
-                   <widget class="QLabel" name="label_22">
-                    <property name="text">
-                     <string>Interés  Fijo:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="6" column="0">
-                   <widget class="QLabel" name="label_25">
-                    <property name="text">
-                     <string>Interés Variable</string>
+                     <string>Cuota Inicial (-):</string>
                     </property>
                    </widget>
                   </item>
@@ -968,6 +1052,13 @@ QLineEdit::disabled {
 	background-color: #f4f4f4;
 }
 </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="label_24">
+                    <property name="text">
+                     <string>Tipo Tasa:</string>
                     </property>
                    </widget>
                   </item>
@@ -1030,8 +1121,15 @@ QComboBox::disabled {
                     </item>
                    </widget>
                   </item>
+                  <item row="5" column="0">
+                   <widget class="QLabel" name="label_22">
+                    <property name="text">
+                     <string>Interés  Fijo (%):</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="5" column="1">
-                   <widget class="QLineEdit" name="interesFijo">
+                   <widget class="NumberInput" name="interesFijo">
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
@@ -1059,11 +1157,18 @@ QLineEdit::disabled {
 	background-color: #f4f4f4;
 }
 </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="0">
+                   <widget class="QLabel" name="label_25">
+                    <property name="text">
+                     <string>Interés Variable (%):</string>
                     </property>
                    </widget>
                   </item>
                   <item row="6" column="1">
-                   <widget class="QLineEdit" name="interesVariable">
+                   <widget class="NumberInput" name="interesVariable">
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
@@ -1092,111 +1197,6 @@ QLineEdit::disabled {
 }
 </string>
                     </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_7">
-                    <property name="text">
-                     <string>Monto:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QLineEdit" name="monto">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QLineEdit {
-	background-color: #ebeded;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover,
-QLineEdit::focus {
-	background-color: #b5b5b5;
-	border-color: #a7a7a7;
-}
-
-
-QLineEdit::disabled {
-	background-color: #f4f4f4;
-}
-</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_9">
-                    <property name="text">
-                     <string>Moneda:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QComboBox" name="moneda">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="cursor">
-                     <cursorShape>PointingHandCursor</cursorShape>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QComboBox {
-	background-color:#ebeded;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	padding-left: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	color:#243646;
-}
-
-QComboBox::hover,
-QComboBox::focus {
-	background-color: #b5b5b5;
-	border-color: #a7a7a7;
-}
-
-
-QComboBox::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QComboBox::down-arrow {
-    image: url(:/Resources/img/dropdown.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}
-
-QComboBox::disabled {
-	background-color: #f4f4f4;
-}
-
-</string>
-                    </property>
-                    <item>
-                     <property name="text">
-                      <string>Bolivianos (BOB)</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Dólares ($us)</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                  </layout>
@@ -1764,12 +1764,12 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
                <item row="1" column="0">
                 <widget class="QLabel" name="label_26">
                  <property name="text">
-                  <string>Monto Desembolso 1:</string>
+                  <string>Monto Desembolso 1 (-):</string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="montoDesem_1">
+                <widget class="NumberInput" name="montoDesem_1">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -1951,12 +1951,12 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
                <item row="3" column="0">
                 <widget class="QLabel" name="label_27">
                  <property name="text">
-                  <string>Monto Desembolso 2:</string>
+                  <string>Monto Desembolso 2 (-):</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QLineEdit" name="montoDesem_2">
+                <widget class="NumberInput" name="montoDesem_2">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -1997,12 +1997,12 @@ QLineEdit::disabled {
                <item row="5" column="0">
                 <widget class="QLabel" name="label_28">
                  <property name="text">
-                  <string>Monto Desembolso 3:</string>
+                  <string>Monto Desembolso 3 (-):</string>
                  </property>
                 </widget>
                </item>
                <item row="5" column="1">
-                <widget class="QLineEdit" name="montoDesem_3">
+                <widget class="NumberInput" name="montoDesem_3">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -2184,12 +2184,12 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
                <item row="7" column="0">
                 <widget class="QLabel" name="label_29">
                  <property name="text">
-                  <string>Monto Desembolso 4:</string>
+                  <string>Monto Desembolso 4 (-):</string>
                  </property>
                 </widget>
                </item>
                <item row="7" column="1">
-                <widget class="QLineEdit" name="montoDesem_4">
+                <widget class="NumberInput" name="montoDesem_4">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -2371,12 +2371,12 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
                <item row="9" column="0">
                 <widget class="QLabel" name="label_30">
                  <property name="text">
-                  <string>Monto Desembolso 5:</string>
+                  <string>Monto Desembolso 5 (-):</string>
                  </property>
                 </widget>
                </item>
                <item row="9" column="1">
-                <widget class="QLineEdit" name="montoDesem_5">
+                <widget class="NumberInput" name="montoDesem_5">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -2772,6 +2772,13 @@ QPushButton::hover {
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>NumberInput</class>
+   <extends>QLineEdit</extends>
+   <header>Numberinput.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="Login.qrc"/>
  </resources>

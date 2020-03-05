@@ -33,25 +33,43 @@ public:
 public:
 	virtual bool validate () = 0;
 	virtual void save () = 0;
-	static void load (int id);
-	virtual void load (QJsonDocument object) = 0;
-	virtual void update (QJsonDocument object) = 0;
+	virtual void load (int id) = 0;
+	virtual void update () = 0;
 	static void deleteRes (int id);
+
+	// getters and setters
+	void setContractNumber (QString contractNumber);
+	void setSignDate (QDate date);
+	void setConcept (QString concept);
+	void setDetail (QString detail);
+	void setCurrency (OperacionesFinancieras::Moneda currency);
+	void setAmmount (double ammount);
+	void setIVA (double iva);
+	void setRateType (OperacionesFinancieras::TipoTasa rateType);
+	void setStaticRate (double staticRate);
+	void setDynamicRate (double dynamicRate);
+	void setLifetime (int lifetime);
+	void setFrequency (OperacionesFinancieras::FrecuenciaDePagos freq);
+	void setExpirationDate (QDate date);
+
+	void setEnterprise (int enterprise_ID);
+	void setEntity (int entity_ID);
 
 signals:
 	void operacionUpdated ();
+	void operationSaved ();
 
 private:
 	int id;
-	QString tipoOperacion;
+	OperacionesFinancieras::TiposDeOperacion tipoOperacion;
 	QString numeroContrato;
 	QDate fechaFirma;
 	QString concepto;
 	QString detalle;
-	OperacionesFinancieras::Moneda moneda;
+	OperacionesFinancieras::Moneda currency;
 	double monto;
 	double iva;
-	OperacionesFinancieras::TipoTasa tipoTasa;
+	OperacionesFinancieras::TipoTasa rateType;
 	double tasaFija;
 	double tasaVariable;
 	int plazo;
