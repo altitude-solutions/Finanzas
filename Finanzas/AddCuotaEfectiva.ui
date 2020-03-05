@@ -83,8 +83,13 @@ color: #333333</string>
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">QSpinBox {
-	background-color: #EBEDED;
+        <string notr="true">QSpinBox::disabled {
+	background-color: #f4f4f4;
+}
+
+
+QSpinBox {
+	background-color: #ebeded;
 	border-style: outset;
 	border-radius: 12px;
 	border-color: #d7d9d9;
@@ -97,12 +102,10 @@ color: #333333</string>
 	padding-left: 3px;
 }
 
-QSpinBox::hover {
-	border-color: black;
-}
-
+QSpinBox::hover,
 QSpinBox::focus {
 	background-color: #b5b5b5;
+	border-color: #a7a7a7;
 }
 
 
@@ -116,6 +119,11 @@ QSpinBox::down-button {
 	 image: url(:/Resources/img/down.png);
     width: 20px;
     height: 10px;
+}
+
+
+QSpinBox::disabled {
+	background-color: #f4f4f4;
 }
 
 </string>
@@ -144,8 +152,12 @@ QSpinBox::down-button {
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">QDateEdit {
-	background-color: #EBEDED;
+        <string notr="true">QDeteEdit::disabled {
+	background-color: #f4f4f4;
+}
+
+QDateEdit {
+	background-color: #ebeded;
 	border-style: outset;
 	border-radius: 13px;
 	border-color: #d7d9d9;
@@ -156,12 +168,10 @@ QSpinBox::down-button {
 	padding: 3px;
 }
 
-QDateEdit::hover {
-	border-color: black;
-}
-
+QDateEdit::hover,
 QDateEdit::focus {
 	background-color: #b5b5b5;
+	border-color: #a7a7a7;
 }
 
 QDateEdit::drop-down  {
@@ -198,11 +208,6 @@ QDateEdit::focus {
 	background-color: #b5b5b5;
 }
 */
-
-
-
-
-
 
 
 
@@ -293,7 +298,7 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
       <widget class="QLineEdit" name="pagoMonto">
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-	background-color: #EBEDED;
+	background-color: #ebeded;
 	border-style: outset;
 	border-radius: 12px;
 	border-color: #d7d9d9;
@@ -304,13 +309,17 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
 	padding: 3px;
 }
 
-QLineEdit::hover {
-	border-color: black;
-}
-
+QLineEdit::hover,
 QLineEdit::focus {
 	background-color: #b5b5b5;
-}</string>
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
        </property>
       </widget>
      </item>
@@ -328,7 +337,7 @@ QLineEdit::focus {
       <widget class="QLineEdit" name="pagoCapital">
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-	background-color: #EBEDED;
+	background-color: #ebeded;
 	border-style: outset;
 	border-radius: 12px;
 	border-color: #d7d9d9;
@@ -339,13 +348,17 @@ QLineEdit::focus {
 	padding: 3px;
 }
 
-QLineEdit::hover {
-	border-color: black;
-}
-
+QLineEdit::hover,
 QLineEdit::focus {
 	background-color: #b5b5b5;
-}</string>
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
        </property>
       </widget>
      </item>
@@ -363,7 +376,7 @@ QLineEdit::focus {
       <widget class="QLineEdit" name="pagoInteres">
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-	background-color: #EBEDED;
+	background-color: #ebeded;
 	border-style: outset;
 	border-radius: 12px;
 	border-color: #d7d9d9;
@@ -374,13 +387,17 @@ QLineEdit::focus {
 	padding: 3px;
 }
 
-QLineEdit::hover {
-	border-color: black;
-}
-
+QLineEdit::hover,
 QLineEdit::focus {
 	background-color: #b5b5b5;
-}</string>
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
        </property>
       </widget>
      </item>
@@ -398,7 +415,7 @@ QLineEdit::focus {
       <widget class="QLineEdit" name="pagoIva">
        <property name="styleSheet">
         <string notr="true">QLineEdit {
-	background-color: #EBEDED;
+	background-color: #ebeded;
 	border-style: outset;
 	border-radius: 12px;
 	border-color: #d7d9d9;
@@ -409,13 +426,17 @@ QLineEdit::focus {
 	padding: 3px;
 }
 
-QLineEdit::hover {
-	border-color: black;
-}
-
+QLineEdit::hover,
 QLineEdit::focus {
 	background-color: #b5b5b5;
-}</string>
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
        </property>
       </widget>
      </item>
@@ -505,6 +526,8 @@ QPushButton::hover {
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="Login.qrc"/>
+ </resources>
  <connections/>
 </ui>

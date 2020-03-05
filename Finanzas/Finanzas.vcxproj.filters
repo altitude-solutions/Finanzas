@@ -49,6 +49,18 @@
     <ClCompile Include="AddCuotaEfectiva.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Operacion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OperacionCredito.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CuotasPlanDePagos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CuotasEfectivas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Login.h">
@@ -70,6 +82,18 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AddCuotaEfectiva.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Operacion.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="OperacionCredito.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CuotasPlanDePagos.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CuotasEfectivas.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -103,6 +127,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OperacionesFinancieras.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

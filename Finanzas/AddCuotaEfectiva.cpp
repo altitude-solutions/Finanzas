@@ -34,7 +34,7 @@ AddCuotaEfectiva::~AddCuotaEfectiva() {
 
 }
 
-void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, CasosPlanDePagos_enum caso, int parentID, int editingID, bool editing) {
+void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, OperacionesFinancieras::TiposDeOperacion caso, int parentID, int editingID, bool editing) {
 	this->targetUrl = targetUrl;
 	this->token = token;
 	ui.numeroCuota->setValue (cuota);
@@ -62,7 +62,7 @@ void AddCuotaEfectiva::onMontoCuotaChanged (QString monto) {
 		ui.pagoMonto->setText (monto);
 	}
 
-	if (this->caso == CasosPlanDePagos_enum::CasoLeaseBack) {
+	if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
 		ui.pagoIva->setText (QString::number (0.13 * ammount, 'f', 2));
 	}
 }
@@ -121,7 +121,7 @@ void AddCuotaEfectiva::onSaveClicked () {
 		ui.addButton->setEnabled (true);
 		return;
 	}
-	if ( this->caso == CasosPlanDePagos_enum::CasoLeaseBack && (!total_ok || total <= 0)) {
+	if ( this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack && (!total_ok || total <= 0)) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 (""));
 		ui.addButton->setEnabled (true);
 		return;

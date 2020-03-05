@@ -90,9 +90,13 @@
   <ItemGroup>
     <ClCompile Include="AddCuotaEfectiva.cpp" />
     <ClCompile Include="AppHeader.cpp" />
+    <ClCompile Include="CuotasEfectivas.cpp" />
+    <ClCompile Include="CuotasPlanDePagos.cpp" />
     <ClCompile Include="LineaDeCredito.cpp" />
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Operacion.cpp" />
+    <ClCompile Include="OperacionCredito.cpp" />
     <ClCompile Include="PagosEfectivos.cpp" />
     <ClCompile Include="PlanDePagos.cpp" />
     <ClCompile Include="TabsWindow.cpp" />
@@ -129,6 +133,11 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AddCuotaEfectiva.h" />
+    <QtMoc Include="Operacion.h" />
+    <QtMoc Include="OperacionCredito.h" />
+    <QtMoc Include="CuotasPlanDePagos.h" />
+    <QtMoc Include="CuotasEfectivas.h" />
+    <ClInclude Include="OperacionesFinancieras.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

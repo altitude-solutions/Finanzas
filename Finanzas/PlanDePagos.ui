@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1284</width>
-    <height>875</height>
+    <width>1196</width>
+    <height>789</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,10 @@
   <property name="styleSheet">
    <string notr="true">background-color: white;</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <property name="spacing">
+    <number>6</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -30,2135 +33,490 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <spacer name="horizontalSpacer_6">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+    <widget class="QSplitter" name="splitter">
+     <property name="styleSheet">
+      <string notr="true">QSplitter::handle {
+	background: #ebeded;
+	/*background: #B3B3B3;*/
+}</string>
+     </property>
+     <property name="lineWidth">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="opaqueResize">
+      <bool>true</bool>
+     </property>
+     <property name="handleWidth">
+      <number>2</number>
+     </property>
+     <widget class="QFrame" name="frame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0">
+       <property name="spacing">
+        <number>0</number>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+       <property name="leftMargin">
+        <number>5</number>
        </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox_2">
-       <property name="title">
-        <string>Información general</string>
+       <property name="topMargin">
+        <number>5</number>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <layout class="QFormLayout" name="formLayout_2">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Tipo de Operación</string>
-            </property>
-            <property name="buddy">
-             <cstring>tipoDeOperacion</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QComboBox" name="tipoDeOperacion">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QComboBox {
-	background-color:#EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	padding-left: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-right: 10px;
-	color:#243646;
-}
-
-QComboBox::hover {
-	border-color: black;
-}
-
-QComboBox::focus {
-	background-color: #b5b5b5;
-}
-
-
-QComboBox::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QComboBox::down-arrow {
-    image: url(:/Resources/img/dropdown.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}</string>
-            </property>
-            <item>
-             <property name="text">
-              <string>Crédito</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Operación de Línea de Crédito</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Leasing</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Lease Back</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Seguro</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Nombre de la Entidad</string>
-            </property>
-            <property name="buddy">
-             <cstring>nombreEntidad</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="nombreEntidad">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QComboBox {
-	background-color:#EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	padding-left: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-right: 10px;
-	color:#243646;
-}
-
-QComboBox::hover {
-	border-color: black;
-}
-
-QComboBox::focus {
-	background-color: #b5b5b5;
-}
-
-
-QComboBox::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QComboBox::down-arrow {
-    image: url(:/Resources/img/dropdown.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Tipo de Entidad</string>
-            </property>
-            <property name="buddy">
-             <cstring>tipoEntidad</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="tipoEntidad">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QComboBox {
-	background-color:#EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	padding-left: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-right: 10px;
-	color:#243646;
-}
-
-QComboBox::hover {
-	border-color: black;
-}
-
-QComboBox::focus {
-	background-color: #b5b5b5;
-}
-
-
-QComboBox::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QComboBox::down-arrow {
-    image: url(:/Resources/img/dropdown.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Código Linea de Crédito</string>
-            </property>
-            <property name="buddy">
-             <cstring>codigoLineaCredito</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="codigoLineaCredito">
-            <property name="styleSheet">
-             <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Empresa Grupo</string>
-            </property>
-            <property name="buddy">
-             <cstring>empresaGrupo</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QComboBox" name="empresaGrupo">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QComboBox {
-	background-color:#EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	padding-left: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-right: 10px;
-	color:#243646;
-}
-
-QComboBox::hover {
-	border-color: black;
-}
-
-QComboBox::focus {
-	background-color: #b5b5b5;
-}
-
-
-QComboBox::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QComboBox::down-arrow {
-    image: url(:/Resources/img/dropdown.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Nro de contrato/operación</string>
-            </property>
-            <property name="buddy">
-             <cstring>numeroContratoOperacion</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLineEdit" name="numeroContratoOperacion">
-            <property name="styleSheet">
-             <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_26">
-            <property name="text">
-             <string>Fecha Firma</string>
-            </property>
-            <property name="buddy">
-             <cstring>fechaFirma</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QDateEdit" name="fechaFirma">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-
-QDateEdit::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QDateEdit::down-arrow {
-    image: url(:/Resources/img/calendar.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}
-
-
-/*
-QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-QCalendarWidget QToolButton {
-/*	height: 35px;*/
-  	/*width: parent;*/
-  	color: black;
-  	font-size: 14px;
-  	icon-size: 20px, 20px;
-  	background-color: #ebeded
-}
-
-QCalendarWidget QMenu {
-  	/*width: 150px;*/
-  	left: 20px;
-  	color: black;
-  	font-size: 14px;
-  	background-color: #ebeded;
-}
-
-
-QCalendarWidget QSpinBox { 
-  	background-color: #EBEDED;
-	border-style: outset;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	padding: 2px;
-}
-
-/*
-QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
-QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
-QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
-QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
-*/
-
-/* header row */
-QCalendarWidget QWidget {
-	alternate-background-color: #d7d7d7;
-}
-
-/* normal days */
-QCalendarWidget QAbstractItemView:enabled {
-	font-size:14px;
-	color: black;
-	background-color: #ebeded;
-	selection-background-color: #d7d7d7; 
-	selection-color: black;
-}
-
-QCalendarWidget QAbstractItemView:!enabled {
-	background-color: red;
-}
-
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-	background-color: #ebeded;
-	color: gray;
-}
-
-</string>
-            </property>
-            <property name="calendarPopup">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Concepto</string>
-            </property>
-            <property name="buddy">
-             <cstring>concepto</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QLineEdit" name="concepto">
-            <property name="styleSheet">
-             <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="label_25">
-            <property name="text">
-             <string>Detalle</string>
-            </property>
-            <property name="buddy">
-             <cstring>detalle</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QLineEdit" name="detalle">
-            <property name="styleSheet">
-             <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Moneda</string>
-            </property>
-            <property name="buddy">
-             <cstring>moneda</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QComboBox" name="moneda">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QComboBox {
-	background-color:#EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	padding-left: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-right: 10px;
-	color:#243646;
-}
-
-QComboBox::hover {
-	border-color: black;
-}
-
-QComboBox::focus {
-	background-color: #b5b5b5;
-}
-
-
-QComboBox::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QComboBox::down-arrow {
-    image: url(:/Resources/img/dropdown.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}</string>
-            </property>
-            <item>
-             <property name="text">
-              <string>Bolivianos (BOB)</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Dólares (USD)</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="10" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Monto (Bs)</string>
-            </property>
-            <property name="buddy">
-             <cstring>monto</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="1">
-           <widget class="QLineEdit" name="monto">
-            <property name="styleSheet">
-             <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="0">
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>IVA</string>
-            </property>
-            <property name="buddy">
-             <cstring>iva</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="1">
-           <widget class="QLineEdit" name="iva">
-            <property name="styleSheet">
-             <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0">
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>Cuota Inicial (Bs)</string>
-            </property>
-            <property name="buddy">
-             <cstring>cuotaInicial</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="1">
-           <widget class="QLineEdit" name="cuotaInicial">
-            <property name="styleSheet">
-             <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="13" column="0">
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>Tipo de Tasa</string>
-            </property>
-            <property name="buddy">
-             <cstring>tipoTasa</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="13" column="1">
-           <widget class="QComboBox" name="tipoTasa">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QComboBox {
-	background-color:#EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	padding-left: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-right: 10px;
-	color:#243646;
-}
-
-QComboBox::hover {
-	border-color: black;
-}
-
-QComboBox::focus {
-	background-color: #b5b5b5;
-}
-
-
-QComboBox::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QComboBox::down-arrow {
-    image: url(:/Resources/img/dropdown.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}</string>
-            </property>
-            <item>
-             <property name="text">
-              <string>Fijo</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Variable</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="14" column="0">
-           <widget class="QLabel" name="label_24">
-            <property name="text">
-             <string>Interés fijo (%)</string>
-            </property>
-            <property name="buddy">
-             <cstring>interesFijo</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="14" column="1">
-           <widget class="QLineEdit" name="interesFijo">
-            <property name="styleSheet">
-             <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-            </property>
-           </widget>
-          </item>
-          <item row="15" column="0">
-           <widget class="QLabel" name="label_13">
-            <property name="text">
-             <string>Interés variable (%)</string>
-            </property>
-            <property name="buddy">
-             <cstring>interesVariable</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="15" column="1">
-           <widget class="QLineEdit" name="interesVariable">
-            <property name="styleSheet">
-             <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <layout class="QFormLayout" name="formLayout">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_14">
-              <property name="text">
-               <string>Plazo (meses)</string>
-              </property>
-              <property name="buddy">
-               <cstring>plazo</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QSpinBox" name="plazo">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QSpinBox {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-left: 3px;
-}
-
-QSpinBox::hover {
-	border-color: black;
-}
-
-QSpinBox::focus {
-	background-color: #b5b5b5;
-}
-
-
-QSpinBox::up-button {
-	 image: url(:/Resources/img/up.png);
-    width: 20px;
-    height: 10px;
-}
-
-QSpinBox::down-button {
-	 image: url(:/Resources/img/down.png);
-    width: 20px;
-    height: 10px;
-}
-
-</string>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>999</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_18">
-              <property name="text">
-               <string>Frecuencia de pagos</string>
-              </property>
-              <property name="buddy">
-               <cstring>frecuencia</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="frecuencia">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QComboBox {
-	background-color:#EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	padding-left: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-right: 10px;
-	color:#243646;
-}
-
-QComboBox::hover {
-	border-color: black;
-}
-
-QComboBox::focus {
-	background-color: #b5b5b5;
-}
-
-
-QComboBox::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QComboBox::down-arrow {
-    image: url(:/Resources/img/dropdown.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}</string>
-              </property>
-              <item>
-               <property name="text">
-                <string>Mensual</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Bimensual</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Trimestral</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Semestral</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Anual</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_15">
-              <property name="text">
-               <string>Fecha Vencimiento</string>
-              </property>
-              <property name="buddy">
-               <cstring>fechaVencimiento</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QDateEdit" name="fechaVencimiento">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-
-QDateEdit::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QDateEdit::down-arrow {
-    image: url(:/Resources/img/calendar.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}
-
-
-/*
-QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-QCalendarWidget QToolButton {
-/*	height: 35px;*/
-  	/*width: parent;*/
-  	color: black;
-  	font-size: 14px;
-  	icon-size: 20px, 20px;
-  	background-color: #ebeded
-}
-
-QCalendarWidget QMenu {
-  	/*width: 150px;*/
-  	left: 20px;
-  	color: black;
-  	font-size: 14px;
-  	background-color: #ebeded;
-}
-
-
-QCalendarWidget QSpinBox { 
-  	background-color: #EBEDED;
-	border-style: outset;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	padding: 2px;
-}
-
-/*
-QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
-QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
-QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
-QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
-*/
-
-/* header row */
-QCalendarWidget QWidget {
-	alternate-background-color: #d7d7d7;
-}
-
-/* normal days */
-QCalendarWidget QAbstractItemView:enabled {
-	font-size:14px;
-	color: black;
-	background-color: #ebeded;
-	selection-background-color: #d7d7d7; 
-	selection-color: black;
-}
-
-QCalendarWidget QAbstractItemView:!enabled {
-	background-color: red;
-}
-
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-	background-color: #ebeded;
-	color: gray;
-}
-
-</string>
-              </property>
-              <property name="calendarPopup">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_27">
-              <property name="text">
-               <string>Fecha desembolso 1</string>
-              </property>
-              <property name="buddy">
-               <cstring>fechaDesem_1</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QDateEdit" name="fechaDesem_1">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-
-QDateEdit::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QDateEdit::down-arrow {
-    image: url(:/Resources/img/calendar.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}
-
-
-/*
-QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-QCalendarWidget QToolButton {
-/*	height: 35px;*/
-  	/*width: parent;*/
-  	color: black;
-  	font-size: 14px;
-  	icon-size: 20px, 20px;
-  	background-color: #ebeded
-}
-
-QCalendarWidget QMenu {
-  	/*width: 150px;*/
-  	left: 20px;
-  	color: black;
-  	font-size: 14px;
-  	background-color: #ebeded;
-}
-
-
-QCalendarWidget QSpinBox { 
-  	background-color: #EBEDED;
-	border-style: outset;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	padding: 2px;
-}
-
-/*
-QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
-QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
-QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
-QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
-*/
-
-/* header row */
-QCalendarWidget QWidget {
-	alternate-background-color: #d7d7d7;
-}
-
-/* normal days */
-QCalendarWidget QAbstractItemView:enabled {
-	font-size:14px;
-	color: black;
-	background-color: #ebeded;
-	selection-background-color: #d7d7d7; 
-	selection-color: black;
-}
-
-QCalendarWidget QAbstractItemView:!enabled {
-	background-color: red;
-}
-
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-	background-color: #ebeded;
-	color: gray;
-}
-
-</string>
-              </property>
-              <property name="calendarPopup">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_16">
-              <property name="text">
-               <string>Monto desembolso 1 (Bs)</string>
-              </property>
-              <property name="buddy">
-               <cstring>montoDesem_1</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLineEdit" name="montoDesem_1">
-              <property name="styleSheet">
-               <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_28">
-              <property name="text">
-               <string>Fecha desembolso 2</string>
-              </property>
-              <property name="buddy">
-               <cstring>fechaDesem_2</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QDateEdit" name="fechaDesem_2">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-
-QDateEdit::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QDateEdit::down-arrow {
-    image: url(:/Resources/img/calendar.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}
-
-
-/*
-QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-QCalendarWidget QToolButton {
-/*	height: 35px;*/
-  	/*width: parent;*/
-  	color: black;
-  	font-size: 14px;
-  	icon-size: 20px, 20px;
-  	background-color: #ebeded
-}
-
-QCalendarWidget QMenu {
-  	/*width: 150px;*/
-  	left: 20px;
-  	color: black;
-  	font-size: 14px;
-  	background-color: #ebeded;
-}
-
-
-QCalendarWidget QSpinBox { 
-  	background-color: #EBEDED;
-	border-style: outset;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	padding: 2px;
-}
-
-/*
-QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
-QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
-QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
-QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
-*/
-
-/* header row */
-QCalendarWidget QWidget {
-	alternate-background-color: #d7d7d7;
-}
-
-/* normal days */
-QCalendarWidget QAbstractItemView:enabled {
-	font-size:14px;
-	color: black;
-	background-color: #ebeded;
-	selection-background-color: #d7d7d7; 
-	selection-color: black;
-}
-
-QCalendarWidget QAbstractItemView:!enabled {
-	background-color: red;
-}
-
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-	background-color: #ebeded;
-	color: gray;
-}
-
-</string>
-              </property>
-              <property name="calendarPopup">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_17">
-              <property name="text">
-               <string>Monto desembolso 2 (Bs)</string>
-              </property>
-              <property name="buddy">
-               <cstring>montoDesem_2</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QLineEdit" name="montoDesem_2">
-              <property name="styleSheet">
-               <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="label_31">
-              <property name="text">
-               <string>Fecha desembolso 3</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QDateEdit" name="fechaDesem_3">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-
-QDateEdit::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QDateEdit::down-arrow {
-    image: url(:/Resources/img/calendar.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}
-
-
-/*
-QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-QCalendarWidget QToolButton {
-/*	height: 35px;*/
-  	/*width: parent;*/
-  	color: black;
-  	font-size: 14px;
-  	icon-size: 20px, 20px;
-  	background-color: #ebeded
-}
-
-QCalendarWidget QMenu {
-  	/*width: 150px;*/
-  	left: 20px;
-  	color: black;
-  	font-size: 14px;
-  	background-color: #ebeded;
-}
-
-
-QCalendarWidget QSpinBox { 
-  	background-color: #EBEDED;
-	border-style: outset;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	padding: 2px;
-}
-
-/*
-QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
-QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
-QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
-QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
-*/
-
-/* header row */
-QCalendarWidget QWidget {
-	alternate-background-color: #d7d7d7;
-}
-
-/* normal days */
-QCalendarWidget QAbstractItemView:enabled {
-	font-size:14px;
-	color: black;
-	background-color: #ebeded;
-	selection-background-color: #d7d7d7; 
-	selection-color: black;
-}
-
-QCalendarWidget QAbstractItemView:!enabled {
-	background-color: red;
-}
-
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-	background-color: #ebeded;
-	color: gray;
-}
-
-</string>
-              </property>
-              <property name="calendarPopup">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0">
-             <widget class="QLabel" name="label_32">
-              <property name="text">
-               <string>Monto desembolso 3 (Bs)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="1">
-             <widget class="QLineEdit" name="montoDesem_3">
-              <property name="styleSheet">
-               <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="0">
-             <widget class="QLabel" name="label_33">
-              <property name="text">
-               <string>Fecha desembolso 4</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="1">
-             <widget class="QDateEdit" name="fechaDesem_4">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-
-QDateEdit::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QDateEdit::down-arrow {
-    image: url(:/Resources/img/calendar.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}
-
-
-/*
-QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-QCalendarWidget QToolButton {
-/*	height: 35px;*/
-  	/*width: parent;*/
-  	color: black;
-  	font-size: 14px;
-  	icon-size: 20px, 20px;
-  	background-color: #ebeded
-}
-
-QCalendarWidget QMenu {
-  	/*width: 150px;*/
-  	left: 20px;
-  	color: black;
-  	font-size: 14px;
-  	background-color: #ebeded;
-}
-
-
-QCalendarWidget QSpinBox { 
-  	background-color: #EBEDED;
-	border-style: outset;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	padding: 2px;
-}
-
-/*
-QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
-QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
-QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
-QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
-*/
-
-/* header row */
-QCalendarWidget QWidget {
-	alternate-background-color: #d7d7d7;
-}
-
-/* normal days */
-QCalendarWidget QAbstractItemView:enabled {
-	font-size:14px;
-	color: black;
-	background-color: #ebeded;
-	selection-background-color: #d7d7d7; 
-	selection-color: black;
-}
-
-QCalendarWidget QAbstractItemView:!enabled {
-	background-color: red;
-}
-
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-	background-color: #ebeded;
-	color: gray;
-}
-
-</string>
-              </property>
-              <property name="calendarPopup">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="0">
-             <widget class="QLabel" name="label_34">
-              <property name="text">
-               <string>Monto desembolso 4 (Bs)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="1">
-             <widget class="QLineEdit" name="montoDesem_4">
-              <property name="styleSheet">
-               <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-              </property>
-             </widget>
-            </item>
-            <item row="11" column="0">
-             <widget class="QLabel" name="label_35">
-              <property name="text">
-               <string>Fecha desembolso 5</string>
-              </property>
-             </widget>
-            </item>
-            <item row="11" column="1">
-             <widget class="QDateEdit" name="fechaDesem_5">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 13px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-
-QDateEdit::drop-down  {
-    border: 0px; /* This seems to replace the whole arrow of the combo box */
-}
-
-
-QDateEdit::down-arrow {
-    image: url(:/Resources/img/calendar.png);
-    width: 24px;
-    height: 24px;
-	margin-right: 6px;
-}
-
-
-/*
-QDateEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QDateEdit::hover {
-	border-color: black;
-}
-
-QDateEdit::focus {
-	background-color: #b5b5b5;
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-QCalendarWidget QToolButton {
-/*	height: 35px;*/
-  	/*width: parent;*/
-  	color: black;
-  	font-size: 14px;
-  	icon-size: 20px, 20px;
-  	background-color: #ebeded
-}
-
-QCalendarWidget QMenu {
-  	/*width: 150px;*/
-  	left: 20px;
-  	color: black;
-  	font-size: 14px;
-  	background-color: #ebeded;
-}
-
-
-QCalendarWidget QSpinBox { 
-  	background-color: #EBEDED;
-	border-style: outset;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	padding: 2px;
-}
-
-/*
-QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
-QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
-QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
-QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
-*/
-
-/* header row */
-QCalendarWidget QWidget {
-	alternate-background-color: #d7d7d7;
-}
-
-/* normal days */
-QCalendarWidget QAbstractItemView:enabled {
-	font-size:14px;
-	color: black;
-	background-color: #ebeded;
-	selection-background-color: #d7d7d7; 
-	selection-color: black;
-}
-
-QCalendarWidget QAbstractItemView:!enabled {
-	background-color: red;
-}
-
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-	background-color: #ebeded;
-	color: gray;
-}
-
-</string>
-              </property>
-              <property name="calendarPopup">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="12" column="0">
-             <widget class="QLabel" name="label_36">
-              <property name="text">
-               <string>Monto desembolso 5 (Bs)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="12" column="1">
-             <widget class="QLineEdit" name="montoDesem_5">
-              <property name="styleSheet">
-               <string notr="true">QLineEdit {
-	background-color: #EBEDED;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover {
-	border-color: black;
-}
-
-QLineEdit::focus {
-	background-color: #b5b5b5;
-}</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_8">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+       <property name="rightMargin">
+        <number>5</number>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+       <property name="bottomMargin">
+        <number>0</number>
        </property>
-      </spacer>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QGroupBox" name="groupBox">
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="search">
+           <property name="styleSheet">
+            <string notr="true">QLineEdit {
+	background-color: #ebeded;
+
+
+	border-bottom:  0px solid #ffffff;
+	border-top: 1px solid  #a7a7a7;	
+	border-right: 1px solid  #a7a7a7;	
+	border-left: 1px solid  #a7a7a7;	
+
+/************
+	border-bottom:  0px solid #ffffff;
+	border-top: 1px solid  #000000;	
+	border-right: 1px solid  #000000;	
+	border-left: 1px solid  #000000;	
+***********/
+
+
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+	color: #333333;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	padding:2px;	
+	min-height: 1em;
+
+}
+
+
+QLineEdit::focus,
+QLineEdit::hover {
+	background-color: #ebeded;
+	border-color: #a7a7a7;
+}
+
+
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>Buscar</string>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="planesList">
+           <property name="styleSheet">
+            <string notr="true">/*********************/
+
+QListView {
+    background-color: #ebeded;
+	alternate-background-color: #e3e3e3;
+	color: #333333;
+}
+
+QListView {
+    show-decoration-selected: 1; /* make the selection span the entire width of the view */
+	color: #333333;
+}
+
+QListView::item:selected {
+    border: 1px solid #b5b5b5;
+	color: #333333;
+}
+
+QListView::item:selected:!active {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+	color: #333333;
+}
+
+QListView::item:selected:active {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+	color: #333333;
+}
+
+QListView::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+	color: #333333;
+}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QFrame" name="frame_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>2</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0">
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame_3">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
+           <verstretch>1</verstretch>
           </sizepolicy>
          </property>
-         <property name="title">
-          <string>Cuotas</string>
-         </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>6</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
-           <layout class="QFormLayout" name="formLayout_3">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_19">
-              <property name="text">
-               <string>Número de Cuota</string>
-              </property>
-              <property name="buddy">
-               <cstring>numeroCuota</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QSpinBox" name="numeroCuota">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QSpinBox {
-	background-color: #EBEDED;
+           <widget class="QFrame" name="frame_7">
+            <property name="styleSheet">
+             <string notr="true">QFrame {
+	background-color: #ebeded;
+	border-top: 1px solid #b3b3b3;
+}</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QPushButton" name="newPlan">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: #1D8680;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:10em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #109491;
+	border-color: #ededef;
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Nuevo</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="editPlan">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: #B3B3B3;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:7em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #a7a7a7;
+	border-color: #ededef;
+}</string>
+               </property>
+               <property name="text">
+                <string>Actualizar</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="clearButton">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: #B3B3B3;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:7em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #a7a7a7;
+	border-color: #ededef;
+}</string>
+               </property>
+               <property name="text">
+                <string>Borrar</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="deletePlan">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: #EB403E;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:7em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #EB553E;
+	border-color: #EB403E;
+}</string>
+               </property>
+               <property name="text">
+                <string>Eliminar</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="savePlan">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: #1D8680;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:10em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #109491;
+	border-color: #ededef;
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Registrar</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>504</width>
+                 <height>18</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="3,1">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
+                <property name="spacing">
+                 <number>6</number>
+                </property>
+                <property name="leftMargin">
+                 <number>5</number>
+                </property>
+                <property name="topMargin">
+                 <number>5</number>
+                </property>
+                <property name="rightMargin">
+                 <number>5</number>
+                </property>
+                <item>
+                 <layout class="QFormLayout" name="formLayout">
+                  <property name="verticalSpacing">
+                   <number>6</number>
+                  </property>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_5">
+                    <property name="text">
+                     <string>Tipo de Operación:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="tipoOperacion">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QComboBox {
+	background-color:#ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover,
+QComboBox::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(:/Resources/img/dropdown.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+QComboBox::disabled {
+	background-color: #f4f4f4;
+}
+
+</string>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Crédito</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Operación de Línea de Crédito</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Leasing</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Lease Back</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Seguro</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_6">
+                    <property name="text">
+                     <string>Nro de contrato/operación:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLineEdit" name="numeroContrato">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLineEdit {
+	background-color: #ebeded;
 	border-style: outset;
 	border-radius: 12px;
 	border-color: #d7d9d9;
@@ -2166,60 +524,45 @@ QLineEdit::focus {
 	font: 10pt &quot;MS Shell Dlg 2&quot;;
 	color: #333333;
 	min-width: 8em;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-left: 3px;
+	padding: 3px;
 }
 
-QSpinBox::hover {
-	border-color: black;
-}
-
-QSpinBox::focus {
+QLineEdit::hover,
+QLineEdit::focus {
 	background-color: #b5b5b5;
+	border-color: #a7a7a7;
 }
 
 
-QSpinBox::up-button {
-	 image: url(:/Resources/img/up.png);
-    width: 20px;
-    height: 10px;
+QLineEdit::disabled {
+	background-color: #f4f4f4;
 }
-
-QSpinBox::down-button {
-	 image: url(:/Resources/img/down.png);
-    width: 20px;
-    height: 10px;
-}
-
 </string>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>999</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_29">
-              <property name="text">
-               <string>Fecha del Pago</string>
-              </property>
-              <property name="buddy">
-               <cstring>fechaPago</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QDateEdit" name="fechaPago">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QDateEdit {
-	background-color: #EBEDED;
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>Fecha Firma:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QDateEdit" name="fechaFirma">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QDeteEdit::disabled {
+	background-color: #f4f4f4;
+}
+
+QDateEdit {
+	background-color: #ebeded;
 	border-style: outset;
 	border-radius: 13px;
 	border-color: #d7d9d9;
@@ -2230,12 +573,10 @@ QSpinBox::down-button {
 	padding: 3px;
 }
 
-QDateEdit::hover {
-	border-color: black;
-}
-
+QDateEdit::hover,
 QDateEdit::focus {
 	background-color: #b5b5b5;
+	border-color: #a7a7a7;
 }
 
 QDateEdit::drop-down  {
@@ -2272,11 +613,6 @@ QDateEdit::focus {
 	background-color: #b5b5b5;
 }
 */
-
-
-
-
-
 
 
 
@@ -2347,26 +683,732 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
 }
 
 </string>
-              </property>
-              <property name="calendarPopup">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_20">
-              <property name="text">
-               <string>Monto total del pago (Bs)</string>
-              </property>
-              <property name="buddy">
-               <cstring>pagoMonto</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="pagoMonto">
-              <property name="styleSheet">
-               <string notr="true">QLineEdit {
+                    </property>
+                    <property name="displayFormat">
+                     <string>dd/MM/yyyy</string>
+                    </property>
+                    <property name="calendarPopup">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="0">
+                   <widget class="QLabel" name="label">
+                    <property name="text">
+                     <string>Código Línea de Crédito</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="1">
+                   <widget class="QLineEdit" name="lineaDeCredito">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
+QLineEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="label_11">
+                    <property name="text">
+                     <string>Empresa:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QComboBox" name="empresa">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QComboBox {
+	background-color:#ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover,
+QComboBox::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(:/Resources/img/dropdown.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+QComboBox::disabled {
+	background-color: #f4f4f4;
+}
+
+</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="label_13">
+                    <property name="text">
+                     <string>Nombre de la Entidad:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QComboBox" name="entidad">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QComboBox {
+	background-color:#ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover,
+QComboBox::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(:/Resources/img/dropdown.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+QComboBox::disabled {
+	background-color: #f4f4f4;
+}
+
+</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QLabel" name="label_14">
+                    <property name="text">
+                     <string>Entidad:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="1">
+                   <widget class="QLabel" name="tipoEntidad">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLabel {
+	background-color: #f4f4f4;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QFormLayout" name="formLayout_3">
+                  <property name="verticalSpacing">
+                   <number>6</number>
+                  </property>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_15">
+                    <property name="text">
+                     <string>IVA:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QLabel" name="iva">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLabel {
+	background-color: #f4f4f4;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="label_19">
+                    <property name="text">
+                     <string>Cuota Inicial:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="label_24">
+                    <property name="text">
+                     <string>Tipo Tasa:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QLabel" name="label_22">
+                    <property name="text">
+                     <string>Interés  Fijo:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="0">
+                   <widget class="QLabel" name="label_25">
+                    <property name="text">
+                     <string>Interés Variable</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QLineEdit" name="cuotaInicial">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
+QLineEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QComboBox" name="tipoTasa">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QComboBox {
+	background-color:#ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover,
+QComboBox::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(:/Resources/img/dropdown.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+QComboBox::disabled {
+	background-color: #f4f4f4;
+}
+
+</string>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Fijo</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Variable</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="5" column="1">
+                   <widget class="QLineEdit" name="interesFijo">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
+QLineEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="1">
+                   <widget class="QLineEdit" name="interesVariable">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
+QLineEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_7">
+                    <property name="text">
+                     <string>Monto:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLineEdit" name="monto">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
+QLineEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_9">
+                    <property name="text">
+                     <string>Moneda:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="moneda">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QComboBox {
+	background-color:#ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover,
+QComboBox::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(:/Resources/img/dropdown.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+QComboBox::disabled {
+	background-color: #f4f4f4;
+}
+
+</string>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Bolivianos (BOB)</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Dólares ($us)</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QFormLayout" name="formLayout_4">
+                  <property name="verticalSpacing">
+                   <number>6</number>
+                  </property>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_10">
+                    <property name="text">
+                     <string>Frecuencia de Pagos:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="frecuencia">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QComboBox {
+	background-color:#ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover,
+QComboBox::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(:/Resources/img/dropdown.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+QComboBox::disabled {
+	background-color: #f4f4f4;
+}
+
+</string>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Mensual</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Bimensual</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Trimestral</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Semestral</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Anual</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_12">
+                    <property name="text">
+                     <string>Plazo:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QSpinBox" name="plazo">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QSpinBox::disabled {
+	background-color: #f4f4f4;
+}
+
+
+QSpinBox {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 3px;
+}
+
+QSpinBox::hover,
+QSpinBox::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QSpinBox::up-button {
+	 image: url(:/Resources/img/up.png);
+    width: 20px;
+    height: 10px;
+}
+
+QSpinBox::down-button {
+	 image: url(:/Resources/img/down.png);
+    width: 20px;
+    height: 10px;
+}
+
+
+QSpinBox::disabled {
+	background-color: #f4f4f4;
+}
+
+</string>
+                    </property>
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>999</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_16">
+                    <property name="text">
+                     <string>Fecha Vencimiento:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QDateEdit" name="fechaVencimiento">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QDeteEdit::disabled {
+	background-color: #f4f4f4;
+}
+
+QDateEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover,
+QDateEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+QDateEdit::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QDateEdit::down-arrow {
+    image: url(:/Resources/img/calendar.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+
+/*
+QDateEdit {
 	background-color: #EBEDED;
 	border-style: outset;
 	border-radius: 12px;
@@ -2378,30 +1420,252 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
 	padding: 3px;
 }
 
-QLineEdit::hover {
+QDateEdit::hover {
 	border-color: black;
 }
 
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+QCalendarWidget QToolButton {
+/*	height: 35px;*/
+  	/*width: parent;*/
+  	color: black;
+  	font-size: 14px;
+  	icon-size: 20px, 20px;
+  	background-color: #ebeded
+}
+
+QCalendarWidget QMenu {
+  	/*width: 150px;*/
+  	left: 20px;
+  	color: black;
+  	font-size: 14px;
+  	background-color: #ebeded;
+}
+
+
+QCalendarWidget QSpinBox { 
+  	background-color: #EBEDED;
+	border-style: outset;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	padding: 2px;
+}
+
+/*
+QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
+QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
+QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
+QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
+*/
+
+/* header row */
+QCalendarWidget QWidget {
+	alternate-background-color: #d7d7d7;
+}
+
+/* normal days */
+QCalendarWidget QAbstractItemView:enabled {
+	font-size:14px;
+	color: black;
+	background-color: #ebeded;
+	selection-background-color: #d7d7d7; 
+	selection-color: black;
+}
+
+QCalendarWidget QAbstractItemView:!enabled {
+	background-color: red;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+	background-color: #ebeded;
+	color: gray;
+}
+
+</string>
+                    </property>
+                    <property name="calendarPopup">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QFormLayout" name="formLayout_2">
+                <property name="horizontalSpacing">
+                 <number>0</number>
+                </property>
+                <property name="verticalSpacing">
+                 <number>6</number>
+                </property>
+                <property name="leftMargin">
+                 <number>5</number>
+                </property>
+                <property name="topMargin">
+                 <number>5</number>
+                </property>
+                <property name="rightMargin">
+                 <number>5</number>
+                </property>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_17">
+                  <property name="text">
+                   <string>Concepto:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_18">
+                  <property name="text">
+                   <string>Detalle:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="concepto">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
 QLineEdit::focus {
 	background-color: #b5b5b5;
-}</string>
-              </property>
-             </widget>
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="detalle">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
+QLineEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
             </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_21">
-              <property name="text">
-               <string>Pago de capital (Bs)</string>
-              </property>
-              <property name="buddy">
-               <cstring>pagoCapital</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLineEdit" name="pagoCapital">
-              <property name="styleSheet">
-               <string notr="true">QLineEdit {
+            <item>
+             <widget class="QFrame" name="formFrame">
+              <layout class="QFormLayout" name="formLayout_5">
+               <property name="rightMargin">
+                <number>5</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_20">
+                 <property name="text">
+                  <string>Fecha Desembolso 1:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QDateEdit" name="fechaDesem_1">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QDeteEdit::disabled {
+	background-color: #f4f4f4;
+}
+
+QDateEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover,
+QDateEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+QDateEdit::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QDateEdit::down-arrow {
+    image: url(:/Resources/img/calendar.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+
+/*
+QDateEdit {
 	background-color: #EBEDED;
 	border-style: outset;
 	border-radius: 12px;
@@ -2413,30 +1677,182 @@ QLineEdit::focus {
 	padding: 3px;
 }
 
-QLineEdit::hover {
+QDateEdit::hover {
 	border-color: black;
 }
 
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+QCalendarWidget QToolButton {
+/*	height: 35px;*/
+  	/*width: parent;*/
+  	color: black;
+  	font-size: 14px;
+  	icon-size: 20px, 20px;
+  	background-color: #ebeded
+}
+
+QCalendarWidget QMenu {
+  	/*width: 150px;*/
+  	left: 20px;
+  	color: black;
+  	font-size: 14px;
+  	background-color: #ebeded;
+}
+
+
+QCalendarWidget QSpinBox { 
+  	background-color: #EBEDED;
+	border-style: outset;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	padding: 2px;
+}
+
+/*
+QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
+QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
+QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
+QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
+*/
+
+/* header row */
+QCalendarWidget QWidget {
+	alternate-background-color: #d7d7d7;
+}
+
+/* normal days */
+QCalendarWidget QAbstractItemView:enabled {
+	font-size:14px;
+	color: black;
+	background-color: #ebeded;
+	selection-background-color: #d7d7d7; 
+	selection-color: black;
+}
+
+QCalendarWidget QAbstractItemView:!enabled {
+	background-color: red;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+	background-color: #ebeded;
+	color: gray;
+}
+
+</string>
+                 </property>
+                 <property name="calendarPopup">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_26">
+                 <property name="text">
+                  <string>Monto Desembolso 1:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="montoDesem_1">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
 QLineEdit::focus {
 	background-color: #b5b5b5;
-}</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_22">
-              <property name="text">
-               <string>Pago de interés (Bs)</string>
-              </property>
-              <property name="buddy">
-               <cstring>pagoInteres</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLineEdit" name="pagoInteres">
-              <property name="styleSheet">
-               <string notr="true">QLineEdit {
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_2">
+                 <property name="text">
+                  <string>Fecha Desembolso 2:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDateEdit" name="fechaDesem_2">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QDeteEdit::disabled {
+	background-color: #f4f4f4;
+}
+
+QDateEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover,
+QDateEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+QDateEdit::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QDateEdit::down-arrow {
+    image: url(:/Resources/img/calendar.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+
+/*
+QDateEdit {
 	background-color: #EBEDED;
 	border-style: outset;
 	border-radius: 12px;
@@ -2448,30 +1864,228 @@ QLineEdit::focus {
 	padding: 3px;
 }
 
-QLineEdit::hover {
+QDateEdit::hover {
 	border-color: black;
 }
 
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+QCalendarWidget QToolButton {
+/*	height: 35px;*/
+  	/*width: parent;*/
+  	color: black;
+  	font-size: 14px;
+  	icon-size: 20px, 20px;
+  	background-color: #ebeded
+}
+
+QCalendarWidget QMenu {
+  	/*width: 150px;*/
+  	left: 20px;
+  	color: black;
+  	font-size: 14px;
+  	background-color: #ebeded;
+}
+
+
+QCalendarWidget QSpinBox { 
+  	background-color: #EBEDED;
+	border-style: outset;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	padding: 2px;
+}
+
+/*
+QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
+QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
+QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
+QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
+*/
+
+/* header row */
+QCalendarWidget QWidget {
+	alternate-background-color: #d7d7d7;
+}
+
+/* normal days */
+QCalendarWidget QAbstractItemView:enabled {
+	font-size:14px;
+	color: black;
+	background-color: #ebeded;
+	selection-background-color: #d7d7d7; 
+	selection-color: black;
+}
+
+QCalendarWidget QAbstractItemView:!enabled {
+	background-color: red;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+	background-color: #ebeded;
+	color: gray;
+}
+
+</string>
+                 </property>
+                 <property name="calendarPopup">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_27">
+                 <property name="text">
+                  <string>Monto Desembolso 2:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="montoDesem_2">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
 QLineEdit::focus {
 	background-color: #b5b5b5;
-}</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_23">
-              <property name="text">
-               <string>Pago de IVA (Bs)</string>
-              </property>
-              <property name="buddy">
-               <cstring>pagoIva</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QLineEdit" name="pagoIva">
-              <property name="styleSheet">
-               <string notr="true">QLineEdit {
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Fecha Desembolso 3:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_28">
+                 <property name="text">
+                  <string>Monto Desembolso 3:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="montoDesem_3">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
+QLineEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_21">
+                 <property name="text">
+                  <string>Fecha Desembolso 4:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QDateEdit" name="fechaDesem_4">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QDeteEdit::disabled {
+	background-color: #f4f4f4;
+}
+
+QDateEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover,
+QDateEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+QDateEdit::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QDateEdit::down-arrow {
+    image: url(:/Resources/img/calendar.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+
+/*
+QDateEdit {
 	background-color: #EBEDED;
 	border-style: outset;
 	border-radius: 12px;
@@ -2483,14 +2097,458 @@ QLineEdit::focus {
 	padding: 3px;
 }
 
-QLineEdit::hover {
+QDateEdit::hover {
 	border-color: black;
 }
 
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+QCalendarWidget QToolButton {
+/*	height: 35px;*/
+  	/*width: parent;*/
+  	color: black;
+  	font-size: 14px;
+  	icon-size: 20px, 20px;
+  	background-color: #ebeded
+}
+
+QCalendarWidget QMenu {
+  	/*width: 150px;*/
+  	left: 20px;
+  	color: black;
+  	font-size: 14px;
+  	background-color: #ebeded;
+}
+
+
+QCalendarWidget QSpinBox { 
+  	background-color: #EBEDED;
+	border-style: outset;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	padding: 2px;
+}
+
+/*
+QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
+QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
+QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
+QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
+*/
+
+/* header row */
+QCalendarWidget QWidget {
+	alternate-background-color: #d7d7d7;
+}
+
+/* normal days */
+QCalendarWidget QAbstractItemView:enabled {
+	font-size:14px;
+	color: black;
+	background-color: #ebeded;
+	selection-background-color: #d7d7d7; 
+	selection-color: black;
+}
+
+QCalendarWidget QAbstractItemView:!enabled {
+	background-color: red;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+	background-color: #ebeded;
+	color: gray;
+}
+
+</string>
+                 </property>
+                 <property name="calendarPopup">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_29">
+                 <property name="text">
+                  <string>Monto Desembolso 4:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QLineEdit" name="montoDesem_4">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
 QLineEdit::focus {
 	background-color: #b5b5b5;
-}</string>
-              </property>
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="label_23">
+                 <property name="text">
+                  <string>Fecha Desembolso 5:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QDateEdit" name="fechaDesem_5">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QDeteEdit::disabled {
+	background-color: #f4f4f4;
+}
+
+QDateEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover,
+QDateEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+QDateEdit::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QDateEdit::down-arrow {
+    image: url(:/Resources/img/calendar.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+
+/*
+QDateEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover {
+	border-color: black;
+}
+
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+QCalendarWidget QToolButton {
+/*	height: 35px;*/
+  	/*width: parent;*/
+  	color: black;
+  	font-size: 14px;
+  	icon-size: 20px, 20px;
+  	background-color: #ebeded
+}
+
+QCalendarWidget QMenu {
+  	/*width: 150px;*/
+  	left: 20px;
+  	color: black;
+  	font-size: 14px;
+  	background-color: #ebeded;
+}
+
+
+QCalendarWidget QSpinBox { 
+  	background-color: #EBEDED;
+	border-style: outset;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	padding: 2px;
+}
+
+/*
+QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
+QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
+QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
+QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
+*/
+
+/* header row */
+QCalendarWidget QWidget {
+	alternate-background-color: #d7d7d7;
+}
+
+/* normal days */
+QCalendarWidget QAbstractItemView:enabled {
+	font-size:14px;
+	color: black;
+	background-color: #ebeded;
+	selection-background-color: #d7d7d7; 
+	selection-color: black;
+}
+
+QCalendarWidget QAbstractItemView:!enabled {
+	background-color: red;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+	background-color: #ebeded;
+	color: gray;
+}
+
+</string>
+                 </property>
+                 <property name="calendarPopup">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_30">
+                 <property name="text">
+                  <string>Monto Desembolso 5:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QLineEdit" name="montoDesem_5">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QLineEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QLineEdit::hover,
+QLineEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QLineEdit::disabled {
+	background-color: #f4f4f4;
+}
+</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QDateEdit" name="fechaDesem_3">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QDeteEdit::disabled {
+	background-color: #f4f4f4;
+}
+
+QDateEdit {
+	background-color: #ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover,
+QDateEdit::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+QDateEdit::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QDateEdit::down-arrow {
+    image: url(:/Resources/img/calendar.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+
+/*
+QDateEdit {
+	background-color: #EBEDED;
+	border-style: outset;
+	border-radius: 12px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	min-width: 8em;
+	padding: 3px;
+}
+
+QDateEdit::hover {
+	border-color: black;
+}
+
+QDateEdit::focus {
+	background-color: #b5b5b5;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+QCalendarWidget QToolButton {
+/*	height: 35px;*/
+  	/*width: parent;*/
+  	color: black;
+  	font-size: 14px;
+  	icon-size: 20px, 20px;
+  	background-color: #ebeded
+}
+
+QCalendarWidget QMenu {
+  	/*width: 150px;*/
+  	left: 20px;
+  	color: black;
+  	font-size: 14px;
+  	background-color: #ebeded;
+}
+
+
+QCalendarWidget QSpinBox { 
+  	background-color: #EBEDED;
+	border-style: outset;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	color: #333333;
+	padding: 2px;
+}
+
+/*
+QCalendarWidget QSpinBox::up-button { subcontrol-origin: border;  subcontrol-position: top right;  width:65px; }
+QCalendarWidget QSpinBox::down-button {subcontrol-origin: border; subcontrol-position: bottom right;  width:65px;
+QCalendarWidget QSpinBox::up-arrow { width:56px;  height:56px; }
+QCalendarWidget QSpinBox::down-arrow { width:56px;  height:56px; }
+*/
+
+/* header row */
+QCalendarWidget QWidget {
+	alternate-background-color: #d7d7d7;
+}
+
+/* normal days */
+QCalendarWidget QAbstractItemView:enabled {
+	font-size:14px;
+	color: black;
+	background-color: #ebeded;
+	selection-background-color: #d7d7d7; 
+	selection-color: black;
+}
+
+QCalendarWidget QAbstractItemView:!enabled {
+	background-color: red;
+}
+
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+	background-color: #ebeded;
+	color: gray;
+}
+
+</string>
+                 </property>
+                 <property name="calendarPopup">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
            </layout>
@@ -2499,253 +2557,221 @@ QLineEdit::focus {
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+        <widget class="QFrame" name="frame_5">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>2</verstretch>
+          </sizepolicy>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QFrame" name="frame_6">
+            <property name="styleSheet">
+             <string notr="true">background-color: #ebeded;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="styleSheet">
+                <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+</string>
+               </property>
+               <property name="text">
+                <string>Cuotas del Plan de Pagos</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>504</width>
+                 <height>18</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="addCuota">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: #1D8680;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:10em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #109491;
+	border-color: #ededef;
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Añadir Cuota</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="editCuota">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: #B3B3B3;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:7em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #a7a7a7;
+	border-color: #ededef;
+}</string>
+               </property>
+               <property name="text">
+                <string>Actualizar</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="deleteCuota">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+	background-color: #EB403E;
+	border-style: outset;
+	border-radius: 12px;
+	font: 12pt &quot;MS Shell Dlg 2&quot;;
+	color: white;
+	min-width: 7em;
+	max-width:7em;
+	padding: 3px  6px 3px 6px;
+}
+
+QPushButton::focus,
+QPushButton::hover {
+	background-color: #EB553E;
+	border-color: #EB403E;
+}</string>
+               </property>
+               <property name="text">
+                <string>Eliminar</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="verticalFrame">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QTableWidget" name="plannedFee">
+               <property name="styleSheet">
+                <string notr="true">QTableWidget {
+	background-color: white;
+	border-top: 2.5px solid #ebeded;
+	border-bottom: 2.5px solid #ebeded;
+	border-right: 4.5px solid #ebeded;
+	border-left: 2.5px solid #ebeded;
+	gridline-color: #B3B3B3;
+	font: 9pt &quot;MS Shell Dlg 2&quot;;
+}</string>
+               </property>
+               <property name="rowCount">
+                <number>0</number>
+               </property>
+               <property name="columnCount">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_6">
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="savePlan">
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-	background-color: #1D8680;
-	border-style: outset;
-	border-radius: 12px;
-	font: 12pt &quot;MS Shell Dlg 2&quot;;
-	color: white;
-	min-width: 2em;
-	max-width:10em;
-	padding: 3px  6px 3px 6px;
-}
-
-QPushButton::focus,
-QPushButton::hover {
-	background-color: #109491;
-	border-color: #ededef;
-}</string>
-       </property>
-       <property name="text">
-        <string>Guardar Plan de Pagos</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="newButton">
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-	background-color: #1D8680;
-	border-style: outset;
-	border-radius: 12px;
-	font: 12pt &quot;MS Shell Dlg 2&quot;;
-	color: white;
-	min-width: 7em;
-	max-width:10em;
-	padding: 3px  6px 3px 6px;
-}
-
-QPushButton::focus,
-QPushButton::hover {
-	background-color: #109491;
-	border-color: #ededef;
-}
-</string>
-       </property>
-       <property name="text">
-        <string>Nuevo</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_7">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="saveCuota">
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-	background-color: #1D8680;
-	border-style: outset;
-	border-radius: 12px;
-	font: 12pt &quot;MS Shell Dlg 2&quot;;
-	color: white;
-	min-width: 7em;
-	max-width:10em;
-	padding: 3px  6px 3px 6px;
-}
-
-QPushButton::focus,
-QPushButton::hover {
-	background-color: #109491;
-	border-color: #ededef;
-}
-</string>
-       </property>
-       <property name="text">
-        <string>Añadir cuota</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_5">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <spacer name="horizontalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QTableWidget" name="tableWidget">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QTableWidget{
-background-color: #EBEDED;
-border-top: 2.5px solid white;
-border-bottom: 2.5px solid white;
-border-right: 2.5px solid white;
-border-left: 2.5px solid white;
-gridline-color: white;
-font: 9pt &quot;MS Shell Dlg 2&quot;;
-}</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+     </widget>
+    </widget>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <tabstops>
-  <tabstop>tipoDeOperacion</tabstop>
-  <tabstop>nombreEntidad</tabstop>
-  <tabstop>tipoEntidad</tabstop>
-  <tabstop>codigoLineaCredito</tabstop>
-  <tabstop>empresaGrupo</tabstop>
-  <tabstop>numeroContratoOperacion</tabstop>
-  <tabstop>fechaFirma</tabstop>
-  <tabstop>concepto</tabstop>
-  <tabstop>detalle</tabstop>
-  <tabstop>moneda</tabstop>
-  <tabstop>monto</tabstop>
-  <tabstop>iva</tabstop>
-  <tabstop>cuotaInicial</tabstop>
-  <tabstop>tipoTasa</tabstop>
-  <tabstop>interesFijo</tabstop>
-  <tabstop>interesVariable</tabstop>
-  <tabstop>plazo</tabstop>
-  <tabstop>frecuencia</tabstop>
-  <tabstop>fechaVencimiento</tabstop>
-  <tabstop>fechaDesem_1</tabstop>
-  <tabstop>montoDesem_1</tabstop>
-  <tabstop>fechaDesem_2</tabstop>
-  <tabstop>montoDesem_2</tabstop>
-  <tabstop>fechaDesem_3</tabstop>
-  <tabstop>montoDesem_3</tabstop>
-  <tabstop>fechaDesem_4</tabstop>
-  <tabstop>montoDesem_4</tabstop>
-  <tabstop>fechaDesem_5</tabstop>
-  <tabstop>montoDesem_5</tabstop>
-  <tabstop>numeroCuota</tabstop>
-  <tabstop>fechaPago</tabstop>
-  <tabstop>pagoMonto</tabstop>
-  <tabstop>pagoCapital</tabstop>
-  <tabstop>pagoInteres</tabstop>
-  <tabstop>pagoIva</tabstop>
-  <tabstop>tableWidget</tabstop>
- </tabstops>
  <resources>
   <include location="Login.qrc"/>
  </resources>

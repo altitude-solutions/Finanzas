@@ -4,6 +4,9 @@
 
 TabsWindow::TabsWindow(QWidget *parent): QMainWindow(parent) {
 	ui.setupUi(this);
+	// Maximize window
+	this->setWindowState (Qt::WindowState::WindowMaximized);
+
 	// ==========================================
 	// Linea de credito tab configuration
 	// ==========================================
@@ -31,6 +34,7 @@ TabsWindow::TabsWindow(QWidget *parent): QMainWindow(parent) {
 	secondLayout->addWidget (secondTabHeader, 1);
 	secondLayout->addWidget (planDePagos, 8);
 	secondLayout->setMargin (0);
+	secondLayout->setSpacing (0);	// remove space between header and body
 	secondTab->setLayout (secondLayout);
 	ui.tabWidget->addTab (secondTab, QString::fromLatin1 ("Plan de Pagos"));
 	connect (secondTabHeader, &AppHeader::logoutButton, this, &TabsWindow::logout);

@@ -36,10 +36,9 @@
     <widget class="QSplitter" name="splitter">
      <property name="styleSheet">
       <string notr="true">QSplitter::handle {
-	background: #B3B3B3;
-}
-
-</string>
+	background: #ebeded;
+	/*background: #B3B3B3;*/
+}</string>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -48,7 +47,7 @@
       <bool>true</bool>
      </property>
      <property name="handleWidth">
-      <number>1</number>
+      <number>2</number>
      </property>
      <property name="childrenCollapsible">
       <bool>true</bool>
@@ -87,42 +86,41 @@
          <item>
           <widget class="QLineEdit" name="search">
            <property name="styleSheet">
-            <string notr="true">
-QLineEdit{
-/*
-	background-color: #B3B3B3;
-*/
+            <string notr="true">QLineEdit {
+	background-color: #ebeded;
 
-/*
+
 	border-bottom:  0px solid #ffffff;
-	border-top: 1px solid  #ededef;	
-	border-right: 1px solid  #ededef;	
-	border-left: 1px solid  #ededef;	
-*/
+	border-top: 1px solid  #a7a7a7;	
+	border-right: 1px solid  #a7a7a7;	
+	border-left: 1px solid  #a7a7a7;	
 
+/************
 	border-bottom:  0px solid #ffffff;
 	border-top: 1px solid  #000000;	
 	border-right: 1px solid  #000000;	
 	border-left: 1px solid  #000000;	
+***********/
 
-/*
+
 	border-top-left-radius:10px;
 	border-top-right-radius:10px;
-	color: white;
+	color: #333333;
 	font: 12pt &quot;MS Shell Dlg 2&quot;;
 	padding:2px;	
 	min-height: 1em;
-*/
+
 }
 
-/*
+
 QLineEdit::focus,
 QLineEdit::hover {
-	background-color: #a7a7a7;
-	border-color: #ededef;
+	background-color: #ebeded;
+	border-color: #a7a7a7;
 }
 
-*/</string>
+
+</string>
            </property>
            <property name="text">
             <string/>
@@ -136,7 +134,45 @@ QLineEdit::hover {
           </widget>
          </item>
          <item>
-          <widget class="QListView" name="planesList"/>
+          <widget class="QListView" name="planesList">
+           <property name="styleSheet">
+            <string notr="true">/*********************/
+
+QListView {
+    background-color: #ebeded;
+	alternate-background-color: #e3e3e3;
+	color: #333333;
+}
+
+QListView {
+    show-decoration-selected: 1; /* make the selection span the entire width of the view */
+	color: #333333;
+}
+
+QListView::item:selected {
+    border: 1px solid #b5b5b5;
+	color: #333333;
+}
+
+QListView::item:selected:!active {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+	color: #333333;
+}
+
+QListView::item:selected:active {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+	color: #333333;
+}
+
+QListView::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+	color: #333333;
+}</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -151,7 +187,7 @@ QLineEdit::hover {
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <property name="spacing">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="leftMargin">
         <number>0</number>
@@ -191,6 +227,9 @@ QLineEdit::hover {
           </property>
           <item>
            <widget class="QFrame" name="frame">
+            <property name="styleSheet">
+             <string notr="true">border-bottom: 1px solid #ebeded;</string>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_6">
              <property name="spacing">
               <number>6</number>
@@ -262,13 +301,6 @@ QLineEdit::hover {
               </layout>
              </item>
             </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
            </widget>
           </item>
           <item>
@@ -607,13 +639,13 @@ color:#333333;
               <number>0</number>
              </property>
              <property name="leftMargin">
-              <number>5</number>
+              <number>0</number>
              </property>
              <property name="topMargin">
               <number>0</number>
              </property>
              <property name="rightMargin">
-              <number>5</number>
+              <number>0</number>
              </property>
              <property name="bottomMargin">
               <number>0</number>
@@ -621,7 +653,15 @@ color:#333333;
              <item>
               <widget class="QTableWidget" name="plannedFee">
                <property name="styleSheet">
-                <string notr="true"/>
+                <string notr="true">QTableWidget {
+	background-color: white;
+	border-top: 2.5px solid #ebeded;
+	border-bottom: 2.5px solid #ebeded;
+	border-right: 4.5px solid #ebeded;
+	border-left: 2.5px solid #ebeded;
+	gridline-color: #B3B3B3;
+	font: 9pt &quot;MS Shell Dlg 2&quot;;
+}</string>
                </property>
                <property name="rowCount">
                 <number>0</number>
@@ -790,13 +830,13 @@ QPushButton::hover {
               <number>0</number>
              </property>
              <property name="leftMargin">
-              <number>5</number>
+              <number>0</number>
              </property>
              <property name="topMargin">
               <number>0</number>
              </property>
              <property name="rightMargin">
-              <number>5</number>
+              <number>0</number>
              </property>
              <property name="bottomMargin">
               <number>0</number>
@@ -804,7 +844,15 @@ QPushButton::hover {
              <item>
               <widget class="QTableWidget" name="effectiveFee">
                <property name="styleSheet">
-                <string notr="true"/>
+                <string notr="true">QTableWidget {
+	background-color: white;
+	border-top: 2.5px solid #ebeded;
+	border-bottom: 2.5px solid #ebeded;
+	border-right: 4.5px solid #ebeded;
+	border-left: 2.5px solid #ebeded;
+	gridline-color: #B3B3B3;
+	font: 9pt &quot;MS Shell Dlg 2&quot;;
+}</string>
                </property>
                <property name="rowCount">
                 <number>0</number>

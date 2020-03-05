@@ -5,6 +5,7 @@
 #include <QHash>
 #include <QStringListModel>
 
+#include "OperacionesFinancieras.h"
 #include "AddCuotaEfectiva.h"
 
 class PagosEfectivos : public QWidget {

@@ -41,22 +41,22 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 	// ==================================================================
 	connect (ui.addCuota, &QPushButton::clicked, this, [&]() {
 		if (planLoaded) {
-			CasosPlanDePagos_enum caso = CasosPlanDePagos_enum::CasoCredito;
+			OperacionesFinancieras::TiposDeOperacion caso = OperacionesFinancieras::TiposDeOperacion::CasoCredito;
 
 			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Crédito")) {
-				caso = CasosPlanDePagos_enum::CasoCredito;
+				caso = OperacionesFinancieras::TiposDeOperacion::CasoCredito;
 			}
 			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Operación de Línea de Crédito")) {
-				caso = CasosPlanDePagos_enum::CasoLineaDeCredito;
+				caso = OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito;
 			}
 			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Leasing")) {
-				caso = CasosPlanDePagos_enum::CasoLeasing;
+				caso = OperacionesFinancieras::TiposDeOperacion::CasoLeasing;
 			}
 			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Lease Back")) {
-				caso = CasosPlanDePagos_enum::CasoLeaseBack;
+				caso = OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack;
 			}
 			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Seguro")) {
-				caso = CasosPlanDePagos_enum::CasoSeguro;
+				caso = OperacionesFinancieras::TiposDeOperacion::CasoSeguro;
 			}
 
 			AddCuotaEfectiva addWindow (this);
@@ -91,22 +91,22 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 				int id = ui.effectiveFee->item (row, 9)->text ().toInt ();
 				QMessageBox::StandardButton answer = QMessageBox::question (this, QString::fromLatin1 ("Actualizar"), QString::fromLatin1 ("¿Actualizar la cuota \"") + ui.effectiveFee->item (row, 0)->text () + QString::fromLatin1 ("\" de la operación \"") + ui.numeroContrato->text () + "\"?");
 				if (answer == QMessageBox::StandardButton::Yes) {
-					CasosPlanDePagos_enum caso = CasosPlanDePagos_enum::CasoCredito;
+					OperacionesFinancieras::TiposDeOperacion caso = OperacionesFinancieras::TiposDeOperacion::CasoCredito;
 
 					if (ui.tipoOperacion->text () == QString::fromLatin1 ("Crédito")) {
-						caso = CasosPlanDePagos_enum::CasoCredito;
+						caso = OperacionesFinancieras::TiposDeOperacion::CasoCredito;
 					}
 					if (ui.tipoOperacion->text () == QString::fromLatin1 ("Operación de Línea de Crédito")) {
-						caso = CasosPlanDePagos_enum::CasoLineaDeCredito;
+						caso = OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito;
 					}
 					if (ui.tipoOperacion->text () == QString::fromLatin1 ("Leasing")) {
-						caso = CasosPlanDePagos_enum::CasoLeasing;
+						caso = OperacionesFinancieras::TiposDeOperacion::CasoLeasing;
 					}
 					if (ui.tipoOperacion->text () == QString::fromLatin1 ("Lease Back")) {
-						caso = CasosPlanDePagos_enum::CasoLeaseBack;
+						caso = OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack;
 					}
 					if (ui.tipoOperacion->text () == QString::fromLatin1 ("Seguro")) {
-						caso = CasosPlanDePagos_enum::CasoSeguro;
+						caso = OperacionesFinancieras::TiposDeOperacion::CasoSeguro;
 					}
 
 					AddCuotaEfectiva addWindow (this);

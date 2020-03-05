@@ -40,7 +40,7 @@ LineaDeCredito::LineaDeCredito(QWidget *parent): QWidget(parent) {
 	ui.fechaFirma->setDisplayFormat ("dd/MM/yyyy");
 	ui.fechaVencimiento->setDisplayFormat ("dd/MM/yyyy");
 
-	// TODO: Debe existir otra forma de hacer que no se pueda editar
+	// Debe existir otra forma de hacer que no se pueda editar
 	ui.tableWidget->setEditTriggers ( NULL );
 
 	// ===============================================
@@ -448,11 +448,11 @@ void LineaDeCredito::refreshTable (QJsonDocument data) {
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 6, new QTableWidgetItem (row.toObject ().value ("moneda").toString ()));
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 7, new QTableWidgetItem (QString::number (row.toObject ().value ("monto").toDouble (), 'f', 2)));
 		
-		ui.tableWidget->item (ui.tableWidget->rowCount () - 1, 7)->setTextAlignment (Qt::AlignmentFlag::AlignRight);	// Align monto to the right
+		ui.tableWidget->item (ui.tableWidget->rowCount () - 1, 7)->setTextAlignment (Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignVCenter);	// Align monto to the right and vertical center
 
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 8, new QTableWidgetItem (QString::number (row.toObject ().value ("id").toInt ())));
 
-		// TODO: color the ones that have reached its limit
+		// color the ones that have reached its limit
 		if (!row.toObject ().value ("estado").toBool ()) {
 			for (int col = 0; col < 7; col++) {
 				ui.tableWidget->item (ui.tableWidget->rowCount () - 1, col)->setBackgroundColor ("#ff0000");

@@ -3,6 +3,7 @@
 #include <QDialog>
 #include "ui_AddCuotaEfectiva.h"
 #include "PlanDePagos.h"
+#include "OperacionesFinancieras.h"
 
 
 class AddCuotaEfectiva: public QDialog {
@@ -12,7 +13,7 @@ public:
 	AddCuotaEfectiva(QWidget *parent = Q_NULLPTR);
 	~AddCuotaEfectiva();
 
-	void setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, CasosPlanDePagos_enum caso, int parentID, int editingID = 0, bool editing = false);
+	void setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, OperacionesFinancieras::TiposDeOperacion caso, int parentID, int editingID = 0, bool editing = false);
 
 public slots:
 	void onSaveClicked ();
@@ -29,5 +30,5 @@ private:
 	bool editing;
 	int editingID;
 	int parentID;
-	CasosPlanDePagos_enum caso;
+	OperacionesFinancieras::TiposDeOperacion caso;
 };
