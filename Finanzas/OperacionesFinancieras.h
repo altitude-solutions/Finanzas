@@ -101,7 +101,7 @@ QString OperacionesFinancieras::MapMonedaEnum (OperacionesFinancieras::Moneda cu
 	if (currency == OperacionesFinancieras::Moneda::Dolares) {
 		return QString::fromLatin1 ("Dólares ($us)");
 	}
-	return QString::fromLatin1 ("-");
+	return QString::fromLatin1 ("");
 }
 
 QString OperacionesFinancieras::MapMonedaEnum_Short (OperacionesFinancieras::Moneda currency) {

@@ -36,7 +36,6 @@ PlanDePagos::~PlanDePagos () {
 
 void PlanDePagos::currencySelected (QString currency) {
 	OperacionesFinancieras::Moneda selectedCurrency = OperacionesFinancieras::MapMonedaString (currency);
-	currentOperation->setCurrency (selectedCurrency);
 	ui.label_7->setText ("Monto (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
 	ui.label_15->setText ("IVA (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
 	ui.label_19->setText ("Cuota Inicial (" + OperacionesFinancieras::MapMonedaEnum_Short (selectedCurrency) + "):");
@@ -49,7 +48,6 @@ void PlanDePagos::currencySelected (QString currency) {
 
 void PlanDePagos::rateTypeSelected (QString rateType) {
 	OperacionesFinancieras::TipoTasa selectedRateType = OperacionesFinancieras::MapTipoTasaString (rateType);
-	currentOperation->setRateType (selectedRateType);
 	switch (selectedRateType)
 	{
 	case OperacionesFinancieras::TipoTasa::Fijo:
@@ -124,6 +122,75 @@ void PlanDePagos::desem_4_changed (QString desem4) {
 		ui.fechaDesem_5->setEnabled (true);
 		ui.montoDesem_5->setEnabled (true);
 	}
+}
+
+//==================================================================
+
+//==================================================================
+//==================== catch validation errors =====================
+void PlanDePagos::catchErrors (OperationValidationErros error, QString errorMessage) {
+	switch (error) {
+	case OperationValidationErros::CONTRACT_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El número del contrato u operación es necesario"));
+		ui.numeroContrato->setFocus ();
+		break;
+	case OperationValidationErros::CURRENCY_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La moneda es necesaria"));
+		ui.moneda->setFocus ();
+		break;
+	case OperationValidationErros::AMMOUNT_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El mondo de la operación debe ser mayor que cero"));
+		ui.monto->setFocus ();
+		break;
+	case OperationValidationErros::IVA_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El IVA de la operación debe ser mayor que cero"));
+		ui.monto->setFocus ();
+		break;
+	case OperationValidationErros::RATE_TYPE_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El tipo de interés es necesario"));
+		ui.tipoTasa->setFocus ();
+		break;
+	case OperationValidationErros::S_RATE_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El interés fijo debe ser mayor que cero"));
+		ui.interesFijo->setFocus ();
+		break;
+	case OperationValidationErros::D_RATE_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El interés variable debe ser mayor que cero"));
+		ui.interesVariable->setFocus ();
+		break;
+	case OperationValidationErros::TERM_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El plazo debe ser mayor o igual a un mes"));
+		ui.plazo->setFocus ();
+		break;
+	case OperationValidationErros::FREQ_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La frecuencia de pagos es necesaria"));
+		ui.frecuencia->setFocus ();
+		break;
+	case OperationValidationErros::ENTERPRISE_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La empresa es necesaria"));
+		ui.empresa->setFocus ();
+		break;
+	case OperationValidationErros::ENTITY_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La entidad financiera es necesaria"));
+		ui.entidad->setFocus ();
+		break;
+	case OperationValidationErros::DESEM_ERROR:
+		QMessageBox::critical (this, "Error", errorMessage);
+		ui.montoDesem_1->setFocus ();
+		break;
+	case OperationValidationErros::INITIAL_DUE_ERROR:
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La cuota inicial debe ser mayor que cero y menor que el monto de la operación"));
+		ui.cuotaInicial->setFocus ();
+		break;
+	case OperationValidationErros::SERVER_SIDE_ERROR:
+		QMessageBox::information (this, QString::fromLatin1 ("Error del servidor"), errorMessage);
+		ui.tipoOperacion->setFocus ();
+		break;
+	case OperationValidationErros::NO_ERROR:
+		QMessageBox::information (this, QString::fromLatin1 ("Éxito"), QString::fromLatin1 ("Guardado con éxito"));
+		break;
+	}
+	ui.savePlan->setEnabled (true);
 }
 //==================================================================
 
@@ -302,52 +369,62 @@ void PlanDePagos::setAuthData (QString address, QString token, QString userName)
 void PlanDePagos::operationTypeSelected (QString operation) {
 	// delete current operation, then asign a new one
 	delete currentOperation;
+	if (operation != "") {
+		OperacionesFinancieras::TiposDeOperacion caso = OperacionesFinancieras::MapOperationString (QString::fromLatin1 (operation.toLatin1 ()));
 
-	OperacionesFinancieras::TiposDeOperacion caso = OperacionesFinancieras::MapOperationString (QString::fromLatin1 (operation.toLatin1 ()));
+		//if (caso == OperacionesFinancieras::TiposDeOperacion::CasoCredito) {
+		currentOperation = new OperacionCredito (this);
 
-	//if (caso == OperacionesFinancieras::TiposDeOperacion::CasoCredito) {
-	currentOperation = new OperacionCredito (this);
-	//}
-	//else {
-	//	currentOperation = nullptr;
-	//	QMessageBox::information (this, "no", "not implemented");
-	//	// back to credito
-	//	ui.tipoOperacion->setCurrentText (OperacionesFinancieras::MapOperationEnum (OperacionesFinancieras::TiposDeOperacion::CasoCredito));
-	//}
+		//}
+		//else {
+		//	currentOperation = nullptr;
+		//	QMessageBox::information (this, "no", "not implemented");
+		//	// back to credito
+		//	ui.tipoOperacion->setCurrentText (OperacionesFinancieras::MapOperationEnum (OperacionesFinancieras::TiposDeOperacion::CasoCredito));
+		//}
 
-	// enable and disable desembolsos on caso
-	switch (caso)
-	{
-	case OperacionesFinancieras::TiposDeOperacion::CasoCredito:
-		ui.fechaDesem_1->setEnabled (true);
-		ui.montoDesem_1->setEnabled (true);
-		break;
-	case OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito:
-		ui.fechaDesem_1->setEnabled (true);
-		ui.montoDesem_1->setEnabled (true);
-		break;
-	case OperacionesFinancieras::TiposDeOperacion::CasoLeasing:
-		ui.fechaDesem_1->setEnabled (false);
-		ui.montoDesem_1->setEnabled (false);
-		ui.fechaDesem_1->setDate (QDate::currentDate ());
-		ui.montoDesem_1->setText ("");
-		break;
-	case OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack:
-		ui.fechaDesem_1->setEnabled (true);
-		ui.montoDesem_1->setEnabled (true);
-		break;
-	case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
-		ui.fechaDesem_1->setEnabled (true);
-		ui.montoDesem_1->setEnabled (true);
-		break;
-	case OperacionesFinancieras::TiposDeOperacion::NONE:
-		ui.fechaDesem_1->setEnabled (false);
-		ui.montoDesem_1->setEnabled (false);
-		ui.fechaDesem_1->setDate (QDate::currentDate ());
-		ui.montoDesem_1->setText ("");
-		break;
-	default:
-		break;
+
+		// impuestos nacionales does not have desembolsos
+		if (ui.entidad->currentText () == QString::fromLatin1 ("Impuestos Nacionales")) currentOperation->isEntity_ImpuestosNacionales = true;
+		else currentOperation->isEntity_ImpuestosNacionales = false;
+		// catch validation errors
+		connect (currentOperation, &Operacion::notifyValidationStatus, this, &PlanDePagos::catchErrors);
+		// enable and disable desembolsos on caso
+		switch (caso) {
+		case OperacionesFinancieras::TiposDeOperacion::CasoCredito:
+			ui.fechaDesem_1->setEnabled (true);
+			ui.montoDesem_1->setEnabled (true);
+			break;
+		case OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito:
+			ui.fechaDesem_1->setEnabled (true);
+			ui.montoDesem_1->setEnabled (true);
+			break;
+		case OperacionesFinancieras::TiposDeOperacion::CasoLeasing:
+			ui.fechaDesem_1->setEnabled (false);
+			ui.montoDesem_1->setEnabled (false);
+			ui.fechaDesem_1->setDate (QDate::currentDate ());
+			ui.montoDesem_1->setText ("");
+			break;
+		case OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack:
+			ui.fechaDesem_1->setEnabled (true);
+			ui.montoDesem_1->setEnabled (true);
+			break;
+		case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
+			ui.fechaDesem_1->setEnabled (true);
+			ui.montoDesem_1->setEnabled (true);
+			break;
+		case OperacionesFinancieras::TiposDeOperacion::NONE:
+			ui.fechaDesem_1->setEnabled (false);
+			ui.montoDesem_1->setEnabled (false);
+			ui.fechaDesem_1->setDate (QDate::currentDate ());
+			ui.montoDesem_1->setText ("");
+			break;
+		default:
+			break;
+		}
+	}
+	else {
+		currentOperation = nullptr;
 	}
 }
 
@@ -476,23 +553,58 @@ void PlanDePagos::onClearClicked () {
 	currentOperation = nullptr;
 }
 
-void PlanDePagos::setupConnections () {
-	// new operation clicked
-	connect (ui.newPlan, &QPushButton::clicked, this, &PlanDePagos::onNewClicked);
+void PlanDePagos::onSaveClicked () {
+	if (currentOperation != nullptr) {
+		ui.savePlan->setEnabled (false);
+		updateModel ();
+		currentOperation->save (this->targetAddress, this->token);		// Validation is inside this method. If there are errores object will notify through signal notifyValidationStatus
+	}
+	else {
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Por favor seleccione un tipo de operación"));
+		ui.tipoOperacion->setFocus ();
+	}
+}
 
-	// "borrar" cliced
+void PlanDePagos::setupConnections () {
+	//======================================================================================
+	//======================================== plan ========================================
+	// "nuevo" clicked
+	connect (ui.newPlan, &QPushButton::clicked, this, &PlanDePagos::onNewClicked);
+	// "borrar" clicked
 	connect (ui.clearButton, &QPushButton::clicked, this, &PlanDePagos::onClearClicked);
+	// "registrar" clicked
+	connect (ui.savePlan, &QPushButton::clicked, this, &PlanDePagos::onSaveClicked);
+	//======================================================================================
 }
 
 void PlanDePagos::setupUiConnections () {
 	// user selected an operation type
 	connect (ui.tipoOperacion, &QComboBox::currentTextChanged, this, &PlanDePagos::operationTypeSelected);
-	
+
 	// moneda changed, update moneda everywhere
 	connect (ui.moneda, &QComboBox::currentTextChanged, this, &PlanDePagos::currencySelected);
 
 	// rate type changed, update rate type
 	connect (ui.tipoTasa, &QComboBox::currentTextChanged, this, &PlanDePagos::rateTypeSelected);
+
+	//entity  changed, update entity type
+	connect (ui.entidad, &QComboBox::currentTextChanged, this, [&](QString entity) {
+		ui.tipoEntidad->setText (listaTiposEntidades[listaEntidades[entity]["tipoDeEntidad"]]);
+		if (entity == QString::fromLatin1 ("Impuestos Nacionales")) {
+			ui.montoDesem_1->setEnabled (false);
+			if (currentOperation != nullptr) {
+				currentOperation->isEntity_ImpuestosNacionales = true;
+			}
+		}
+		else {
+			if (currentOperation != nullptr) {
+				currentOperation->isEntity_ImpuestosNacionales = false;
+			}
+			if (OperacionesFinancieras::MapOperationString (ui.tipoOperacion->currentText ()) != OperacionesFinancieras::TiposDeOperacion::CasoLeasing ) {
+				ui.montoDesem_1->setEnabled (true);
+			}
+		}
+		});
 
 	// desembolsos changed: enable next if there is data or disable next if there is a blank
 	connect (ui.montoDesem_1, &QLineEdit::textChanged, this, &PlanDePagos::desem_1_changed);
@@ -502,6 +614,57 @@ void PlanDePagos::setupUiConnections () {
 
 	// Monto changed, then changes iva if leasing or leaseback
 	connect (ui.monto, &NumberInput::valueChanged, this, [&](double value) {
-
+		ui.iva->setText (QString::number (0.13 * value, 'f', 2));
 		});
+
+
+	//=====================================================================================================
+	//========================================= enterkey pressed ==========================================
+	connect (ui.numeroContrato, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.lineaDeCredito, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.monto, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.cuotaInicial, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.interesFijo, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.interesVariable, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.concepto, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.detalle, &QLineEdit::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.montoDesem_1, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.montoDesem_2, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.montoDesem_3, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.montoDesem_4, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	connect (ui.montoDesem_5, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	//=====================================================================================================
 }
+
+void PlanDePagos::updateModel () {
+	currentOperation->setContractNumber (ui.numeroContrato->text ()); //=====================================================================> Set contract number
+	currentOperation->setSignDate (ui.fechaFirma->date ()); //==============================================================================> Set sign date
+	currentOperation->setConcept (ui.concepto->text ()); //===================================================================================> Set concept
+	currentOperation->setDetail (ui.detalle->text ()); //=====================================================================================> Set detail
+	OperacionesFinancieras::Moneda currency = OperacionesFinancieras::MapMonedaString (ui.moneda->currentText ()); //========================> Set currency
+	currentOperation->setCurrency (currency); //==================================================================//
+	currentOperation->setAmmount (ui.monto->getValue ()); //=================================================================================> Set ammount
+	currentOperation->setIVA (ui.iva->text ().toDouble ()); //===============================================================================> Set iva
+	OperacionesFinancieras::TipoTasa rateType = OperacionesFinancieras::MapTipoTasaString (ui.tipoTasa->currentText ()); //==================> Set rate type
+	currentOperation->setRateType (rateType); //========================================================================//
+	currentOperation->setStaticRate (ui.interesFijo->getValue ()); //========================================================================> Set static rate
+	currentOperation->setDynamicRate (ui.interesVariable->getValue ()); //===================================================================> Set dynamic rate
+	currentOperation->setTerm (ui.plazo->value ()); //=======================================================================================> Set term
+	OperacionesFinancieras::FrecuenciaDePagos frequency = OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->currentText ()); //====> Set frequency
+	currentOperation->setFrequency (frequency); //====================================================================================//
+	currentOperation->setExpirationDate (ui.fechaVencimiento->date ()); //===================================================================> Set expiration date
+	currentOperation->setEnterprise (listaEmpresas[ui.empresa->currentText ()].toInt ()); //=================================================> Set enterprise
+	currentOperation->setEntity (listaEntidades[ui.entidad->currentText ()]["id"].toInt ()); //==============================================> Set entity
+	currentOperation->setFechaDesem_1 (ui.fechaDesem_1->date ()); //===============//========================================================> Set desem 1 
+	currentOperation->setMontoDesem_1 (ui.montoDesem_1->getValue ()); //==========//
+	currentOperation->setFechaDesem_2 (ui.fechaDesem_2->date ()); //===============//========================================================> Set desem 2
+	currentOperation->setMontoDesem_2 (ui.montoDesem_2->getValue ()); //==========//
+	currentOperation->setFechaDesem_3 (ui.fechaDesem_3->date ()); //===============//========================================================> Set desem 3
+	currentOperation->setMontoDesem_3 (ui.montoDesem_3->getValue ()); //==========//
+	currentOperation->setFechaDesem_4 (ui.fechaDesem_4->date ()); //===============//========================================================> Set desem 4
+	currentOperation->setMontoDesem_4 (ui.montoDesem_4->getValue ()); //==========//
+	currentOperation->setFechaDesem_5 (ui.fechaDesem_5->date ()); //===============//========================================================> Set desem 5
+	currentOperation->setMontoDesem_5 (ui.montoDesem_5->getValue ()); //==========//
+	currentOperation->setInitialDue (ui.cuotaInicial->getValue ()); //=======================================================================> Set cuota inicial
+}
+

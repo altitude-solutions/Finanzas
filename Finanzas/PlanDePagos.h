@@ -44,6 +44,8 @@ private slots:
 	void desem_2_changed (QString desem2);
 	void desem_3_changed (QString desem3);
 	void desem_4_changed (QString desem4);
+	// catch model validation errors
+	void catchErrors (OperationValidationErros error, QString errorMessage);
 
 private:
 	// data loaders
@@ -59,14 +61,25 @@ private:
 	void resetFields ();
 	// unlock fields
 	void unlockField ();
+	//======================================================
+	//======================= button =======================
 	// new button clicked event
 	void onNewClicked ();
-	// void on "borrar" clicked event: resetFiels
+	// clear clicked event: resetFiels
 	void onClearClicked ();
+	// save button clicked
+	void onSaveClicked ();
+	//======================================================
+
 	// setup callback(buttons) connections
 	void setupConnections ();
 	// setup ui connections (autofills, number checkers, some validators and desembolsos enable/disable behavior)
 	void setupUiConnections ();
+
+	//======================================================
+	//================== update operation ==================
+	void updateModel ();
+	//======================================================
 
 	// window
 	Ui::PlanDePagos ui;
