@@ -4,12 +4,13 @@
 
 #include "Operacion.h"
 
-class OperacionCredito : public Operacion {
+
+class OperacionLineaDeCredito : public Operacion {
 	Q_OBJECT
 
 public:
-	OperacionCredito(QObject *parent);
-	~OperacionCredito();
+	OperacionLineaDeCredito(QObject *parent);
+	~OperacionLineaDeCredito();
 
 	bool validate ();
 	void save (QString targetURL, QString token);

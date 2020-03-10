@@ -11,8 +11,6 @@
 
 // Other imports
 #include "OperacionesFinancieras.h"
-#include "CuotasPlanDePagos.h"
-#include "CuotasEfectivas.h"
 
 // Json imports
 #include <QJsonDocument>
@@ -24,7 +22,6 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-
 
 enum class OperationValidationErros {
 	CONTRACT_ERROR,
@@ -38,6 +35,7 @@ enum class OperationValidationErros {
 	FREQ_ERROR,
 	ENTERPRISE_ERROR,
 	ENTITY_ERROR,
+	CREDIT_LINE_ERROR,
 	DESEM_ERROR,
 	INITIAL_DUE_ERROR,
 	NO_ERROR,
@@ -56,11 +54,12 @@ public:
 public:
 	virtual bool validate () = 0;
 	virtual void save (QString targetURL, QString token) = 0;
-	virtual void load (int id, QString targetURL, QString token) = 0;
+	static Operacion* load (int id, QString targetURL, QString token, QObject* parent = nullptr);
 	virtual void update (QString targetURL, QString token) = 0;
 	static void deleteRes (QString targetURL, QString token);
 
 	// getters and setters
+	void setID (int id);
 	void setContractNumber (QString contractNumber);
 	void setSignDate (QDate date);
 	void setConcept (QString concept);
@@ -77,6 +76,7 @@ public:
 
 	void setEnterprise (int enterprise_ID);
 	void setEntity (int entity_ID);
+	void setCreditLine (int creditLine_ID);
 
 	OperacionesFinancieras::TiposDeOperacion getOperationType ();
 
@@ -108,6 +108,7 @@ public:
 	QDate getExpirationDate ();
 	int getEnterprise ();
 	int getEntity ();
+	int getCreditLine ();
 	QDate getFechaDesem_1 ();
 	double getMontoDesem_1 ();
 	QDate getFechaDesem_2 ();
@@ -142,12 +143,10 @@ protected:
 	int term;
 	OperacionesFinancieras::FrecuenciaDePagos frequency;
 	QDate expirationDate;
-	// cuotas
-	QList<CuotasPlanDePagos> plannedDue;
-	QList<CuotasEfectivas> effectiveDue;
 	// other tables
 	int enterprise;
 	int entity;
+	int creditLine;
 	// desembolsos
 	QDate fechaDesem_1;
 	double montoDesem_1;

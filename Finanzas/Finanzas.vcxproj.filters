@@ -64,6 +64,12 @@
     <ClCompile Include="NumberInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OperacionLineaDeCredito.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddCuotaDelPlan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Login.h">
@@ -102,6 +108,12 @@
     <QtMoc Include="NumberInput.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="OperacionLineaDeCredito.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AddCuotaDelPlan.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Login.ui">
@@ -123,6 +135,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="AddCuotaEfectiva.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="AddCuotaDelPlan.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

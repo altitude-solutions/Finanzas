@@ -1,14 +1,17 @@
-#include "OperacionCredito.h"
+#include "OperacionLineaDeCredito.h"
 
-OperacionCredito::OperacionCredito (QObject* parent) : Operacion (parent) {
-	this->operationType = OperacionesFinancieras::TiposDeOperacion::CasoCredito;
+
+OperacionLineaDeCredito::OperacionLineaDeCredito(QObject *parent): Operacion(parent) {
+	this->operationType = OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito;
 }
 
-OperacionCredito::~OperacionCredito () {
+OperacionLineaDeCredito::~OperacionLineaDeCredito() {
 
 }
 
-bool OperacionCredito::validate () {
+
+
+bool OperacionLineaDeCredito::validate () {
 	if (this->contractNumber == "") {
 		emit notifyValidationStatus (OperationValidationErros::CONTRACT_ERROR);
 		return  false;
@@ -19,6 +22,10 @@ bool OperacionCredito::validate () {
 	}
 	if (this->entity == 0) {
 		emit notifyValidationStatus (OperationValidationErros::ENTITY_ERROR);
+		return  false;
+	}
+	if (this->creditLine == 0) {
+		emit notifyValidationStatus (OperationValidationErros::CREDIT_LINE_ERROR, "La línea de crédito es necesaria");
 		return  false;
 	}
 	if (this->currency == OperacionesFinancieras::Moneda::NONE) {
@@ -82,7 +89,7 @@ bool OperacionCredito::validate () {
 	return true;
 }
 
-void OperacionCredito::save (QString targetURL, QString token) {
+void OperacionLineaDeCredito::save (QString targetURL, QString token) {
 	if (validate ()) {
 		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
 		QNetworkRequest request;
@@ -109,7 +116,6 @@ void OperacionCredito::save (QString targetURL, QString token) {
 				}
 			}
 			else {
-				this->id = response.object ().value ("planDePagos").toObject ().value ("id").toInt ();
 				emit notifyValidationStatus (OperationValidationErros::NO_ERROR);
 			}
 			reply->deleteLater ();
@@ -135,7 +141,7 @@ void OperacionCredito::save (QString targetURL, QString token) {
 		bodyContent.insert ("plazo", this->term);
 		bodyContent.insert ("frecuenciaDePagos", OperacionesFinancieras::MapFrecuenciaEnum (this->frequency));
 		bodyContent.insert ("fechaVencimiento", QDateTime (this->expirationDate).toMSecsSinceEpoch ());
-		if (!this->isEntity_ImpuestosNacionales) {
+		if (!isEntity_ImpuestosNacionales) {
 			bodyContent.insert ("fechaDesembolso_1", QDateTime (this->fechaDesem_1).toMSecsSinceEpoch ());
 			bodyContent.insert ("montoDesembolso_1", this->montoDesem_1);
 		}
@@ -155,7 +161,7 @@ void OperacionCredito::save (QString targetURL, QString token) {
 			bodyContent.insert ("fechaDesembolso_5", QDateTime (this->fechaDesem_5).toMSecsSinceEpoch ());
 			bodyContent.insert ("montoDesembolso_5", this->montoDesem_5);
 		}
-		//bodyContent.insert ("lineaDeCredito", );
+		bodyContent.insert ("lineaDeCredito", this->creditLine);
 		bodyContent.insert ("empresaGrupo", this->enterprise);
 		bodyContent.insert ("entidadFinanciera", this->entity);
 
@@ -165,7 +171,6 @@ void OperacionCredito::save (QString targetURL, QString token) {
 	}
 }
 
-void OperacionCredito::update (QString targetURL, QString token) {
+void OperacionLineaDeCredito::update (QString targetURL, QString token) {
 
 }
-

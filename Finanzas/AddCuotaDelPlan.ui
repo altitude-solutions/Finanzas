@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AddCuotaEfectiva</class>
- <widget class="QDialog" name="AddCuotaEfectiva">
+ <class>AddCuotaDelPlan</class>
+ <widget class="QWidget" name="AddCuotaDelPlan">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,10 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>AddCuotaEfectiva</string>
-  </property>
-  <property name="styleSheet">
-   <string notr="true">background-color: white;</string>
+   <string>AddCuotaDelPlan</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
@@ -100,6 +97,9 @@ color: #333333</string>
      </item>
      <item row="0" column="1">
       <widget class="QSpinBox" name="numeroCuota">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="cursor">
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
@@ -316,7 +316,7 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="pagoMonto">
+      <widget class="NumberInput" name="pagoMonto">
        <property name="styleSheet">
         <string notr="true">QLineEdit {
 	background-color: #ebeded;
@@ -355,7 +355,7 @@ QLineEdit::disabled {
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="pagoCapital">
+      <widget class="NumberInput" name="pagoCapital">
        <property name="styleSheet">
         <string notr="true">QLineEdit {
 	background-color: #ebeded;
@@ -394,7 +394,7 @@ QLineEdit::disabled {
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QLineEdit" name="pagoInteres">
+      <widget class="NumberInput" name="pagoInteres">
        <property name="styleSheet">
         <string notr="true">QLineEdit {
 	background-color: #ebeded;
@@ -433,7 +433,10 @@ QLineEdit::disabled {
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QLineEdit" name="pagoIva">
+      <widget class="NumberInput" name="pagoIva">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
 	background-color: #ebeded;
@@ -556,6 +559,13 @@ QPushButton::hover {
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>NumberInput</class>
+   <extends>QLineEdit</extends>
+   <header>Numberinput.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="Login.qrc"/>
  </resources>

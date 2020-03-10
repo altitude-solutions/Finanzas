@@ -28,6 +28,8 @@ PlanDePagos::PlanDePagos (QWidget* parent) : QWidget (parent) {
 	// set connections
 	setupConnections ();
 	setupUiConnections ();
+
+	loadedFromLeftlist = false;
 }
 
 PlanDePagos::~PlanDePagos () {
@@ -48,25 +50,26 @@ void PlanDePagos::currencySelected (QString currency) {
 
 void PlanDePagos::rateTypeSelected (QString rateType) {
 	OperacionesFinancieras::TipoTasa selectedRateType = OperacionesFinancieras::MapTipoTasaString (rateType);
-	switch (selectedRateType)
-	{
-	case OperacionesFinancieras::TipoTasa::Fijo:
-		ui.interesFijo->setEnabled (true);
-		ui.interesVariable->setEnabled (false);
-		ui.interesVariable->setText ("");
-		break;
-	case OperacionesFinancieras::TipoTasa::Variable:
-		ui.interesFijo->setEnabled (true);
-		ui.interesVariable->setEnabled (true);
-		break;
-	case OperacionesFinancieras::TipoTasa::NONE:
-		ui.interesFijo->setEnabled (false);
-		ui.interesVariable->setEnabled (false);
-		ui.interesFijo->setText ("");
-		ui.interesVariable->setText ("");
-		break;
-	default:
-		break;
+	if (!loadedFromLeftlist) {
+		switch (selectedRateType) {
+		case OperacionesFinancieras::TipoTasa::Fijo:
+			ui.interesFijo->setEnabled (true);
+			ui.interesVariable->setEnabled (false);
+			ui.interesVariable->setText ("");
+			break;
+		case OperacionesFinancieras::TipoTasa::Variable:
+			ui.interesFijo->setEnabled (true);
+			ui.interesVariable->setEnabled (true);
+			break;
+		case OperacionesFinancieras::TipoTasa::NONE:
+			ui.interesFijo->setEnabled (false);
+			ui.interesVariable->setEnabled (false);
+			ui.interesFijo->setText ("");
+			ui.interesVariable->setText ("");
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -126,9 +129,40 @@ void PlanDePagos::desem_4_changed (QString desem4) {
 
 //==================================================================
 
+void PlanDePagos::termChanged (int value) {
+	ui.fechaVencimiento->setDate (ui.fechaFirma->date ().addMonths (value));
+}
+
+void PlanDePagos::expirationDateChanged (QDate date) {
+	qint64 diff = QDateTime (ui.fechaFirma->date ()).msecsTo (QDateTime (date));
+	diff /= 3600000; // to hours
+	diff /= 24; // to days
+	diff /= 30; /// to months
+
+	ui.plazo->setValue (diff);
+}
+
+void PlanDePagos::signDateChanged (QDate date) {
+	ui.fechaVencimiento->setMinimumDate (date);
+	ui.fechaVencimiento->setDate (date.addMonths (ui.plazo->value ()));
+
+	ui.fechaDesem_1->setMinimumDate (date);
+	ui.fechaDesem_2->setMinimumDate (date);
+	ui.fechaDesem_3->setMinimumDate (date);
+	ui.fechaDesem_4->setMinimumDate (date);
+	ui.fechaDesem_5->setMinimumDate (date);
+
+	ui.fechaDesem_1->setDate (date);
+	ui.fechaDesem_2->setDate (date);
+	ui.fechaDesem_3->setDate (date);
+	ui.fechaDesem_4->setDate (date);
+	ui.fechaDesem_5->setDate (date);
+}
+
 //==================================================================
 //==================== catch validation errors =====================
 void PlanDePagos::catchErrors (OperationValidationErros error, QString errorMessage) {
+	ui.savePlan->setEnabled (true);
 	switch (error) {
 	case OperationValidationErros::CONTRACT_ERROR:
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El número del contrato u operación es necesario"));
@@ -183,16 +217,30 @@ void PlanDePagos::catchErrors (OperationValidationErros error, QString errorMess
 		ui.cuotaInicial->setFocus ();
 		break;
 	case OperationValidationErros::SERVER_SIDE_ERROR:
-		QMessageBox::information (this, QString::fromLatin1 ("Error del servidor"), errorMessage);
+		QMessageBox::critical (this, QString::fromLatin1 ("Error del servidor"), errorMessage);
 		ui.tipoOperacion->setFocus ();
+		break;
+	case OperationValidationErros::CREDIT_LINE_ERROR:
+		QMessageBox::critical (this, QString::fromLatin1 ("Error"), errorMessage);
+		ui.lineaDeCredito->setFocus ();
 		break;
 	case OperationValidationErros::NO_ERROR:
 		QMessageBox::information (this, QString::fromLatin1 ("Éxito"), QString::fromLatin1 ("Guardado con éxito"));
+		enableDueButtons ();
+		reloadSelectedPlan ();
+		loadPlanesDePago ();
 		break;
 	}
-	ui.savePlan->setEnabled (true);
 }
+
 //==================================================================
+
+void PlanDePagos::loadClickedPlan (QListWidgetItem* itm) {
+	delete currentOperation;
+	currentOperation = Operacion::load (listaOperaciones[itm->text ()].toInt (), this->targetAddress, this->token, this);
+	reloadSelectedPlan ();
+	loadedFromLeftlist = true;
+}
 
 //==================================================================
 //========================== Data loaders ==========================
@@ -313,8 +361,160 @@ void PlanDePagos::loadLineasDeCredito (int entidad_id) {
 	request.setRawHeader ("Content-Type", "application/json");
 	nam->get (request);
 }
-//==================================================================
 
+void PlanDePagos::loadPlanesDePago (QString query) {
+	listaOperaciones.clear ();
+	ui.planesList->clear ();
+
+	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+	connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+		QByteArray resBin = reply->readAll ();
+		if (reply->error ()) {
+			QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+			QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+			return;
+		}
+		QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+		foreach (QJsonValue entidad, okJson.object ().value ("planesDePago").toArray ()) {
+			listaOperaciones.insert (entidad.toObject ().value ("numeroDeContratoOperacion").toString (), QString::number (entidad.toObject ().value ("id").toInt ()));
+			ui.planesList->addItem (entidad.toObject ().value ("numeroDeContratoOperacion").toString ());
+		}
+		reply->deleteLater ();
+		});
+	QNetworkRequest request;
+	request.setUrl (QUrl (targetAddress + "/planDePagos" + query));
+
+	request.setRawHeader ("token", this->token.toUtf8 ());
+	request.setRawHeader ("Content-Type", "application/json");
+	nam->get (request);
+}
+
+void PlanDePagos::reloadSelectedPlan () {
+	if (currentOperation != nullptr) {
+		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+		connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+			QByteArray resBin = reply->readAll ();
+			if (reply->error ()) {
+				QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+				QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+				return;
+			}
+			QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+			ui.empresa->setCurrentText (okJson.object ().value ("planDePagos").toObject ().value ("empresas_grupo").toObject ().value ("empresa").toString ());
+			ui.entidad->setCurrentText (okJson.object ().value ("planDePagos").toObject ().value ("entidades_financiera").toObject ().value ("nombreEntidad").toString ());
+			ui.tipoEntidad->setText (okJson.object ().value ("planDePagos").toObject ().value ("entidades_financiera").toObject ().value ("tipos_de_entidad").toObject ().value ("tipoDeEntidad").toString ());
+			ui.tipoOperacion->setCurrentText (okJson.object ().value ("planDePagos").toObject ().value ("tipoOperacion").toString ());
+			ui.numeroContrato->setText (okJson.object ().value ("planDePagos").toObject ().value ("numeroDeContratoOperacion").toString ());
+			ui.fechaFirma->setDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaFirma").toVariant ().toLongLong ()).date ());
+			ui.moneda->setCurrentText (okJson.object ().value ("planDePagos").toObject ().value ("moneda").toString ());
+			ui.monto->setText (QString::number (okJson.object ().value ("planDePagos").toObject ().value ("monto").toDouble (), 'f', 2));
+
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("iva").isNull ()) {
+				ui.iva->setText (QString::number (okJson.object ().value ("planDePagos").toObject ().value ("iva").toDouble (), 'f', 2));
+			}
+			else {
+				ui.iva->setText ("-");
+			}
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("cuotaInicial").isNull ()) {
+				ui.cuotaInicial->setText (QString::number (okJson.object ().value ("planDePagos").toObject ().value ("cuotaInicial").toDouble (), 'f', 2));
+			}
+			else {
+				ui.cuotaInicial->setText ("-");
+			}
+			ui.tipoTasa->setCurrentText (okJson.object ().value ("planDePagos").toObject ().value ("tipoDeTasa").toString ());
+			ui.interesFijo->setValue (okJson.object ().value ("planDePagos").toObject ().value ("interesFijo").toDouble ());
+
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("interesVariable").isNull ()) {
+				ui.interesVariable->setValue (okJson.object ().value ("planDePagos").toObject ().value ("interesVariable").toDouble ());
+			}
+			else {
+				ui.interesVariable->setText ("-");
+			}
+			ui.frecuencia->setCurrentText (okJson.object ().value ("planDePagos").toObject ().value ("frecuenciaDePagos").toString ());
+			ui.plazo->setValue (okJson.object ().value ("planDePagos").toObject ().value ("plazo").toInt ());
+			ui.fechaVencimiento->setDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaVencimiento").toVariant ().toLongLong ()).date ());
+
+			ui.concepto->setText (okJson.object ().value ("planDePagos").toObject ().value ("concepto").toString ());
+			ui.detalle->setText (okJson.object ().value ("planDePagos").toObject ().value ("detalle").toString ());
+
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_1").isNull ()) {
+				ui.montoDesem_1->setValue (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_1").toDouble ());
+			}
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_2").isNull ()) {
+				ui.montoDesem_2->setValue (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_2").toDouble ());
+			}
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_3").isNull ()) {
+				ui.montoDesem_3->setValue (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_3").toDouble ());
+			}
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_4").isNull ()) {
+				ui.montoDesem_4->setValue (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_4").toDouble ());
+			}
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_5").isNull ()) {
+				ui.montoDesem_5->setValue (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_5").toDouble ());
+			}
+
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_1").isNull ()) {
+				ui.fechaDesem_1->setDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_1").toVariant ().toLongLong ()).date ());
+			}
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_2").isNull ()) {
+				ui.fechaDesem_2->setDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_2").toVariant ().toLongLong ()).date ());
+			}
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_3").isNull ()) {
+				ui.fechaDesem_3->setDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_3").toVariant ().toLongLong ()).date ());
+			}
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_4").isNull ()) {
+				ui.fechaDesem_4->setDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_4").toVariant ().toLongLong ()).date ());
+			}
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_5").isNull ()) {
+				ui.fechaDesem_5->setDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_5").toVariant ().toLongLong ()).date ());
+			}
+
+			ui.plannedFee->setRowCount (0);
+
+			double saldoCapital = okJson.object ().value ("planDePagos").toObject ().value ("monto").toDouble ();
+			double saldoIva = okJson.object ().value ("planDePagos").toObject ().value ("iva").toDouble ();
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			foreach (QJsonValue cuota, okJson.object ().value ("planDePagos").toObject ().value ("cuotasPlan").toArray ()) {
+				ui.plannedFee->insertRow (ui.plannedFee->rowCount ());
+
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 0, new QTableWidgetItem (QString::number (cuota.toObject ().value ("numeroDeCuota").toInt ())));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 1, new QTableWidgetItem (QString::number (QDateTime::fromMSecsSinceEpoch (cuota.toObject ().value ("fechaDePago").toVariant ().toLongLong ()).date ().year ())));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 2, new QTableWidgetItem (QDate::shortMonthName (QDateTime::fromMSecsSinceEpoch (cuota.toObject ().value ("fechaDePago").toVariant ().toLongLong ()).date ().month ()) + "/" + QString::number (QDateTime::fromMSecsSinceEpoch (cuota.toObject ().value ("fechaDePago").toVariant ().toLongLong ()).date ().year ())));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 3, new QTableWidgetItem (QDateTime::fromMSecsSinceEpoch (cuota.toObject ().value ("fechaDePago").toVariant ().toLongLong ()).toString ("dd/MM/yyyy")));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 4, new QTableWidgetItem (QString::number (cuota.toObject ().value ("montoTotalDelPago").toDouble ())));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 5, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeCapital").toDouble ())));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 6, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeInteres").toDouble ())));
+				if (!cuota.toObject ().value ("pagoDeIva").isNull ()) {
+					ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 7, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeIva").toDouble ())));
+				}
+				else {
+					ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 7, new QTableWidgetItem (""));
+				}
+
+				saldoCapital -= cuota.toObject ().value ("pagoDeCapital").toDouble ();
+				saldoIva -= cuota.toObject ().value ("pagoDeIva").toDouble ();
+
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 8, new QTableWidgetItem (QString::number (saldoCapital, 'f', 2)));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 9, new QTableWidgetItem (QString::number (saldoIva, 'f', 2)));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 10, new QTableWidgetItem (QString::number (saldoCapital + saldoIva, 'f', 2)));
+
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 11, new QTableWidgetItem (QString::number (cuota.toObject ().value ("id").toInt ())));
+			}
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			enableDueButtons ();
+			reply->deleteLater ();
+			});
+		QNetworkRequest request;
+		request.setUrl (QUrl (targetAddress + "/planDePagos/" + QString::number (this->currentOperation->getID ())));
+
+		request.setRawHeader ("token", this->token.toUtf8 ());
+		request.setRawHeader ("Content-Type", "application/json");
+		nam->get (request);
+	}
+}
+//==================================================================
 
 void PlanDePagos::setTableHeaders () {
 	ui.plannedFee->setColumnCount (11);
@@ -353,6 +553,7 @@ void PlanDePagos::onTabSelected () {
 	loadEmpresasGrupo ();
 	loadEntidadesFinancieras ();
 	loadTiposDeEntidad ();
+	loadPlanesDePago ();
 }
 
 // Set auth data
@@ -364,68 +565,98 @@ void PlanDePagos::setAuthData (QString address, QString token, QString userName)
 	loadEmpresasGrupo ();
 	loadEntidadesFinancieras ();
 	loadTiposDeEntidad ();
+	loadPlanesDePago ();
 }
 
 void PlanDePagos::operationTypeSelected (QString operation) {
-	// delete current operation, then asign a new one
-	delete currentOperation;
-	if (operation != "") {
-		OperacionesFinancieras::TiposDeOperacion caso = OperacionesFinancieras::MapOperationString (QString::fromLatin1 (operation.toLatin1 ()));
+	if (!loadedFromLeftlist) {
+		// delete current operation, then asign a new one
+		delete currentOperation;
+	}
+		if (operation != "") {
+			OperacionesFinancieras::TiposDeOperacion caso = OperacionesFinancieras::MapOperationString (QString::fromLatin1 (operation.toLatin1 ()));
 
-		//if (caso == OperacionesFinancieras::TiposDeOperacion::CasoCredito) {
-		currentOperation = new OperacionCredito (this);
+			if (!loadedFromLeftlist) {
+				switch (caso) {
+				case OperacionesFinancieras::TiposDeOperacion::CasoCredito:
+					currentOperation = new OperacionCredito (this);
+					break;
+				case OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito:
+					currentOperation = nullptr;
+					break;
+				case OperacionesFinancieras::TiposDeOperacion::CasoLeasing:
+					currentOperation = nullptr;
+					break;
+				case OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack:
+					currentOperation = nullptr;
+					break;
+				case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
+					currentOperation = nullptr;
+					break;
+				case OperacionesFinancieras::TiposDeOperacion::NONE:
+					currentOperation = nullptr;
+					break;
+				}
+			}
 
-		//}
-		//else {
-		//	currentOperation = nullptr;
-		//	QMessageBox::information (this, "no", "not implemented");
-		//	// back to credito
-		//	ui.tipoOperacion->setCurrentText (OperacionesFinancieras::MapOperationEnum (OperacionesFinancieras::TiposDeOperacion::CasoCredito));
-		//}
-
-
-		// impuestos nacionales does not have desembolsos
-		if (ui.entidad->currentText () == QString::fromLatin1 ("Impuestos Nacionales")) currentOperation->isEntity_ImpuestosNacionales = true;
-		else currentOperation->isEntity_ImpuestosNacionales = false;
-		// catch validation errors
-		connect (currentOperation, &Operacion::notifyValidationStatus, this, &PlanDePagos::catchErrors);
-		// enable and disable desembolsos on caso
-		switch (caso) {
-		case OperacionesFinancieras::TiposDeOperacion::CasoCredito:
-			ui.fechaDesem_1->setEnabled (true);
-			ui.montoDesem_1->setEnabled (true);
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito:
-			ui.fechaDesem_1->setEnabled (true);
-			ui.montoDesem_1->setEnabled (true);
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::CasoLeasing:
-			ui.fechaDesem_1->setEnabled (false);
-			ui.montoDesem_1->setEnabled (false);
-			ui.fechaDesem_1->setDate (QDate::currentDate ());
-			ui.montoDesem_1->setText ("");
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack:
-			ui.fechaDesem_1->setEnabled (true);
-			ui.montoDesem_1->setEnabled (true);
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
-			ui.fechaDesem_1->setEnabled (true);
-			ui.montoDesem_1->setEnabled (true);
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::NONE:
-			ui.fechaDesem_1->setEnabled (false);
-			ui.montoDesem_1->setEnabled (false);
-			ui.fechaDesem_1->setDate (QDate::currentDate ());
-			ui.montoDesem_1->setText ("");
-			break;
-		default:
-			break;
+			// catch validation errors
+			if (currentOperation != nullptr) {
+				connect (currentOperation, &Operacion::notifyValidationStatus, this, &PlanDePagos::catchErrors);
+			}
+			// enable and disable desembolsos on caso
+			switch (caso) {
+			case OperacionesFinancieras::TiposDeOperacion::CasoCredito:
+				ui.fechaDesem_1->setEnabled (true);
+				ui.montoDesem_1->setEnabled (true);
+				break;
+			case OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito:
+				ui.fechaDesem_1->setEnabled (true);
+				ui.montoDesem_1->setEnabled (true);
+				break;
+			case OperacionesFinancieras::TiposDeOperacion::CasoLeasing:
+				ui.fechaDesem_1->setEnabled (false);
+				ui.montoDesem_1->setEnabled (false);
+				ui.fechaDesem_1->setDate (QDate::currentDate ());
+				ui.montoDesem_1->setText ("");
+				break;
+			case OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack:
+				ui.fechaDesem_1->setEnabled (true);
+				ui.montoDesem_1->setEnabled (true);
+				break;
+			case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
+				ui.fechaDesem_1->setEnabled (true);
+				ui.montoDesem_1->setEnabled (true);
+				break;
+			case OperacionesFinancieras::TiposDeOperacion::NONE:
+				ui.fechaDesem_1->setEnabled (false);
+				ui.montoDesem_1->setEnabled (false);
+				ui.fechaDesem_1->setDate (QDate::currentDate ());
+				ui.montoDesem_1->setText ("");
+				break;
+			default:
+				break;
+			}
+			// impuestos nacionales does not have desembolsos
+			if (ui.entidad->currentText () == QString::fromLatin1 ("Impuestos Nacionales")) {
+				ui.montoDesem_1->setEnabled (false);
+				ui.fechaDesem_1->setEnabled (false);
+				if (currentOperation != nullptr) {
+					currentOperation->isEntity_ImpuestosNacionales = true;
+				}
+			}
+			else {
+				if (currentOperation != nullptr) {
+					currentOperation->isEntity_ImpuestosNacionales = false;
+				}
+				if (OperacionesFinancieras::MapOperationString (ui.tipoOperacion->currentText ()) != OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
+					ui.montoDesem_1->setEnabled (true);
+					ui.fechaDesem_1->setEnabled (true);
+				}
+			}
 		}
-	}
-	else {
-		currentOperation = nullptr;
-	}
+		else {
+			currentOperation = nullptr;
+		}
 }
 
 //==================================================================
@@ -450,7 +681,7 @@ void PlanDePagos::clearFields () {
 	// third column
 	ui.frecuencia->setCurrentIndex (-1);  // ======== instead of setCurrentText("")
 	ui.plazo->setValue (1);
-	ui.fechaVencimiento->setDate (QDate::currentDate ());
+	ui.fechaVencimiento->setDate (QDate::currentDate ().addMonths (1));
 	// fourth column
 	ui.fechaDesem_1->setDate (QDate::currentDate ());
 	ui.montoDesem_1->setText ("");
@@ -465,6 +696,8 @@ void PlanDePagos::clearFields () {
 	// extra row
 	ui.concepto->setText ("");
 	ui.detalle->setText ("");
+	// clear table
+	ui.plannedFee->setRowCount (0);
 }
 
 void PlanDePagos::blockFields () {
@@ -507,8 +740,6 @@ void PlanDePagos::blockFields () {
 	ui.savePlan->setEnabled (false);
 	// Cuotas buttons
 	ui.addCuota->setEnabled (false);
-	ui.editCuota->setEnabled (false);
-	ui.deleteCuota->setEnabled (false);
 }
 
 void PlanDePagos::resetFields () {
@@ -536,15 +767,58 @@ void PlanDePagos::unlockField () {
 	ui.detalle->setEnabled (true);
 	// Buttons
 		// Planes buttons
-	ui.editPlan->setEnabled (true);
 	ui.clearButton->setEnabled (true);
-	ui.deletePlan->setEnabled (true);
 	ui.savePlan->setEnabled (true);
+}
+
+void PlanDePagos::enableDueButtons () {
+	ui.savePlan->setEnabled (false);
+	ui.editPlan->setEnabled (true);
+	ui.deletePlan->setEnabled (true);
+
+	ui.addCuota->setEnabled (true);
+	ui.editCuota->setEnabled (true);
+	ui.deleteCuota->setEnabled (true);
+
+	//=====================================
+	ui.tipoOperacion->setEnabled (false);
+	ui.numeroContrato->setEnabled (false);
+	ui.fechaFirma->setEnabled (false);
+	ui.empresa->setEnabled (false);
+	ui.entidad->setEnabled (false);
+	ui.lineaDeCredito->setEnabled (false);
+	// second column
+	ui.monto->setEnabled (false);
+	ui.moneda->setEnabled (false);
+	ui.cuotaInicial->setEnabled (false);
+	ui.tipoTasa->setEnabled (false);
+	ui.interesFijo->setEnabled (false);
+	ui.interesVariable->setEnabled (false);
+	// third column
+	ui.frecuencia->setEnabled (false);
+	ui.plazo->setEnabled (false);
+	ui.fechaVencimiento->setEnabled (false);
+	// fourth column
+	ui.fechaDesem_1->setEnabled (false);
+	ui.montoDesem_1->setEnabled (false);
+	ui.fechaDesem_2->setEnabled (false);
+	ui.montoDesem_2->setEnabled (false);
+	ui.fechaDesem_3->setEnabled (false);
+	ui.montoDesem_3->setEnabled (false);
+	ui.fechaDesem_4->setEnabled (false);
+	ui.montoDesem_4->setEnabled (false);
+	ui.fechaDesem_5->setEnabled (false);
+	ui.montoDesem_5->setEnabled (false);
+	// extra row
+	ui.concepto->setEnabled (false);
+	ui.detalle->setEnabled (false);
 }
 //==================================================================
 
 void PlanDePagos::onNewClicked () {
 	unlockField ();
+	clearFields ();
+	ui.tipoOperacion->setFocus ();
 }
 
 void PlanDePagos::onClearClicked () {
@@ -565,6 +839,28 @@ void PlanDePagos::onSaveClicked () {
 	}
 }
 
+void PlanDePagos::onAddDue () {
+	AddCuotaDelPlan addWindow (this);
+	if (ui.plannedFee->rowCount () == 0) {
+		//addWindow.setWindowData (this->targetAddress, this->token, 1, QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, this->currentPlan);
+		addWindow.setValidationParams (this->targetAddress, this->token, this->currentOperation);
+	}
+	else {
+		//addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->rowCount () + 1, QDate::fromString (ui.effectiveFee->item (ui.effectiveFee->rowCount () - 1, 1)->text (), "dd/MM/yyyy"), caso, this->currentPlan);
+		CuotasPlanDePagos lastDue(this);
+		lastDue.setDueNumber (ui.plannedFee->item (ui.plannedFee->rowCount () - 1, 0)->text ().toInt ());
+		lastDue.setDueDate (QDate::fromString (ui.plannedFee->item (ui.plannedFee->rowCount () - 1, 3)->text (), "dd/MM/yyyy"));
+
+		addWindow.setValidationParams (this->targetAddress, this->token, this->currentOperation, &lastDue, false);
+	}
+
+	connect (&addWindow, &AddCuotaDelPlan::accepted, this, &PlanDePagos::reloadSelectedPlan);
+
+	addWindow.setModal (true);
+	addWindow.exec ();
+	addWindow.deleteLater ();
+}
+
 void PlanDePagos::setupConnections () {
 	//======================================================================================
 	//======================================== plan ========================================
@@ -575,6 +871,14 @@ void PlanDePagos::setupConnections () {
 	// "registrar" clicked
 	connect (ui.savePlan, &QPushButton::clicked, this, &PlanDePagos::onSaveClicked);
 	//======================================================================================
+
+	//======================================================================================
+	//======================================= cuotas =======================================
+	connect (ui.addCuota, &QPushButton::clicked, this, &PlanDePagos::onAddDue);
+	//======================================================================================
+
+	// load plan selected on left panel
+	connect (ui.planesList, &QListWidget::itemDoubleClicked, this, &PlanDePagos::loadClickedPlan);
 }
 
 void PlanDePagos::setupUiConnections () {
@@ -592,6 +896,7 @@ void PlanDePagos::setupUiConnections () {
 		ui.tipoEntidad->setText (listaTiposEntidades[listaEntidades[entity]["tipoDeEntidad"]]);
 		if (entity == QString::fromLatin1 ("Impuestos Nacionales")) {
 			ui.montoDesem_1->setEnabled (false);
+			ui.fechaDesem_1->setEnabled (false);
 			if (currentOperation != nullptr) {
 				currentOperation->isEntity_ImpuestosNacionales = true;
 			}
@@ -602,9 +907,18 @@ void PlanDePagos::setupUiConnections () {
 			}
 			if (OperacionesFinancieras::MapOperationString (ui.tipoOperacion->currentText ()) != OperacionesFinancieras::TiposDeOperacion::CasoLeasing ) {
 				ui.montoDesem_1->setEnabled (true);
+				ui.fechaDesem_1->setEnabled (true);
 			}
 		}
 		});
+
+	// term changed, update expiration date
+	connect (ui.plazo, qOverload<int> (&QSpinBox::valueChanged), this, &PlanDePagos::termChanged);
+	
+	// sign date and expiration date changed
+	connect (ui.fechaFirma, &QDateEdit::dateChanged, this, &PlanDePagos::signDateChanged);
+	connect (ui.fechaVencimiento, &QDateEdit::dateChanged, this, &PlanDePagos::expirationDateChanged);
+
 
 	// desembolsos changed: enable next if there is data or disable next if there is a blank
 	connect (ui.montoDesem_1, &QLineEdit::textChanged, this, &PlanDePagos::desem_1_changed);
@@ -614,9 +928,12 @@ void PlanDePagos::setupUiConnections () {
 
 	// Monto changed, then changes iva if leasing or leaseback
 	connect (ui.monto, &NumberInput::valueChanged, this, [&](double value) {
-		ui.iva->setText (QString::number (0.13 * value, 'f', 2));
+		if (currentOperation != nullptr) {
+			if (currentOperation->getOperationType () == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || currentOperation->getOperationType () == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+				ui.iva->setText (QString::number (0.13 * value, 'f', 2));
+			}
+		}
 		});
-
 
 	//=====================================================================================================
 	//========================================= enterkey pressed ==========================================
@@ -633,6 +950,16 @@ void PlanDePagos::setupUiConnections () {
 	connect (ui.montoDesem_3, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
 	connect (ui.montoDesem_4, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
 	connect (ui.montoDesem_5, &NumberInput::returnPressed, ui.savePlan, &QPushButton::click);
+	//=====================================================================================================
+
+	//=====================================================================================================
+	//========================================= search operations =========================================
+	connect (ui.search, &QLineEdit::textChanged, this, [&](QString query) {
+		if (query != "") {
+			query = "?q=" + query;
+		}
+		loadPlanesDePago (query);
+		});
 	//=====================================================================================================
 }
 
@@ -655,16 +982,17 @@ void PlanDePagos::updateModel () {
 	currentOperation->setExpirationDate (ui.fechaVencimiento->date ()); //===================================================================> Set expiration date
 	currentOperation->setEnterprise (listaEmpresas[ui.empresa->currentText ()].toInt ()); //=================================================> Set enterprise
 	currentOperation->setEntity (listaEntidades[ui.entidad->currentText ()]["id"].toInt ()); //==============================================> Set entity
-	currentOperation->setFechaDesem_1 (ui.fechaDesem_1->date ()); //===============//========================================================> Set desem 1 
-	currentOperation->setMontoDesem_1 (ui.montoDesem_1->getValue ()); //==========//
-	currentOperation->setFechaDesem_2 (ui.fechaDesem_2->date ()); //===============//========================================================> Set desem 2
-	currentOperation->setMontoDesem_2 (ui.montoDesem_2->getValue ()); //==========//
+	currentOperation->setFechaDesem_1 (ui.fechaDesem_1->date ()); //===================//====================================================> Set desem 1 
+	currentOperation->setMontoDesem_1 (ui.montoDesem_1->getValue ()); //==============//
+	currentOperation->setFechaDesem_2 (ui.fechaDesem_2->date ()); //=================//======================================================> Set desem 2
+	currentOperation->setMontoDesem_2 (ui.montoDesem_2->getValue ()); //============//
 	currentOperation->setFechaDesem_3 (ui.fechaDesem_3->date ()); //===============//========================================================> Set desem 3
 	currentOperation->setMontoDesem_3 (ui.montoDesem_3->getValue ()); //==========//
-	currentOperation->setFechaDesem_4 (ui.fechaDesem_4->date ()); //===============//========================================================> Set desem 4
-	currentOperation->setMontoDesem_4 (ui.montoDesem_4->getValue ()); //==========//
-	currentOperation->setFechaDesem_5 (ui.fechaDesem_5->date ()); //===============//========================================================> Set desem 5
-	currentOperation->setMontoDesem_5 (ui.montoDesem_5->getValue ()); //==========//
+	currentOperation->setFechaDesem_4 (ui.fechaDesem_4->date ()); //=============//==========================================================> Set desem 4
+	currentOperation->setMontoDesem_4 (ui.montoDesem_4->getValue ()); //========//
+	currentOperation->setFechaDesem_5 (ui.fechaDesem_5->date ()); //===========//============================================================> Set desem 5
+	currentOperation->setMontoDesem_5 (ui.montoDesem_5->getValue ()); //======//
 	currentOperation->setInitialDue (ui.cuotaInicial->getValue ()); //=======================================================================> Set cuota inicial
+	currentOperation->setCreditLine (lineasDeCredito[ui.lineaDeCredito->text ()]["id"].toInt ()); //=========================================> Set linea de credito
 }
 

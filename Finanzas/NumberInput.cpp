@@ -13,12 +13,14 @@ NumberInput::~NumberInput () {
 }
 
 void NumberInput::setValue (double value) {
-	this->setText (QString::number (value, 'f', this->precision));
-	this->value = this->text().toDouble ();
-	if (this->previous.toDouble () != value) {
-		emit valueChanged (this->value);
+	if(value !=  this->value) {
+		this->setText (QString::number (value, 'f', this->precision));
 	}
-	this->previous = QString::number (value);
+	//this->value = this->text().toDouble ();
+	//if (this->previous.toDouble () != value) {
+		//emit valueChanged (this->value);
+	//}
+	//this->previous = QString::number (value);
 }
 
 double NumberInput::getValue () {

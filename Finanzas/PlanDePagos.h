@@ -17,6 +17,8 @@
 #include "Operacion.h"
 #include "OperacionCredito.h"
 
+#include "AddCuotaDelPlan.h"
+
 
 class PlanDePagos : public QWidget {
 	Q_OBJECT
@@ -46,6 +48,15 @@ private slots:
 	void desem_4_changed (QString desem4);
 	// catch model validation errors
 	void catchErrors (OperationValidationErros error, QString errorMessage);
+	// load selected plan from left list
+	void loadClickedPlan (QListWidgetItem *itm);
+	// plazo changed, update expiration date
+	void termChanged (int value);
+	// expiration date  changed, update term
+	void expirationDateChanged (QDate date);
+	// sign date changed, update expiration date
+	void signDateChanged (QDate date);
+
 
 private:
 	// data loaders
@@ -53,6 +64,8 @@ private:
 	void loadEntidadesFinancieras ();
 	void loadTiposDeEntidad ();
 	void loadLineasDeCredito (int entidad_ID);
+	void loadPlanesDePago (QString query = "");
+	void reloadSelectedPlan ();
 	// table operations
 	void setTableHeaders ();
 	// clear fields and block them
@@ -61,6 +74,8 @@ private:
 	void resetFields ();
 	// unlock fields
 	void unlockField ();
+	// after plan saved enable dues
+	void enableDueButtons ();
 	//======================================================
 	//======================= button =======================
 	// new button clicked event
@@ -69,6 +84,8 @@ private:
 	void onClearClicked ();
 	// save button clicked
 	void onSaveClicked ();
+	// add due
+	void onAddDue ();
 	//======================================================
 
 	// setup callback(buttons) connections
@@ -94,6 +111,7 @@ private:
 	QHash <QString, QString> listaTiposEntidades;
 	QHash <QString, QHash <QString, QString>> lineasDeCredito;
 	QHash <QString, QString> listaEmpresas;
+	QHash <QString, QString> listaOperaciones;
 
 	Operacion *currentOperation;
 
@@ -101,4 +119,6 @@ private:
 	double saldoCapital;
 	double saldoCapitalReal;
 	double creditoFiscal;
+
+	bool loadedFromLeftlist;
 };
