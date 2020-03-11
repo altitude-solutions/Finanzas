@@ -1,14 +1,15 @@
-#include "OperacionCredito.h"
+#include "OperacionLeasing.h"
 
-OperacionCredito::OperacionCredito (QObject* parent) : Operacion (parent) {
-	this->operationType = OperacionesFinancieras::TiposDeOperacion::CasoCredito;
-}
-
-OperacionCredito::~OperacionCredito () {
+OperacionLeasing::OperacionLeasing(QObject *parent): Operacion(parent) {
 
 }
 
-bool OperacionCredito::validate () {
+OperacionLeasing::~OperacionLeasing() {
+
+}
+
+
+bool OperacionLeasing::validate () {
 	if (this->contractNumber == "") {
 		emit notifyValidationStatus (OperationValidationErros::CONTRACT_ERROR);
 		return  false;
@@ -27,6 +28,14 @@ bool OperacionCredito::validate () {
 	}
 	if (this->ammount <= 0) {
 		emit notifyValidationStatus (OperationValidationErros::AMMOUNT_ERROR);
+		return  false;
+	}
+	if (this->iva <= 0) {
+		emit notifyValidationStatus (OperationValidationErros::IVA_ERROR);
+		return  false;
+	}
+	if (this->initialDue <= 0) {
+		emit notifyValidationStatus (OperationValidationErros::INITIAL_DUE_ERROR);
 		return  false;
 	}
 	if (this->rateType == OperacionesFinancieras::TipoTasa::NONE) {
@@ -49,40 +58,10 @@ bool OperacionCredito::validate () {
 		emit notifyValidationStatus (OperationValidationErros::TERM_ERROR);
 		return  false;
 	}
-	if (this->montoDesem_1 <= 0 && !this->isEntity_ImpuestosNacionales) {
-		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, "El desembolso 1 debe ser mayor a cero");
-		return  false;
-	}
-	if (this->montoDesem_2 < 0) {
-		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, "El desembolso 2 debe ser mayor a cero");
-		return  false;
-	}
-	if (this->montoDesem_3 < 0) {
-		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, "El desembolso 3 debe ser mayor a cero");
-		return  false;
-	}
-	if (this->montoDesem_4 < 0) {
-		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, "El desembolso 4 debe ser mayor a cero");
-		return  false;
-	}
-	if (this->montoDesem_5 < 0) {
-		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, "El desembolso 5 debe ser mayor a cero");
-		return  false;
-	}
-	double desemTotal = 0;
-	desemTotal += montoDesem_1;
-	desemTotal += montoDesem_2;
-	desemTotal += montoDesem_3;
-	desemTotal += montoDesem_4;
-	desemTotal += montoDesem_5;
-	if (this->ammount != desemTotal) {
-		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, QString::fromLatin1 ("La suma de los desembolsos debe ser igual al monto de la operación"));
-		return  false;
-	}
 	return true;
 }
 
-void OperacionCredito::save (QString targetURL, QString token) {
+void OperacionLeasing::save (QString targetURL, QString token) {
 	if (validate ()) {
 		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
 		QNetworkRequest request;
@@ -125,6 +104,8 @@ void OperacionCredito::save (QString targetURL, QString token) {
 		bodyContent.insert ("detalle", this->detail);
 		bodyContent.insert ("moneda", OperacionesFinancieras::MapMonedaEnum (this->currency));
 		bodyContent.insert ("monto", this->ammount);
+		bodyContent.insert ("iva", this->iva);
+		bodyContent.insert ("cuotaInicial", this->initialDue);
 		bodyContent.insert ("tipoDeTasa", OperacionesFinancieras::MapTipoTasaEnum (this->rateType));
 		bodyContent.insert ("interesFijo", this->staticRate);
 		if (this->rateType == OperacionesFinancieras::TipoTasa::Variable) {
@@ -133,26 +114,6 @@ void OperacionCredito::save (QString targetURL, QString token) {
 		bodyContent.insert ("plazo", this->term);
 		bodyContent.insert ("frecuenciaDePagos", OperacionesFinancieras::MapFrecuenciaEnum (this->frequency));
 		bodyContent.insert ("fechaVencimiento", QDateTime (this->expirationDate).toMSecsSinceEpoch ());
-		if (!this->isEntity_ImpuestosNacionales) {
-			bodyContent.insert ("fechaDesembolso_1", QDateTime (this->fechaDesem_1).toMSecsSinceEpoch ());
-			bodyContent.insert ("montoDesembolso_1", this->montoDesem_1);
-		}
-		if (this->montoDesem_2 != 0) {
-			bodyContent.insert ("fechaDesembolso_2", QDateTime (this->fechaDesem_2).toMSecsSinceEpoch ());
-			bodyContent.insert ("montoDesembolso_2", this->montoDesem_2);
-		}
-		if (this->montoDesem_3 != 0) {
-			bodyContent.insert ("fechaDesembolso_3", QDateTime (this->fechaDesem_3).toMSecsSinceEpoch ());
-			bodyContent.insert ("montoDesembolso_3", this->montoDesem_3);
-		}
-		if (this->montoDesem_4 != 0) {
-			bodyContent.insert ("fechaDesembolso_4", QDateTime (this->fechaDesem_4).toMSecsSinceEpoch ());
-			bodyContent.insert ("montoDesembolso_4", this->montoDesem_4);
-		}
-		if (this->montoDesem_5 != 0) {
-			bodyContent.insert ("fechaDesembolso_5", QDateTime (this->fechaDesem_5).toMSecsSinceEpoch ());
-			bodyContent.insert ("montoDesembolso_5", this->montoDesem_5);
-		}
 		bodyContent.insert ("empresaGrupo", this->enterprise);
 		bodyContent.insert ("entidadFinanciera", this->entity);
 
@@ -162,6 +123,6 @@ void OperacionCredito::save (QString targetURL, QString token) {
 	}
 }
 
-void OperacionCredito::update (QString targetURL, QString token) {
+void OperacionLeasing::update (QString targetURL, QString token) {
 
 }

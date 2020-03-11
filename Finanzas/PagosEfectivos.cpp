@@ -210,7 +210,7 @@ void PagosEfectivos::findButtonClicked () {
 void PagosEfectivos::searchPlan (QString filter) {
 	QString query = "";
 	if (filter != "") {
-		query = "?q="+filter;
+		query = "&q="+filter;
 	}
 	loadPlanesData (query);
 }
@@ -415,7 +415,7 @@ void PagosEfectivos::loadPlanesData (QString query) {
 		reply->deleteLater ();
 	});
 	QNetworkRequest request;
-	request.setUrl (QUrl (targetAddress + "/planDePagos" + query));
+	request.setUrl (QUrl (targetAddress + "/planDePagos?status=1" + query));
 
 	request.setRawHeader ("token", this->token.toUtf8 ());
 	request.setRawHeader ("Content-Type", "application/json");

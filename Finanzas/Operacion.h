@@ -56,7 +56,7 @@ public:
 	virtual void save (QString targetURL, QString token) = 0;
 	static Operacion* load (int id, QString targetURL, QString token, QObject* parent = nullptr);
 	virtual void update (QString targetURL, QString token) = 0;
-	static void deleteRes (QString targetURL, QString token);
+	bool deleteRes (QString targetURL, QString token);
 
 	// getters and setters
 	void setID (int id);

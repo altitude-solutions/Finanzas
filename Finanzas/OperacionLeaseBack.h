@@ -1,16 +1,13 @@
 #pragma once
 
-#include <QObject>
-
 #include "Operacion.h"
 
-
-class OperacionCredito : public Operacion {
+class OperacionLeaseBack : public Operacion {
 	Q_OBJECT
 
 public:
-	OperacionCredito(QObject *parent);
-	~OperacionCredito();
+	OperacionLeaseBack(QObject *parent);
+	~OperacionLeaseBack();
 
 	bool validate ();
 	void save (QString targetURL, QString token);

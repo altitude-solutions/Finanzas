@@ -1,14 +1,15 @@
-#include "OperacionCredito.h"
+#include "OperacionLeaseBack.h"
 
-OperacionCredito::OperacionCredito (QObject* parent) : Operacion (parent) {
-	this->operationType = OperacionesFinancieras::TiposDeOperacion::CasoCredito;
-}
-
-OperacionCredito::~OperacionCredito () {
+OperacionLeaseBack::OperacionLeaseBack(QObject *parent): Operacion(parent) {
 
 }
 
-bool OperacionCredito::validate () {
+OperacionLeaseBack::~OperacionLeaseBack(){
+
+}
+
+
+bool OperacionLeaseBack::validate () {
 	if (this->contractNumber == "") {
 		emit notifyValidationStatus (OperationValidationErros::CONTRACT_ERROR);
 		return  false;
@@ -27,6 +28,10 @@ bool OperacionCredito::validate () {
 	}
 	if (this->ammount <= 0) {
 		emit notifyValidationStatus (OperationValidationErros::AMMOUNT_ERROR);
+		return  false;
+	}
+	if (this->iva <= 0) {
+		emit notifyValidationStatus (OperationValidationErros::IVA_ERROR);
 		return  false;
 	}
 	if (this->rateType == OperacionesFinancieras::TipoTasa::NONE) {
@@ -82,7 +87,7 @@ bool OperacionCredito::validate () {
 	return true;
 }
 
-void OperacionCredito::save (QString targetURL, QString token) {
+void OperacionLeaseBack::save (QString targetURL, QString token) {
 	if (validate ()) {
 		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
 		QNetworkRequest request;
@@ -125,6 +130,8 @@ void OperacionCredito::save (QString targetURL, QString token) {
 		bodyContent.insert ("detalle", this->detail);
 		bodyContent.insert ("moneda", OperacionesFinancieras::MapMonedaEnum (this->currency));
 		bodyContent.insert ("monto", this->ammount);
+		bodyContent.insert ("iva", this->iva);
+		//bodyContent.insert ("cuotaInicial", );
 		bodyContent.insert ("tipoDeTasa", OperacionesFinancieras::MapTipoTasaEnum (this->rateType));
 		bodyContent.insert ("interesFijo", this->staticRate);
 		if (this->rateType == OperacionesFinancieras::TipoTasa::Variable) {
@@ -162,6 +169,6 @@ void OperacionCredito::save (QString targetURL, QString token) {
 	}
 }
 
-void OperacionCredito::update (QString targetURL, QString token) {
+void OperacionLeaseBack::update (QString targetURL, QString token) {
 
 }

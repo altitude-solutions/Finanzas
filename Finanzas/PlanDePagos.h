@@ -12,10 +12,16 @@
 #include <QJsonArray>
 #include <QJsonValue>
 
-// Clases imports
+// Operation namespace, utility functions
 #include "OperacionesFinancieras.h"
-#include "Operacion.h"
+
+// Clases imports
+#include "Operacion.h"		// abstract
 #include "OperacionCredito.h"
+#include "OperacionLineaDeCredito.h"
+#include "OperacionLeasing.h"
+#include "OperacionLeaseBack.h"
+
 
 #include "AddCuotaDelPlan.h"
 
@@ -84,8 +90,10 @@ private:
 	void onClearClicked ();
 	// save button clicked
 	void onSaveClicked ();
-	// add due
+	// add due clicked
 	void onAddDue ();
+	// delete plan clicked
+	void onDeletePlan ();
 	//======================================================
 
 	// setup callback(buttons) connections

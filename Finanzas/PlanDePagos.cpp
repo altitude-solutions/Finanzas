@@ -33,7 +33,7 @@ PlanDePagos::PlanDePagos (QWidget* parent) : QWidget (parent) {
 }
 
 PlanDePagos::~PlanDePagos () {
-
+	delete currentOperation;
 }
 
 void PlanDePagos::currencySelected (QString currency) {
@@ -383,7 +383,7 @@ void PlanDePagos::loadPlanesDePago (QString query) {
 		reply->deleteLater ();
 		});
 	QNetworkRequest request;
-	request.setUrl (QUrl (targetAddress + "/planDePagos" + query));
+	request.setUrl (QUrl (targetAddress + "/planDePagos?status=1" + query));
 
 	request.setRawHeader ("token", this->token.toUtf8 ());
 	request.setRawHeader ("Content-Type", "application/json");
@@ -582,13 +582,13 @@ void PlanDePagos::operationTypeSelected (QString operation) {
 					currentOperation = new OperacionCredito (this);
 					break;
 				case OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito:
-					currentOperation = nullptr;
+					currentOperation = new OperacionLineaDeCredito (this);
 					break;
 				case OperacionesFinancieras::TiposDeOperacion::CasoLeasing:
-					currentOperation = nullptr;
+					currentOperation = new OperacionLeasing (this);
 					break;
 				case OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack:
-					currentOperation = nullptr;
+					currentOperation = new OperacionLeaseBack (this);
 					break;
 				case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
 					currentOperation = nullptr;
@@ -816,6 +816,7 @@ void PlanDePagos::enableDueButtons () {
 //==================================================================
 
 void PlanDePagos::onNewClicked () {
+	resetFields ();
 	unlockField ();
 	clearFields ();
 	ui.tipoOperacion->setFocus ();
@@ -861,6 +862,22 @@ void PlanDePagos::onAddDue () {
 	addWindow.deleteLater ();
 }
 
+void PlanDePagos::onDeletePlan () {
+	QMessageBox::StandardButton answer = QMessageBox::question (this, "Eliminar", QString::fromLatin1 ("¿Eliminar la operación \"") + currentOperation->getContractNumber () + QString::fromLatin1 ("\"?"));
+	if (answer == QMessageBox::StandardButton::Yes) {
+		if (currentOperation->deleteRes (this->targetAddress, this->token)) {
+			QMessageBox::information (this, QString::fromLatin1 ("Éxito"), QString::fromLatin1 ("Borrado con éxito"));
+			delete currentOperation;
+			currentOperation = nullptr;
+			resetFields ();
+			loadPlanesDePago ();
+		}
+		else {
+			QMessageBox::information (this, "Error", QString::fromLatin1 ("No se pudo completar la operación"));
+		}
+	}
+}
+
 void PlanDePagos::setupConnections () {
 	//======================================================================================
 	//======================================== plan ========================================
@@ -870,6 +887,8 @@ void PlanDePagos::setupConnections () {
 	connect (ui.clearButton, &QPushButton::clicked, this, &PlanDePagos::onClearClicked);
 	// "registrar" clicked
 	connect (ui.savePlan, &QPushButton::clicked, this, &PlanDePagos::onSaveClicked);
+	// "eliminar" clicked
+	connect (ui.deletePlan, &QPushButton::clicked, this, &PlanDePagos::onDeletePlan);
 	//======================================================================================
 
 	//======================================================================================
@@ -956,7 +975,7 @@ void PlanDePagos::setupUiConnections () {
 	//========================================= search operations =========================================
 	connect (ui.search, &QLineEdit::textChanged, this, [&](QString query) {
 		if (query != "") {
-			query = "?q=" + query;
+			query = "&q=" + query;
 		}
 		loadPlanesDePago (query);
 		});
@@ -995,4 +1014,3 @@ void PlanDePagos::updateModel () {
 	currentOperation->setInitialDue (ui.cuotaInicial->getValue ()); //=======================================================================> Set cuota inicial
 	currentOperation->setCreditLine (lineasDeCredito[ui.lineaDeCredito->text ()]["id"].toInt ()); //=========================================> Set linea de credito
 }
-

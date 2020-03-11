@@ -70,6 +70,12 @@
     <ClCompile Include="AddCuotaDelPlan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OperacionLeasing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OperacionLeaseBack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Login.h">
@@ -112,6 +118,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AddCuotaDelPlan.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="OperacionLeasing.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="OperacionLeaseBack.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

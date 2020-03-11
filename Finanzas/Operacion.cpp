@@ -3,7 +3,8 @@
 
 #include "OperacionCredito.h"
 #include "OperacionLineaDeCredito.h"
-
+#include "OperacionLeasing.h"
+#include "OperacionLeaseBack.h"
 
 #include <QEventLoop>
 
@@ -47,96 +48,12 @@ Operacion::~Operacion() {
 
 }
 
+// Read CRUD operation
 Operacion* Operacion::load (int id, QString targetURL, QString token, QObject* parent) {
 	Operacion* op = nullptr;
 
 	QNetworkAccessManager* nam = new QNetworkAccessManager (parent);
-	/*connect (nam, &QNetworkAccessManager::finished, parent, [&](QNetworkReply* reply) {
-		QByteArray resBin = reply->readAll ();
-		if (reply->error ()) {
-			QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
-			return;
-		}
-		QJsonDocument okJson = QJsonDocument::fromJson (resBin);
 
-		OperacionesFinancieras::TiposDeOperacion opType = OperacionesFinancieras::MapOperationString (okJson.object ().value ("planDePagos").toObject ().value ("tipoOperacion").toString ());
-		switch (opType) {
-		case OperacionesFinancieras::TiposDeOperacion::CasoCredito:
-			op = new OperacionCredito (parent);
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito:
-			op = new OperacionLineaDeCredito (parent);
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::CasoLeasing:
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack:
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
-			break;
-		case OperacionesFinancieras::TiposDeOperacion::NONE:
-			return;
-			break;
-		}
-		op->setID (okJson.object ().value ("planDePagos").toObject ().value ("id").toInt());
-		op->setContractNumber (okJson.object ().value ("planDePagos").toObject ().value ("numeroDeContratoOperacion").toString ());
-		op->setSignDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaFirma").toVariant ().toLongLong ()).date ());
-		op->setConcept (okJson.object ().value ("planDePagos").toObject ().value ("concepto").toString ());
-		op->setDetail (okJson.object ().value ("planDePagos").toObject ().value ("detalle").toString ());
-		op->setCurrency (OperacionesFinancieras::MapMonedaString (okJson.object ().value ("planDePagos").toObject ().value ("moneda").toString ()));
-		op->setAmmount (okJson.object ().value ("planDePagos").toObject ().value ("monto").toDouble ());
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("iva").isNull ()) {
-			op->setIVA (okJson.object ().value ("planDePagos").toObject ().value ("iva").toDouble ());
-		}
-		op->setRateType (OperacionesFinancieras::MapTipoTasaString (okJson.object ().value ("planDePagos").toObject ().value ("tipoDeTasa").toString ()));
-		op->setStaticRate (okJson.object ().value ("planDePagos").toObject ().value ("interesFijo").toDouble ());
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("interesVariable").isNull ()) {
-			op->setDynamicRate (okJson.object ().value ("planDePagos").toObject ().value ("interesVariable").toDouble ());
-		}
-		op->setTerm (okJson.object ().value ("planDePagos").toObject ().value ("plazo").toInt ());
-		op->setFrequency (OperacionesFinancieras::MapFrecuenciaString (okJson.object ().value ("planDePagos").toObject ().value ("frecuenciaDePagos").toString ()));
-		op->setExpirationDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaVencimiento").toVariant ().toLongLong ()).date ());
-		op->setEnterprise (okJson.object ().value ("planDePagos").toObject ().value ("empresas_grupo").toObject ().value ("id").toInt());
-		op->setEntity (okJson.object ().value ("planDePagos").toObject ().value ("entidades_financiera").toObject ().value ("id").toInt());
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("lineas_de_credito").isNull ()) {
-			op->setCreditLine (okJson.object ().value ("planDePagos").toObject ().value ("lineas_de_credito").toObject ().value ("id").toInt ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("cuotaInicial").isNull ()) {
-			op->setInitialDue (okJson.object ().value ("planDePagos").toObject ().value ("cuotaInicial").toDouble ());
-		}
-
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_1").isNull ()) {
-			op->setMontoDesem_1 (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_1").toDouble ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_1").isNull ()) {
-			op->setFechaDesem_1 (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_1").toVariant ().toLongLong ()).date ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_2").isNull ()) {
-			op->setMontoDesem_2 (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_2").toDouble ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_2").isNull ()) {
-			op->setFechaDesem_2 (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_2").toVariant ().toLongLong ()).date ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_3").isNull ()) {
-			op->setMontoDesem_3 (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_3").toDouble ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_3").isNull ()) {
-			op->setFechaDesem_3 (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_3").toVariant ().toLongLong ()).date ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_4").isNull ()) {
-			op->setMontoDesem_4 (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_4").toDouble ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_4").isNull ()) {
-			op->setFechaDesem_4 (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_4").toVariant ().toLongLong ()).date ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_5").isNull ()) {
-			op->setMontoDesem_5 (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_5").toDouble ());
-		}
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_5").isNull ()) {
-			op->setFechaDesem_5 (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_5").toVariant ().toLongLong ()).date ());
-		}
-
-		reply->deleteLater ();
-		});*/
 
 	QNetworkRequest request;
 	request.setUrl (QUrl (targetURL + "/planDePagos/" + QString::number (id)));
@@ -167,8 +84,10 @@ Operacion* Operacion::load (int id, QString targetURL, QString token, QObject* p
 			op = new OperacionLineaDeCredito (parent);
 			break;
 		case OperacionesFinancieras::TiposDeOperacion::CasoLeasing:
+			op = new OperacionLeasing (parent);
 			break;
 		case OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack:
+			op = new OperacionLeaseBack (parent);
 			break;
 		case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
 			break;
@@ -236,14 +155,48 @@ Operacion* Operacion::load (int id, QString targetURL, QString token, QObject* p
 
 	reply->deleteLater ();
 
+
+	nam->deleteLater ();
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	return op;
 }
 
 // Delete CRUD operation
-void Operacion::deleteRes (QString targetURL, QString token) {
+bool Operacion::deleteRes (QString targetURL, QString token) {
+	// return variable;
+	bool message = false;
 
+	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+
+	QNetworkRequest request;
+	request.setUrl (QUrl (targetURL + "/planDePagos/" + QString::number (this->getID ())));
+
+	request.setRawHeader ("token", token.toUtf8 ());
+	request.setRawHeader ("Content-Type", "application/json");
+	QNetworkReply* reply = nam->deleteResource (request);
+
+	QEventLoop eventLoop;
+	connect (reply, SIGNAL (finished ()), &eventLoop, SLOT (quit ()));
+	eventLoop.exec ();
+
+	QByteArray resBin = reply->readAll ();
+	if (reply->error ()) {
+		QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+		message = false;
+	}
+	else {
+		QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+		message = true;
+	}
+
+	reply->deleteLater ();
+
+	nam->deleteLater ();
+
+	return message;
 }
 
 
