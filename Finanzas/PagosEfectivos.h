@@ -21,8 +21,6 @@ public slots:
 	void onTabSelected ();
 
 private slots:
-	void saveButtonClicked ();
-	void findButtonClicked ();
 	void searchPlan (QString  filter);
 	void loadSelectedPlan (int id);
 
@@ -31,6 +29,8 @@ private:
 	void loadEntidadesFinancieras ();
 	void loadPlanesData (QString query = "");
 	void setPlanTableHeaders ();
+
+	void setupTableClipboard ();
 
 	Ui::PagosEfectivos ui;
 

@@ -108,6 +108,8 @@ private:
 	void setupConnections ();
 	// setup ui connections (autofills, number checkers, some validators and desembolsos enable/disable behavior)
 	void setupUiConnections ();
+	// setup table clipboard
+	void setupTableClipboard ();
 
 	//======================================================
 	//================== update operation ==================

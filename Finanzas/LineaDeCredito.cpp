@@ -18,6 +18,13 @@
 #include <QDebug>
 
 
+// clipboard to excel
+#include <QClipboard>
+#include <QApplication>
+#include <QAction>
+#include <QKeySequence>
+
+
 LineaDeCredito::LineaDeCredito(QWidget *parent): QWidget(parent) {
 	ui.setupUi(this);
 	// ===============================================
@@ -129,6 +136,10 @@ LineaDeCredito::LineaDeCredito(QWidget *parent): QWidget(parent) {
 
 	editing = false;
 	editingID = 0;
+
+
+	// setup table clipboard
+	setupTableClipboard ();
 }
 
 LineaDeCredito::~LineaDeCredito() {
@@ -516,4 +527,33 @@ void LineaDeCredito::clearFields () {
 
 	editing = false;
 	editingID = 0;
+}
+
+void LineaDeCredito::setupTableClipboard () {
+	QAction* copyPlan = new QAction (ui.tableWidget);
+
+	copyPlan->setShortcut (QKeySequence::Copy);
+	copyPlan->setShortcutContext (Qt::ShortcutContext::WidgetShortcut);
+
+	connect (copyPlan, &QAction::triggered, this, [&]() {
+		if (ui.tableWidget->selectedItems ().length () > 0) {
+			QClipboard* clipboard = QApplication::clipboard ();
+
+			int currentRow = ui.tableWidget->selectedItems ().at (0)->row ();
+			QString toClipboard = "";
+			foreach (QTableWidgetItem * itm, ui.tableWidget->selectedItems ()) {
+				if (currentRow == itm->row ()) {
+					toClipboard += itm->text () + "\t";
+				}
+				else {
+					toClipboard += "\n" + itm->text () + "\t";
+				}
+				currentRow = itm->row ();
+			}
+
+			clipboard->setText (toClipboard);
+		}
+		});
+
+	ui.tableWidget->addAction (copyPlan);
 }

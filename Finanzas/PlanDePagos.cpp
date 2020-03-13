@@ -17,6 +17,13 @@
 #include "NumberInput.h"
 
 
+// clipboard to excel
+#include <QClipboard>
+#include <QApplication>
+#include <QAction>
+#include <QKeySequence>
+
+
 PlanDePagos::PlanDePagos (QWidget* parent) : QWidget (parent) {
 	ui.setupUi (this);
 	// initialize saldos
@@ -32,6 +39,8 @@ PlanDePagos::PlanDePagos (QWidget* parent) : QWidget (parent) {
 
 	loadedFromLeftlist = false;
 	editingPlan = false;
+
+	setupTableClipboard ();
 }
 
 PlanDePagos::~PlanDePagos () {
@@ -1178,6 +1187,35 @@ void PlanDePagos::setupUiConnections () {
 		}
 		});
 	//=====================================================================================================
+}
+
+void PlanDePagos::setupTableClipboard () {
+	QAction* copyPlan = new QAction (ui.plannedFee);
+
+	copyPlan->setShortcut (QKeySequence::Copy);
+	copyPlan->setShortcutContext (Qt::ShortcutContext::WidgetShortcut);
+
+	connect (copyPlan, &QAction::triggered, this, [&]() {
+		if (ui.plannedFee->selectedItems ().length () > 0) {
+			QClipboard* clipboard = QApplication::clipboard ();
+
+			int currentRow = ui.plannedFee->selectedItems ().at (0)->row ();
+			QString toClipboard = "";
+			foreach (QTableWidgetItem * itm, ui.plannedFee->selectedItems ()) {
+				if (currentRow == itm->row ()) {
+					toClipboard += itm->text () + "\t";
+				}
+				else {
+					toClipboard += "\n" + itm->text () + "\t";
+				}
+				currentRow = itm->row ();
+			}
+
+			clipboard->setText (toClipboard);
+		}
+		});
+
+	ui.plannedFee->addAction (copyPlan);
 }
 
 void PlanDePagos::updateModel () {

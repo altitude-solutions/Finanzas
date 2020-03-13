@@ -15,6 +15,13 @@
 #include <QMessageBox>
 
 
+// clipboard to excel
+#include <QClipboard>
+#include <QApplication>
+#include <QAction>
+#include <QKeySequence>
+
+
 PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 	ui.setupUi (this);
 	// ==================================================================
@@ -169,9 +176,7 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 		}
 	});
 
-	// ==================================================================
-	// Load planes de pago info
-	// ==================================================================
+	setupTableClipboard ();
 }
 
 PagosEfectivos::~PagosEfectivos(){
@@ -196,16 +201,6 @@ void PagosEfectivos::onTabSelected () {
 	loadEmpresasGrupo ();
 	loadEntidadesFinancieras ();
 	loadPlanesData ();
-}
-
-// Finish cycle
-void PagosEfectivos::saveButtonClicked () {
-
-}
-
-// Start cycle
-void PagosEfectivos::findButtonClicked () {
-
 }
 
 void PagosEfectivos::searchPlan (QString filter) {
@@ -479,4 +474,60 @@ void PagosEfectivos::setPlanTableHeaders () {
 
 	ui.effectiveFee->hideColumn (9);
 	//ui.effectiveFee->horizontalHeader ()->setSectionResizeMode (9, QHeaderView::ResizeMode::Stretch);	// id
+}
+
+void PagosEfectivos::setupTableClipboard () {
+	QAction* copyPlan = new QAction (ui.plannedFee);
+	
+	copyPlan->setShortcut (QKeySequence::Copy);
+	copyPlan->setShortcutContext (Qt::ShortcutContext::WidgetShortcut);
+
+	connect (copyPlan, &QAction::triggered, this, [&]() {
+		if (ui.plannedFee->selectedItems ().length () > 0) {
+			QClipboard* clipboard = QApplication::clipboard ();
+
+			int currentRow = ui.plannedFee->selectedItems ().at (0)->row ();
+			QString toClipboard = "";
+			foreach (QTableWidgetItem * itm, ui.plannedFee->selectedItems ()) {
+				if (currentRow == itm->row ()) {
+					toClipboard += itm->text () + "\t";
+				}
+				else {
+					toClipboard += "\n" + itm->text () + "\t";
+				}
+				currentRow = itm->row ();
+			}
+
+			clipboard->setText (toClipboard);
+		}
+		});
+
+	ui.plannedFee->addAction (copyPlan);
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
+	QAction* copyEffe = new QAction (ui.plannedFee);
+
+	copyEffe->setShortcut (QKeySequence::Copy);
+	copyEffe->setShortcutContext (Qt::ShortcutContext::WidgetShortcut);
+
+	connect (copyEffe, &QAction::triggered, this, [&]() {
+		if (ui.effectiveFee->selectedItems ().length () > 0) {
+			QClipboard* clipboard = QApplication::clipboard ();
+
+			int currentRow = ui.effectiveFee->selectedItems ().at (0)->row ();
+			QString toClipboard = "";
+			foreach (QTableWidgetItem * itm, ui.effectiveFee->selectedItems ()) {
+				if (currentRow == itm->row ()) {
+					toClipboard += itm->text () + "\t";
+				}
+				else {
+					toClipboard += "\n" + itm->text () + "\t";
+				}
+				currentRow = itm->row ();
+			}
+
+			clipboard->setText (toClipboard);
+		}
+		});
+
+	ui.effectiveFee->addAction (copyEffe);
 }
