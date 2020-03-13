@@ -191,7 +191,7 @@ void AddCuotaEfectiva::onSaveClicked () {
 		bodyContent.insert ("montoTotalDelPago", ui.pagoMonto->text ().toDouble ());
 		bodyContent.insert ("pagoDeCapital", ui.pagoCapital->text ().toDouble ());
 		bodyContent.insert ("pagoDeInteres", ui.pagoInteres->text ().toDouble ());
-		if (ui.pagoIva->text () != "") {
+		if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
 			bodyContent.insert ("pagoDeIva", ui.pagoIva->text ().toDouble ());
 		}
 		bodyContent.insert ("parent", this->parentID);
@@ -242,7 +242,7 @@ void AddCuotaEfectiva::onSaveClicked () {
 		bodyContent.insert ("montoTotalDelPago", ui.pagoMonto->text ().toDouble ());
 		bodyContent.insert ("pagoDeCapital", ui.pagoCapital->text ().toDouble ());
 		bodyContent.insert ("pagoDeInteres", ui.pagoInteres->text ().toDouble ());
-		if (ui.pagoIva->text () != "") {
+		if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
 			bodyContent.insert ("pagoDeIva", ui.pagoIva->text ().toDouble ());
 		}
 		bodyContent.insert ("parent", this->parentID);

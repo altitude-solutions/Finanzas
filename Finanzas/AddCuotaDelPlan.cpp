@@ -163,7 +163,10 @@ void AddCuotaDelPlan::onSaveClicked () {
 			currentDue->setTotal (ui.pagoMonto->getValue ());
 			currentDue->setCapital (ui.pagoCapital->getValue ());
 			currentDue->setInterest (ui.pagoInteres->getValue ());
-			currentDue->setIva (ui.pagoIva->getValue ());
+
+			if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+				currentDue->setIva (ui.pagoIva->getValue ());
+			}
 			
 			currentDue->setParentID (this->parentOp_ID);
 

@@ -3,8 +3,8 @@
 NumberInput::NumberInput (QWidget* parent) : QLineEdit (parent) {
 	connect (this, &QLineEdit::textChanged, this, &NumberInput::validateNumber);
 	connect (this, &QLineEdit::editingFinished, this, &NumberInput::updateForPrecision);
-	this->value = -1;
-	previous = "-1";
+	this->value = 0;
+	previous = "";
 	precision = 2;
 }
 
@@ -16,11 +16,6 @@ void NumberInput::setValue (double value) {
 	if(QString::number(value, 'f',  this->precision) !=  QString::number(this->value, 'f', this->precision)) {
 		this->setText (QString::number (value, 'f', this->precision));
 	}
-	//this->value = this->text().toDouble ();
-	//if (this->previous.toDouble () != value) {
-		//emit valueChanged (this->value);
-	//}
-	//this->previous = QString::number (value);
 }
 
 double NumberInput::getValue () {
@@ -49,6 +44,9 @@ void NumberInput::validateNumber (QString data) {
 		if (isOk) {
 			if (QString::number (toEvaluate, 'f', this->precision) != QString::number (this->value, 'f', this->precision)) {
 				this->value = toEvaluate;
+				emit valueChanged (this->value);
+			}
+			if (this->previous == "") {
 				emit valueChanged (this->value);
 			}
 			this->previous = QString::number (value, 'f', this->precision);

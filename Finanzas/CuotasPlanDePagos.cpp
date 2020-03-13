@@ -144,7 +144,6 @@ void CuotasPlanDePagos::save (QString targetUrl, QString token) {
 	nam->post (request, body.toJson ());
 }
 
-
 void CuotasPlanDePagos::update (QString targetUrl, QString token) {
 	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
 	QNetworkRequest request;
