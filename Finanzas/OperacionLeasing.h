@@ -13,4 +13,6 @@ public:
 	bool validate ();
 	void save (QString targetURL, QString token);
 	void update (QString targetURL, QString token);
+
+	void createFirstDue (QString targetURL, QString token);
 };

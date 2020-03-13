@@ -1,13 +1,19 @@
 #include "OperacionLeaseBack.h"
 
-OperacionLeaseBack::OperacionLeaseBack(QObject *parent): Operacion(parent) {
+#include "CuotasPlanDePagos.h"
 
+
+QString targetAddress_2;
+QString token_ID_2;
+
+
+OperacionLeaseBack::OperacionLeaseBack(QObject *parent): Operacion(parent) {
+	this->operationType = OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack;
 }
 
 OperacionLeaseBack::~OperacionLeaseBack(){
 
 }
-
 
 bool OperacionLeaseBack::validate () {
 	if (this->contractNumber == "") {
@@ -32,6 +38,10 @@ bool OperacionLeaseBack::validate () {
 	}
 	if (this->iva <= 0) {
 		emit notifyValidationStatus (OperationValidationErros::IVA_ERROR);
+		return  false;
+	}
+	if (this->initialDue < 0 || this->initialDue > this->ammount) {
+		emit notifyValidationStatus (OperationValidationErros::INITIAL_DUE_ERROR);
 		return  false;
 	}
 	if (this->rateType == OperacionesFinancieras::TipoTasa::NONE) {
@@ -89,6 +99,9 @@ bool OperacionLeaseBack::validate () {
 
 void OperacionLeaseBack::save (QString targetURL, QString token) {
 	if (validate ()) {
+		targetAddress_2 = targetURL;
+		token_ID_2 = token;
+
 		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
 		QNetworkRequest request;
 		request.setUrl (QUrl (targetURL + "/planDePagos"));
@@ -115,6 +128,9 @@ void OperacionLeaseBack::save (QString targetURL, QString token) {
 			}
 			else {
 				this->id = response.object ().value ("planDePagos").toObject ().value ("id").toInt ();
+				if (this->getInitialDue () != 0) {
+					createFirstDue (targetAddress_2, token_ID_2);
+				}
 				emit notifyValidationStatus (OperationValidationErros::NO_ERROR);
 			}
 			reply->deleteLater ();
@@ -131,7 +147,7 @@ void OperacionLeaseBack::save (QString targetURL, QString token) {
 		bodyContent.insert ("moneda", OperacionesFinancieras::MapMonedaEnum (this->currency));
 		bodyContent.insert ("monto", this->ammount);
 		bodyContent.insert ("iva", this->iva);
-		//bodyContent.insert ("cuotaInicial", );
+		bodyContent.insert ("cuotaInicial", this->initialDue);
 		bodyContent.insert ("tipoDeTasa", OperacionesFinancieras::MapTipoTasaEnum (this->rateType));
 		bodyContent.insert ("interesFijo", this->staticRate);
 		if (this->rateType == OperacionesFinancieras::TipoTasa::Variable) {
@@ -171,4 +187,24 @@ void OperacionLeaseBack::save (QString targetURL, QString token) {
 
 void OperacionLeaseBack::update (QString targetURL, QString token) {
 
+}
+
+
+void OperacionLeaseBack::createFirstDue (QString targetURL, QString token) {
+	CuotasPlanDePagos* currentDue = new CuotasPlanDePagos (this);
+
+	double capital = 0.87 * this->getInitialDue ();
+	QString aux = QString::number (this->getInitialDue () - capital, 'f', 2);
+	double iva = aux.toDouble ();
+
+	currentDue->setDueNumber (1);
+	currentDue->setDueDate (this->getSignDate ());
+	currentDue->setTotal (this->getInitialDue ());
+	currentDue->setCapital (capital);
+	currentDue->setInterest (0);
+	currentDue->setIva (iva);
+
+	currentDue->setParentID (this->getID ());
+
+	currentDue->save (targetURL, token);
 }

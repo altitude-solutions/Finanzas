@@ -1,13 +1,17 @@
 #include "OperacionLeasing.h"
 
-OperacionLeasing::OperacionLeasing(QObject *parent): Operacion(parent) {
+#include "CuotasPlanDePagos.h"
 
+QString targetAddress;
+QString token_ID;
+
+OperacionLeasing::OperacionLeasing(QObject *parent): Operacion(parent) {
+	this->operationType = OperacionesFinancieras::TiposDeOperacion::CasoLeasing;
 }
 
 OperacionLeasing::~OperacionLeasing() {
 
 }
-
 
 bool OperacionLeasing::validate () {
 	if (this->contractNumber == "") {
@@ -34,7 +38,7 @@ bool OperacionLeasing::validate () {
 		emit notifyValidationStatus (OperationValidationErros::IVA_ERROR);
 		return  false;
 	}
-	if (this->initialDue <= 0) {
+	if (this->initialDue <= 0 || this->initialDue > this->ammount) {
 		emit notifyValidationStatus (OperationValidationErros::INITIAL_DUE_ERROR);
 		return  false;
 	}
@@ -63,6 +67,9 @@ bool OperacionLeasing::validate () {
 
 void OperacionLeasing::save (QString targetURL, QString token) {
 	if (validate ()) {
+		targetAddress = targetURL;
+		token_ID = token;
+
 		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
 		QNetworkRequest request;
 		request.setUrl (QUrl (targetURL + "/planDePagos"));
@@ -72,7 +79,6 @@ void OperacionLeasing::save (QString targetURL, QString token) {
 		connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
 			QJsonDocument response = QJsonDocument::fromJson (reply->readAll ());
 			if (reply->error ()) {
-				qDebug () << "response error " << reply->error ();
 				if (response.object ().value ("err").toObject ().contains ("message")) {
 					// If there is a known error
 					emit notifyValidationStatus (OperationValidationErros::SERVER_SIDE_ERROR, QString::fromLatin1 (response.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
@@ -89,6 +95,8 @@ void OperacionLeasing::save (QString targetURL, QString token) {
 			}
 			else {
 				this->id = response.object ().value ("planDePagos").toObject ().value ("id").toInt ();
+				createFirstDue (targetAddress, token_ID);
+
 				emit notifyValidationStatus (OperationValidationErros::NO_ERROR);
 			}
 			reply->deleteLater ();
@@ -117,7 +125,6 @@ void OperacionLeasing::save (QString targetURL, QString token) {
 		bodyContent.insert ("empresaGrupo", this->enterprise);
 		bodyContent.insert ("entidadFinanciera", this->entity);
 
-
 		body.setObject (bodyContent);
 		nam->post (request, body.toJson ());
 	}
@@ -125,4 +132,53 @@ void OperacionLeasing::save (QString targetURL, QString token) {
 
 void OperacionLeasing::update (QString targetURL, QString token) {
 
+}
+
+void OperacionLeasing::createFirstDue (QString targetURL,  QString token) {
+	CuotasPlanDePagos* currentDue = new CuotasPlanDePagos (this);
+
+	double capital = 0.87 * this->getInitialDue ();
+	QString aux = QString::number (this->getInitialDue () - capital, 'f', 2);
+	double iva = aux.toDouble ();
+
+	currentDue->setDueNumber (1);
+	currentDue->setDueDate (this->getSignDate ());
+	currentDue->setTotal (this->getInitialDue ());
+	currentDue->setCapital (capital);
+	currentDue->setInterest (0);
+	currentDue->setIva (iva);
+
+	currentDue->setParentID (this->getID ());
+
+
+	currentDue->save (targetURL, token);
+	//===============================================================================================================
+	// Network manager and request
+	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+	QNetworkRequest request;
+	request.setUrl (QUrl (targetURL + "/cuotaEfectiva"));
+	request.setRawHeader ("Content-Type", "application/json");
+	request.setRawHeader ("token", token.toUtf8 ());
+
+	// On response lambda
+	connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+		QJsonDocument jsonReply = QJsonDocument::fromJson (reply->readAll ());
+			reply->deleteLater ();
+		});
+
+	// Request body
+	QJsonDocument body;
+	QJsonObject bodyContent;
+
+	bodyContent.insert ("numeroDeCuota", 1);
+	bodyContent.insert ("fechaDePago", QDateTime (this->getSignDate ()).toMSecsSinceEpoch ());
+	bodyContent.insert ("montoTotalDelPago", this->getInitialDue ());
+	bodyContent.insert ("pagoDeCapital", capital);
+	bodyContent.insert ("pagoDeInteres", 0);
+	bodyContent.insert ("pagoDeIva", iva);
+
+	bodyContent.insert ("parent", this->getID ());
+
+	body.setObject (bodyContent);
+	nam->post (request, body.toJson ());
 }

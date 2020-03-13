@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1220</width>
+    <width>1228</width>
     <height>789</height>
    </rect>
   </property>
@@ -445,6 +445,7 @@ QPushButton::hover {
 	border-width: 1px;
 	font: 10pt &quot;MS Shell Dlg 2&quot;;
 	padding-left: 3px;
+	padding-right: 8px;
 	padding-top: 3px;
 	padding-bottom: 3px;
 	color:#243646;
@@ -699,38 +700,6 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
                     </property>
                    </widget>
                   </item>
-                  <item row="6" column="1">
-                   <widget class="QLineEdit" name="lineaDeCredito">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QLineEdit {
-	background-color: #ebeded;
-	border-style: outset;
-	border-radius: 12px;
-	border-color: #d7d9d9;
-	border-width: 1px;
-	font: 10pt &quot;MS Shell Dlg 2&quot;;
-	color: #333333;
-	min-width: 8em;
-	padding: 3px;
-}
-
-QLineEdit::hover,
-QLineEdit::focus {
-	background-color: #b5b5b5;
-	border-color: #a7a7a7;
-}
-
-
-QLineEdit::disabled {
-	background-color: #f4f4f4;
-}
-</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="3" column="0">
                    <widget class="QLabel" name="label_11">
                     <property name="text">
@@ -870,6 +839,49 @@ QComboBox::disabled {
                     </property>
                     <property name="text">
                      <string/>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="1">
+                   <widget class="QComboBox" name="lineaDeCredito">
+                    <property name="styleSheet">
+                     <string notr="true">QComboBox {
+	background-color:#ebeded;
+	border-style: outset;
+	border-radius: 13px;
+	border-color: #d7d9d9;
+	border-width: 1px;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+	padding-left: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#243646;
+}
+
+QComboBox::hover,
+QComboBox::focus {
+	background-color: #b5b5b5;
+	border-color: #a7a7a7;
+}
+
+
+QComboBox::drop-down  {
+    border: 0px; /* This seems to replace the whole arrow of the combo box */
+}
+
+
+QComboBox::down-arrow {
+    image: url(:/Resources/img/dropdown.png);
+    width: 24px;
+    height: 24px;
+	margin-right: 6px;
+}
+
+QComboBox::disabled {
+	background-color: #f4f4f4;
+}
+
+</string>
                     </property>
                    </widget>
                   </item>
@@ -2743,13 +2755,60 @@ QPushButton::hover {
                <property name="styleSheet">
                 <string notr="true">QTableWidget {
 	background-color: white;
-	border-top: 2.5px solid #ebeded;
-	border-bottom: 2.5px solid #ebeded;
-	border-right: 4.5px solid #ebeded;
-	border-left: 2.5px solid #ebeded;
-	gridline-color: #B3B3B3;
+	border-top: 2.5px solid #EBEDED;
+	border-bottom: 2.5px solid #EBEDED;
+	border-right: 2.5px solid #EBEDED;
+	border-left: 2.5px solid #EBEDED;
+	gridline-color: #a7a7a7;
 	font: 9pt &quot;MS Shell Dlg 2&quot;;
-}</string>
+}
+
+
+QHeaderView::section {
+	border-top: 1px solid #a7a7a7;
+	border-left: 0px solid #a7a7a7;
+	border-right: 1px solid #a7a7a7;
+	border-bottom: 1px solid #a7a7a7;
+}
+
+
+
+
+/* Scroll bar stylesheet */
+QScrollBar:vertical {
+	border: 0px solid #a7a7a7;
+	background: #b7b7b7;
+	width:16px;
+	margin: 0px 0px 0px 0px;
+	border-radius: 8px;
+}
+QScrollBar::handle:vertical {
+	background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+	stop: 0 rgb(16, 148, 145), stop: 0.5 rgb(29, 134, 128), stop:1 rgb(16, 148, 145));
+	min-height: 0px;
+	border-radius: 7px;
+}
+QScrollBar::add-line:vertical {
+	background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+	stop: 0 rgb(167, 167, 167), stop: 0.5 rgb(255, 255, 255), stop:1 rgb(167, 167, 167));
+	height: 16px;
+	subcontrol-position: bottom;
+	subcontrol-origin: margin;
+	border-radius: 8px;
+}
+QScrollBar::sub-line:vertical {
+	background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+	stop: 0 rgb(167, 167, 167), stop: 0.5 rgb(255, 255, 255), stop:1 rgb(167, 167, 167));
+	height: 16 px;
+	subcontrol-position: top;
+	subcontrol-origin: margin;
+	border-radius: 8px;
+}
+
+QScrollBar::handle::hover {
+	background-color: #109491;
+}
+</string>
                </property>
                <property name="rowCount">
                 <number>0</number>

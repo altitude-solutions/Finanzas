@@ -61,10 +61,10 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 
 			AddCuotaEfectiva addWindow (this);
 			if (ui.effectiveFee->rowCount () == 0) {
-				addWindow.setWindowData (this->targetAddress, this->token, 1, QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, this->currentPlan);
+				addWindow.setWindowData (this->targetAddress, this->token, 1, QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan);
 			}
 			else {
-				addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->rowCount () + 1, QDate::fromString (ui.effectiveFee->item (ui.effectiveFee->rowCount () - 1, 1)->text (), "dd/MM/yyyy"), caso, this->currentPlan);
+				addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->rowCount () + 1, QDate::fromString (ui.effectiveFee->item (ui.effectiveFee->rowCount () - 1, 1)->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan);
 			}
 
 			connect (&addWindow, &AddCuotaEfectiva::accepted, this, [&]() {
@@ -110,7 +110,7 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 					}
 
 					AddCuotaEfectiva addWindow (this);
-					addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->item(row, 0)->text().toInt(), QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, this->currentPlan, ui.effectiveFee->item(row, 9)->text().toInt(), true);
+					addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->item (row, 0)->text ().toInt (), QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan, ui.effectiveFee->item (row, 9)->text ().toInt (), true);
 
 					connect (&addWindow, &AddCuotaEfectiva::accepted, this, [&]() {
 						loadSelectedPlan (this->currentPlan);
@@ -191,6 +191,7 @@ void PagosEfectivos::setAuthData (QString address, QString token, QString userNa
 // On Tab selected
 // Use it to setup current tab
 void PagosEfectivos::onTabSelected () {
+	
 	// Tab setup
 	loadEmpresasGrupo ();
 	loadEntidadesFinancieras ();
@@ -274,11 +275,11 @@ void PagosEfectivos::loadSelectedPlan (int id) {
 
 			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 0, new QTableWidgetItem (QString::number (cuota.toObject ().value ("numeroDeCuota").toInt ())));
 			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 1, new QTableWidgetItem (QDateTime::fromMSecsSinceEpoch (cuota.toObject ().value ("fechaDePago").toVariant ().toLongLong ()).toString ("dd/MM/yyyy")));
-			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 2, new QTableWidgetItem (QString::number (cuota.toObject ().value ("montoTotalDelPago").toDouble ())));
-			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 3, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeCapital").toDouble ())));
-			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 4, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeInteres").toDouble ())));
+			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 2, new QTableWidgetItem (QString::number (cuota.toObject ().value ("montoTotalDelPago").toDouble (), 'f', 2)));
+			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 3, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeCapital").toDouble (), 'f', 2)));
+			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 4, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeInteres").toDouble (), 'f', 2)));
 			if (!cuota.toObject ().value ("pagoDeIva").isNull ()) {
-				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 5, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeIva").toDouble ())));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 5, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeIva").toDouble (), 'f', 2)));
 			}
 			else {
 				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 5, new QTableWidgetItem (""));
@@ -286,6 +287,12 @@ void PagosEfectivos::loadSelectedPlan (int id) {
 			
 			saldoCapital -= cuota.toObject ().value ("pagoDeCapital").toDouble ();
 			saldoIva -= cuota.toObject ().value ("pagoDeIva").toDouble ();
+
+			//====================================== primera cuota caso Leasing ============================================================
+			OperacionesFinancieras::TiposDeOperacion opera = OperacionesFinancieras::MapOperationString (okJson.object ().value ("planDePagos").toObject ().value ("tipoOperacion").toString ());
+			if (cuota.toObject ().value ("numeroDeCuota").toInt () == 1 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
+				saldoCapital -= okJson.object ().value ("planDePagos").toObject ().value ("iva").toDouble ();
+			}
 
 			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 6, new QTableWidgetItem (QString::number (saldoCapital, 'f', 2)));
 			ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 7, new QTableWidgetItem (QString::number (saldoIva, 'f', 2)));
@@ -304,11 +311,11 @@ void PagosEfectivos::loadSelectedPlan (int id) {
 
 			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 0, new QTableWidgetItem (QString::number (cuota.toObject ().value ("numeroDeCuota").toInt ())));
 			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 1, new QTableWidgetItem (QDateTime::fromMSecsSinceEpoch (cuota.toObject ().value ("fechaDePago").toVariant ().toLongLong ()).toString ("dd/MM/yyyy")));
-			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 2, new QTableWidgetItem (QString::number (cuota.toObject ().value ("montoTotalDelPago").toDouble ())));
-			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 3, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeCapital").toDouble ())));
-			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 4, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeInteres").toDouble ())));
+			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 2, new QTableWidgetItem (QString::number (cuota.toObject ().value ("montoTotalDelPago").toDouble (), 'f', 2)));
+			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 3, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeCapital").toDouble (), 'f', 2)));
+			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 4, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeInteres").toDouble (), 'f', 2)));
 			if (!cuota.toObject ().value ("pagoDeIva").isNull ()) {
-				ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 5, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeIva").toDouble ())));
+				ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 5, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeIva").toDouble (), 'f', 2)));
 			}
 			else {
 				ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 5, new QTableWidgetItem (""));
@@ -316,6 +323,12 @@ void PagosEfectivos::loadSelectedPlan (int id) {
 
 			saldoCapital -= cuota.toObject ().value ("pagoDeCapital").toDouble ();
 			saldoIva -= cuota.toObject ().value ("pagoDeIva").toDouble ();
+
+			//====================================== primera cuota caso Leasing ============================================================
+			OperacionesFinancieras::TiposDeOperacion opera = OperacionesFinancieras::MapOperationString (okJson.object ().value ("planDePagos").toObject ().value ("tipoOperacion").toString ());
+			if (cuota.toObject ().value ("numeroDeCuota").toInt () == 1 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
+				saldoCapital -= okJson.object ().value ("planDePagos").toObject ().value ("iva").toDouble ();
+			}
 
 			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 6, new QTableWidgetItem (QString::number (saldoCapital, 'f', 2)));
 			ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 7, new QTableWidgetItem (QString::number (saldoIva, 'f', 2)));

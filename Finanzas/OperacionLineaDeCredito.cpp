@@ -116,6 +116,7 @@ void OperacionLineaDeCredito::save (QString targetURL, QString token) {
 				}
 			}
 			else {
+				this->id = response.object ().value ("planDePagos").toObject ().value ("id").toInt ();
 				emit notifyValidationStatus (OperationValidationErros::NO_ERROR);
 			}
 			reply->deleteLater ();

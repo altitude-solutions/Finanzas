@@ -13,13 +13,13 @@ public:
 	AddCuotaEfectiva(QWidget *parent = Q_NULLPTR);
 	~AddCuotaEfectiva();
 
-	void setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, OperacionesFinancieras::TiposDeOperacion caso, int parentID, int editingID = 0, bool editing = false);
+	void setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, OperacionesFinancieras::TiposDeOperacion caso, OperacionesFinancieras::FrecuenciaDePagos freq, int parentID, int editingID = 0, bool editing = false);
 
 public slots:
 	void onSaveClicked ();
-	void onMontoCuotaChanged (QString monto);
-	void onPagoCapitalChanged (QString capital);
-	void onPagoInteresChanged (QString interes);
+	void onMontoCuotaChanged (double monto);
+	void onPagoCapitalChanged (double capital);
+	void onPagoInteresChanged (double interes);
 
 private:
 	Ui::AddCuotaEfectiva ui;

@@ -69,7 +69,7 @@ private:
 	void loadEmpresasGrupo ();
 	void loadEntidadesFinancieras ();
 	void loadTiposDeEntidad ();
-	void loadLineasDeCredito (int entidad_ID);
+	void loadLineasDeCredito (int entidad_ID, int empresa_ID);
 	void loadPlanesDePago (QString query = "");
 	void reloadSelectedPlan ();
 	// table operations

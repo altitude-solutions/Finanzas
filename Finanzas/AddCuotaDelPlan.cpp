@@ -27,11 +27,11 @@ AddCuotaDelPlan::AddCuotaDelPlan (QWidget* parent): QDialog (parent) {
 	connect (ui.pagoCapital, &QLineEdit::returnPressed, ui.addButton, &QPushButton::click);
 	connect (ui.pagoInteres, &QLineEdit::returnPressed, ui.addButton, &QPushButton::click);
 
-	connect (ui.pagoMonto, &NumberInput::valueChanged, this, &AddCuotaDelPlan::ivaAutofill);
+	//connect (ui.pagoMonto, &NumberInput::valueChanged, this, &AddCuotaDelPlan::ivaAutofill);
 }
 
 AddCuotaDelPlan::~AddCuotaDelPlan () {
-
+	delete currentDue;
 }
 
 void AddCuotaDelPlan::setValidationParams (QString targetURL, QString token, Operacion* op, CuotasPlanDePagos *lastDue, bool editing, CuotasPlanDePagos *due) {
@@ -49,7 +49,27 @@ void AddCuotaDelPlan::setValidationParams (QString targetURL, QString token, Ope
 	}
 	else {
 		ui.fechaPago->setMinimumDate (lastDue->getDueDate ());
-		ui.fechaPago->setDate (lastDue->getDueDate ().addMonths (1));
+		int addedMonths = 0;
+		switch (op->getFrequency ()) {
+		case OperacionesFinancieras::FrecuenciaDePagos::Mensual:
+			addedMonths = 1;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::Bimensual:
+			addedMonths = 2;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::Trimestral:
+			addedMonths = 3;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::Semestral:
+			addedMonths = 6;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::Anual:
+			addedMonths = 12;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::NONE:
+			break;
+		}
+		ui.fechaPago->setDate (lastDue->getDueDate ().addMonths (addedMonths));
 		ui.numeroCuota->setValue (lastDue->getDueNumber () + 1);
 	}
 	ui.pagoMonto->setFocus ();
@@ -79,13 +99,15 @@ void AddCuotaDelPlan::setValidationParams (QString targetURL, QString token, Ope
 	connect (currentDue, &CuotasPlanDePagos::notifyValidationStatus, this, &AddCuotaDelPlan::catchError);
 
 	connect (ui.pagoCapital, &NumberInput::valueChanged, this, &AddCuotaDelPlan::capitalChanged);
-	connect (ui.pagoInteres, &NumberInput::valueChanged, this, &AddCuotaDelPlan::interestChanged);
+
+	//connect (ui.pagoInteres, &NumberInput::valueChanged, this, &AddCuotaDelPlan::interestChanged);
 }
 
 void AddCuotaDelPlan::onSaveClicked () {
 	ui.addButton->setEnabled (false);
 	if (currentDue != nullptr) {
-		if (ui.pagoMonto->getValue () == (ui.pagoCapital->getValue() + ui.pagoInteres->getValue () + ui.pagoIva->getValue ())) {
+		double diff = ui.pagoMonto->getValue () - (ui.pagoCapital->getValue () + ui.pagoInteres->getValue () + ui.pagoIva->getValue ());
+		if (abs (diff) < 1e-9) {
 			if (ui.pagoMonto->getValue () <= 0) {
 				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto total del pago debe ser mayor a cero"));
 				ui.pagoMonto->setFocus ();
@@ -129,14 +151,15 @@ void AddCuotaDelPlan::onSaveClicked () {
 		}
 		else {
 			QMessageBox::critical (this, "Error", "La suma de los pagos debe ser igual al monto total del pago");
+			ui.addButton->setEnabled (true);
 		}
 	}
 }
 
 void AddCuotaDelPlan::ivaAutofill (double ammount) {
-	if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
-		ui.pagoIva->setValue (0.13 * ammount);
-	}
+	//if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
+	//	ui.pagoIva->setValue (0.13 * ammount);
+	//}
 }
 
 void AddCuotaDelPlan::catchError (DueValidationError errorCode, QString message) {
@@ -144,8 +167,8 @@ void AddCuotaDelPlan::catchError (DueValidationError errorCode, QString message)
 	if (currentDue != nullptr) {
 		switch (errorCode) {
 		case DueValidationError::SERVER_SIDE_ERROR:
+			QMessageBox::critical (this, QString::fromLatin1("Error"), message);
 			break;
-			QMessageBox::critical (this, "Error", message);
 		case DueValidationError::NO_ERROR:
 			QMessageBox::information (this, QString::fromLatin1 ("Éxito"), QString::fromLatin1 ("Guardado con éxito"));
 			emit this->accept ();
@@ -155,9 +178,14 @@ void AddCuotaDelPlan::catchError (DueValidationError errorCode, QString message)
 }
 
 void AddCuotaDelPlan::capitalChanged (double capital) {
+	if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+		ui.pagoIva->setValue (0.13 * capital / 0.87);
+	}
 	ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 }
 
 void AddCuotaDelPlan::interestChanged (double interest) {
-	ui.pagoCapital->setValue (ui.pagoMonto->getValue () - interest - ui.pagoIva->getValue ());
+	//ui.pagoIva->setValue (ui.pagoMonto->getValue () - interest - ui.pagoCapital->getValue ());
+
+	//ui.pagoCapital->setValue (ui.pagoMonto->getValue () - interest - ui.pagoIva->getValue ());
 }

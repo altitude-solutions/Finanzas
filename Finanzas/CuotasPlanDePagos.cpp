@@ -96,7 +96,6 @@ void CuotasPlanDePagos::save (QString targetUrl, QString token) {
 	request.setRawHeader ("Content-Type", "application/json");
 	request.setRawHeader ("token", token.toUtf8 ());
 
-
 	connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
 
 		QJsonDocument response = QJsonDocument::fromJson (reply->readAll ());
@@ -131,8 +130,9 @@ void CuotasPlanDePagos::save (QString targetUrl, QString token) {
 	bodyContent.insert ("montoTotalDelPago", this->totalAmmount);
 	bodyContent.insert ("pagoDeCapital", this->capitalDue);
 	bodyContent.insert ("pagoDeInteres", this->interestDue);
-	bodyContent.insert ("pagoIva", this->ivaDue);
-
+	if (this->ivaDue != 0) {
+		bodyContent.insert ("pagoDeIva", this->ivaDue);
+	}
 	bodyContent.insert ("parent", this->parent_ID);
 
 	body.setObject (bodyContent);

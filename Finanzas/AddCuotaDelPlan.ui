@@ -395,6 +395,9 @@ QLineEdit::disabled {
      </item>
      <item row="4" column="1">
       <widget class="NumberInput" name="pagoInteres">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
 	background-color: #ebeded;

@@ -13,7 +13,7 @@ NumberInput::~NumberInput () {
 }
 
 void NumberInput::setValue (double value) {
-	if(value !=  this->value) {
+	if(QString::number(value, 'f',  this->precision) !=  QString::number(this->value, 'f', this->precision)) {
 		this->setText (QString::number (value, 'f', this->precision));
 	}
 	//this->value = this->text().toDouble ();
@@ -47,21 +47,22 @@ void NumberInput::validateNumber (QString data) {
 		bool isOk = true;
 		double toEvaluate = data.toDouble (&isOk);
 		if (isOk) {
-			this->value = toEvaluate;
-			if (QString::number(this->value) != this->previous) {
+			if (QString::number (toEvaluate, 'f', this->precision) != QString::number (this->value, 'f', this->precision)) {
+				this->value = toEvaluate;
 				emit valueChanged (this->value);
 			}
-			this->previous = QString::number (value);
+			this->previous = QString::number (value, 'f', this->precision);
 		}
 		else {
 			this->setText (this->previous);
 		}
 	}
 	else {
-		this->value = 0;
-		if (QString::number (this->value) != this->previous) {
+		//if (this->value != this->previous) {
+		if (QString::number (0, 'f', this->precision) != QString::number (this->value, 'f', this->precision)) {
+			this->value = 0;
 			emit valueChanged (this->value);
 		}
-		this->previous = QString::number (value);
+		this->previous = QString::number (value, 'f', this->precision);
 	}
 }
