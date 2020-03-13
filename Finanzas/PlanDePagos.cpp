@@ -145,11 +145,12 @@ void PlanDePagos::termChanged (int value) {
 }
 
 void PlanDePagos::expirationDateChanged (QDate date) {
-	qint64 diff = QDateTime (ui.fechaFirma->date ()).msecsTo (QDateTime (date));
-	diff /= 3600000; // to hours
-	diff /= 24; // to days
-	diff /= 30; /// to months
-
+	QDate auxDate = ui.fechaFirma->date ();
+	int diff = 0;
+	while (auxDate < date) {
+		auxDate = auxDate.addMonths (1);
+		diff++;
+	}
 	ui.plazo->setValue (diff);
 }
 
