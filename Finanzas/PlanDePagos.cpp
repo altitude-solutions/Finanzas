@@ -31,6 +31,7 @@ PlanDePagos::PlanDePagos (QWidget* parent) : QWidget (parent) {
 	setupUiConnections ();
 
 	loadedFromLeftlist = false;
+	editingPlan = false;
 }
 
 PlanDePagos::~PlanDePagos () {
@@ -51,7 +52,7 @@ void PlanDePagos::currencySelected (QString currency) {
 
 void PlanDePagos::rateTypeSelected (QString rateType) {
 	OperacionesFinancieras::TipoTasa selectedRateType = OperacionesFinancieras::MapTipoTasaString (rateType);
-	if (!loadedFromLeftlist) {
+	if (editingPlan || !loadedFromLeftlist) {
 		switch (selectedRateType) {
 		case OperacionesFinancieras::TipoTasa::Fijo:
 			ui.interesFijo->setEnabled (true);
@@ -490,7 +491,7 @@ void PlanDePagos::reloadSelectedPlan () {
 					ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 7, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeIva").toDouble (), 'f', 2)));
 				}
 				else {
-					ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 7, new QTableWidgetItem (""));
+					ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 7, new QTableWidgetItem ("0.00"));
 				}
 
 				saldoCapital -= cuota.toObject ().value ("pagoDeCapital").toDouble ();
@@ -498,7 +499,7 @@ void PlanDePagos::reloadSelectedPlan () {
 
 				//================================ primera cuota caso Leasing =======================================
 				OperacionesFinancieras::TiposDeOperacion opera = OperacionesFinancieras::MapOperationString (okJson.object ().value ("planDePagos").toObject ().value ("tipoOperacion").toString ());
-				if (cuota.toObject ().value ("numeroDeCuota").toInt () == 1 && opera==OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
+				if ((cuota.toObject ().value ("numeroDeCuota").toInt () == 1 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) || (cuota.toObject ().value ("numeroDeCuota").toInt () == 0 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack)) {
 					saldoCapital -= okJson.object ().value ("planDePagos").toObject ().value ("iva").toDouble ();
 				}
 
@@ -523,7 +524,7 @@ void PlanDePagos::reloadSelectedPlan () {
 //==================================================================
 
 void PlanDePagos::setTableHeaders () {
-	ui.plannedFee->setColumnCount (11);
+	ui.plannedFee->setColumnCount (12);
 	// set columns names
 	QStringList headers;
 	headers << QString::fromLatin1 ("Cuota") << QString::fromLatin1 ("Año") << QString::fromLatin1 ("Mes") << QString::fromLatin1 ("Fecha de Pago") << QString::fromLatin1 ("Pago Total")
@@ -548,6 +549,7 @@ void PlanDePagos::setTableHeaders () {
 	ui.plannedFee->horizontalHeader ()->setSectionResizeMode (9, QHeaderView::ResizeMode::Stretch);				// credito fiscal
 	ui.plannedFee->horizontalHeader ()->setSectionResizeMode (10, QHeaderView::ResizeMode::Stretch);			// saldo capital real
 	ui.plannedFee->hideColumn (11);																				// id
+
 
 	// hide vertical headers
 	ui.plannedFee->verticalHeader ()->hide ();
@@ -700,6 +702,7 @@ void PlanDePagos::clearFields () {
 	ui.tipoOperacion->setCurrentIndex (-1);  // ======== instead of setCurrentText("")
 	ui.numeroContrato->setText ("");
 	ui.fechaFirma->setDate (QDate::currentDate ());
+	ui.fechaFirma->setMaximumDate (QDate::currentDate ());
 	ui.empresa->setCurrentIndex (-1);  // ======== instead of setCurrentText("")
 	ui.entidad->setCurrentIndex (-1);  // ======== instead of setCurrentText("")
 	ui.tipoEntidad->setText ("");
@@ -847,10 +850,46 @@ void PlanDePagos::enableDueButtons () {
 	ui.concepto->setEnabled (false);
 	ui.detalle->setEnabled (false);
 }
+
+void PlanDePagos::makePlanEditable () {
+	editingPlan = true;
+	ui.savePlan->setEnabled (true);
+	ui.clearButton->setEnabled (true);
+	//====================== first column except  credit line ======================
+	ui.tipoOperacion->setEnabled (true);
+	ui.numeroContrato->setEnabled (true);
+	ui.fechaFirma->setEnabled (true);
+	ui.empresa->setEnabled (true);
+	ui.entidad->setEnabled (true);
+	//====================== second column except initial due =======================
+	ui.moneda->setEnabled (true);
+	ui.monto->setEnabled (true);
+	ui.tipoTasa->setEnabled (true);
+	if (OperacionesFinancieras::MapTipoTasaString (ui.tipoTasa->currentText ()) == OperacionesFinancieras::TipoTasa::Fijo) {
+		ui.interesFijo->setEnabled (true);
+	}
+	else {
+		if (OperacionesFinancieras::MapTipoTasaString (ui.tipoTasa->currentText ()) == OperacionesFinancieras::TipoTasa::Variable) {
+			ui.interesFijo->setEnabled (true);
+			ui.interesVariable->setEnabled (true);
+		}
+	}
+	//====================== third column =============================================
+	ui.frecuencia->setEnabled (true);
+	ui.plazo->setEnabled (true);
+	ui.fechaVencimiento->setEnabled (true);
+	//========================= fourth column =========================================
+	ui.montoDesem_1->setEnabled (true);
+	ui.fechaDesem_1->setEnabled (true);
+	//============================== extra row ====================================
+	ui.concepto->setEnabled (true);
+	ui.detalle->setEnabled (true);
+}
 //==================================================================
 
 void PlanDePagos::onNewClicked () {
 	loadedFromLeftlist = false;
+	editingPlan = false;
 	resetFields ();
 	unlockField ();
 	clearFields ();
@@ -861,13 +900,21 @@ void PlanDePagos::onClearClicked () {
 	resetFields ();
 	delete currentOperation;
 	currentOperation = nullptr;
+
+	loadedFromLeftlist = false;
+	editingPlan = false;
 }
 
 void PlanDePagos::onSaveClicked () {
 	if (currentOperation != nullptr) {
 		ui.savePlan->setEnabled (false);
 		updateModel ();
-		currentOperation->save (this->targetAddress, this->token);		// Validation is inside this method. If there are errores object will notify through signal notifyValidationStatus
+		if (!editingPlan) {
+			currentOperation->save (this->targetAddress, this->token);		// Validation is inside this method. If there are errores object will notify through signal notifyValidationStatus
+		}
+		else {
+			currentOperation->update (this->targetAddress, this->token);		// Validation is inside this method. If there are errores object will notify through signal notifyValidationStatus
+		}
 	}
 	else {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("Por favor seleccione un tipo de operación"));
@@ -913,6 +960,94 @@ void PlanDePagos::onDeletePlan () {
 	}
 }
 
+void PlanDePagos::onUpdatePlan () {
+	makePlanEditable ();
+	ui.editPlan->setEnabled (false);
+}
+
+void PlanDePagos::onUpdateDue () {
+	if (currentOperation!=nullptr) {
+		if (ui.plannedFee->selectedItems ().length () > 0) {
+			int row = ui.plannedFee->selectedItems ().at (0)->row ();
+			int id = ui.plannedFee->item (row, 9)->text ().toInt ();
+			QMessageBox::StandardButton answer = QMessageBox::question (this, QString::fromLatin1 ("Actualizar"), QString::fromLatin1 ("¿Actualizar la cuota \"") + ui.plannedFee->item (row, 0)->text () + QString::fromLatin1 ("\" de la operación \"") + ui.numeroContrato->text () + "\"?");
+			if (answer == QMessageBox::StandardButton::Yes) {
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				AddCuotaDelPlan addWindow (this);
+				if (row == 0) {
+					CuotasPlanDePagos currentDue (&addWindow);
+					currentDue.setID (ui.plannedFee->item (row, 11)->text ().toInt ());
+					currentDue.setDueNumber (ui.plannedFee->item (row, 0)->text ().toInt ());
+					currentDue.setDueDate (QDate::fromString (ui.plannedFee->item (row, 3)->text (), "dd/MM/yyyy"));
+					currentDue.setTotal (ui.plannedFee->item (row, 4)->text ().toDouble ());
+					currentDue.setCapital (ui.plannedFee->item (row, 5)->text ().toDouble ());
+					currentDue.setInterest (ui.plannedFee->item (row, 6)->text ().toDouble ());
+					currentDue.setIva (ui.plannedFee->item (row, 7)->text ().toDouble ());
+
+					addWindow.setValidationParams (this->targetAddress, this->token, this->currentOperation, nullptr, true, &currentDue);
+				}
+				else {
+					CuotasPlanDePagos lastDue (this);
+					lastDue.setDueNumber (ui.plannedFee->item (row - 1, 0)->text ().toInt ());
+					lastDue.setDueDate (QDate::fromString (ui.plannedFee->item (row - 1, 3)->text (), "dd/MM/yyyy"));
+
+					CuotasPlanDePagos currentDue (&addWindow);
+					currentDue.setID (ui.plannedFee->item (row, 11)->text ().toInt ());
+					currentDue.setDueNumber (ui.plannedFee->item (row, 0)->text ().toInt ());
+					currentDue.setDueDate (QDate::fromString (ui.plannedFee->item (row, 3)->text (), "dd/MM/yyyy"));
+					currentDue.setTotal (ui.plannedFee->item (row, 4)->text ().toDouble ());
+					currentDue.setCapital (ui.plannedFee->item (row, 5)->text ().toDouble ());
+					currentDue.setInterest (ui.plannedFee->item (row, 6)->text ().toDouble ());
+					currentDue.setIva (ui.plannedFee->item (row, 7)->text ().toDouble ());
+
+
+					addWindow.setValidationParams (this->targetAddress, this->token, this->currentOperation, &lastDue, true, &currentDue);
+				}
+
+				connect (&addWindow, &AddCuotaDelPlan::accepted, this, &PlanDePagos::reloadSelectedPlan);
+
+				addWindow.setModal (true);
+				addWindow.exec ();
+				addWindow.deleteLater ();
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+		}
+		else {
+			QMessageBox::warning (this, QString::fromLatin1 ("Cuota sin seleccionar"), QString::fromLatin1 ("Por favor seleccione la cuota que desea editar"));
+		}
+	}
+	else {
+		QMessageBox::warning (this, "Error", QString::fromLatin1 ("Por favor seleccione un plan de pagos"));
+		ui.planesList->setFocus ();
+	}
+}
+
+void PlanDePagos::onDeleteDue () {
+	if (currentOperation != nullptr) {
+		if (ui.plannedFee->selectedItems ().length () > 0) {
+			int row = ui.plannedFee->selectedItems ().at (0)->row ();
+			int id = ui.plannedFee->item (row, 11)->text ().toInt ();
+			QMessageBox::StandardButton answer = QMessageBox::question (this, QString::fromLatin1 ("Eliminar"), QString::fromLatin1 ("¿Eliminar la cuota \"") + ui.plannedFee->item (row, 0)->text () + QString::fromLatin1 ("\" de la operación \"") + ui.numeroContrato->text () + "\"?");
+			if (answer == QMessageBox::StandardButton::Yes) {
+				if (CuotasPlanDePagos::deleteRes (this->targetAddress, this->token, id)) {
+					QMessageBox::information (this, QString::fromLatin1 ("Éxito"), QString::fromLatin1 ("Cuota eliminada con éxito"));
+					reloadSelectedPlan ();
+				}
+				else {
+					QMessageBox::critical (this, QString::fromLatin1 ("Error"), QString::fromLatin1 ("No se pudo eliminar la Cuota"));
+				}
+			}
+		}
+		else {
+			QMessageBox::warning (this, QString::fromLatin1 ("Cuota sin seleccionar"), QString::fromLatin1 ("Por favor seleccione la cuota que desea eliminar"));
+		}
+	}
+	else {
+		QMessageBox::warning (this, "Error", QString::fromLatin1 ("Por favor seleccione un plan de pagos"));
+		ui.planesList->setFocus ();
+	}
+}
+
 void PlanDePagos::setupConnections () {
 	//======================================================================================
 	//======================================== plan ========================================
@@ -924,11 +1059,18 @@ void PlanDePagos::setupConnections () {
 	connect (ui.savePlan, &QPushButton::clicked, this, &PlanDePagos::onSaveClicked);
 	// "eliminar" clicked
 	connect (ui.deletePlan, &QPushButton::clicked, this, &PlanDePagos::onDeletePlan);
+	// "actualizar" clicked
+	connect (ui.editPlan, &QPushButton::clicked, this, &PlanDePagos::onUpdatePlan);
 	//======================================================================================
 
 	//======================================================================================
 	//======================================= cuotas =======================================
+	// "añadir cuota" clicked
 	connect (ui.addCuota, &QPushButton::clicked, this, &PlanDePagos::onAddDue);
+	// "actualizar" clicked
+	connect (ui.editCuota, &QPushButton::clicked, this, &PlanDePagos::onUpdateDue);
+	// "eliminar" clicked
+	connect (ui.deleteCuota, &QPushButton::clicked, this, &PlanDePagos::onDeleteDue);
 	//======================================================================================
 
 	// load plan selected on left panel

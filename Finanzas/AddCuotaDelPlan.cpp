@@ -45,6 +45,27 @@ void AddCuotaDelPlan::setValidationParams (QString targetURL, QString token, Ope
 	this->parentOp_ID = op->getID ();
 	if (lastDue == nullptr) {
 		ui.fechaPago->setMinimumDate (op->getSignDate ());
+		int addedMonths = 0;
+		switch (op->getFrequency ()) {
+		case OperacionesFinancieras::FrecuenciaDePagos::Mensual:
+			addedMonths = 1;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::Bimensual:
+			addedMonths = 2;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::Trimestral:
+			addedMonths = 3;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::Semestral:
+			addedMonths = 6;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::Anual:
+			addedMonths = 12;
+			break;
+		case OperacionesFinancieras::FrecuenciaDePagos::NONE:
+			break;
+		}
+		ui.fechaPago->setDate (op->getSignDate ().addMonths (addedMonths));
 		ui.numeroCuota->setValue (1);
 	}
 	else {
@@ -83,7 +104,12 @@ void AddCuotaDelPlan::setValidationParams (QString targetURL, QString token, Ope
 		ui.pagoInteres->setValue (due != nullptr ? due->getInterest () : 0);
 		ui.pagoIva->setValue (due != nullptr ? due->getIva () : 0);		
 		
-		this->currentDue = due;
+		this->currentDue = new CuotasPlanDePagos (this);
+
+		currentDue->setID (due->getID ());
+
+		qDebug () << "current due id inner =" << due->getID ();
+		qDebug () << "second ID =" << currentDue->getID();
 
 		ui.label->setText (QString::fromLatin1 ("Editar Cuota"));
 		setWindowTitle (QString::fromLatin1 (("Editar Cuota")));

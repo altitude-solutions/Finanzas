@@ -61,10 +61,10 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 
 			AddCuotaEfectiva addWindow (this);
 			if (ui.effectiveFee->rowCount () == 0) {
-				addWindow.setWindowData (this->targetAddress, this->token, 1, QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan);
+				addWindow.setWindowData (this->targetAddress, this->token, 1, QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan, QDate::currentDate ());
 			}
 			else {
-				addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->rowCount () + 1, QDate::fromString (ui.effectiveFee->item (ui.effectiveFee->rowCount () - 1, 1)->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan);
+				addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->rowCount () + 1, QDate::fromString (ui.effectiveFee->item (ui.effectiveFee->rowCount () - 1, 1)->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan, QDate::currentDate ());
 			}
 
 			connect (&addWindow, &AddCuotaEfectiva::accepted, this, [&]() {
@@ -110,7 +110,7 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 					}
 
 					AddCuotaEfectiva addWindow (this);
-					addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->item (row, 0)->text ().toInt (), QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan, ui.effectiveFee->item (row, 9)->text ().toInt (), true);
+					addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->item (row, 0)->text ().toInt (), QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan, QDate::fromString (ui.effectiveFee->item (row, 1)->text (), "dd/MM/yyyy"), ui.effectiveFee->item (row, 2)->text ().toDouble (), ui.effectiveFee->item (row, 3)->text ().toDouble (), ui.effectiveFee->item (row, 4)->text ().toDouble (), ui.effectiveFee->item (row, 5)->text ().toDouble (), ui.effectiveFee->item (row, 9)->text ().toInt (), true);
 
 					connect (&addWindow, &AddCuotaEfectiva::accepted, this, [&]() {
 						loadSelectedPlan (this->currentPlan);
@@ -145,10 +145,10 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 					QNetworkAccessManager* nam = new QNetworkAccessManager (this);
 					connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
 						if (reply->error ()) {
-							QMessageBox::critical (this, "Error", QString::fromStdString ("No se pudo borrar la Cuota"));
+							QMessageBox::critical (this, "Error", QString::fromStdString ("No se pudo eliminar la Cuota"));
 						}
 						else {
-							QMessageBox::information (this, QString::fromLatin1 ("Éxito"), QString::fromLatin1 ("Cuota borrada con éxito"));
+							QMessageBox::information (this, QString::fromLatin1 ("Éxito"), QString::fromLatin1 ("Cuota eliminada con éxito"));
 						}
 						loadSelectedPlan (this->currentPlan);
 						reply->deleteLater ();
@@ -282,7 +282,7 @@ void PagosEfectivos::loadSelectedPlan (int id) {
 				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 5, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeIva").toDouble (), 'f', 2)));
 			}
 			else {
-				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 5, new QTableWidgetItem (""));
+				ui.plannedFee->setItem (ui.plannedFee->rowCount () - 1, 5, new QTableWidgetItem ("0.00"));
 			}
 			
 			saldoCapital -= cuota.toObject ().value ("pagoDeCapital").toDouble ();
@@ -290,7 +290,7 @@ void PagosEfectivos::loadSelectedPlan (int id) {
 
 			//====================================== primera cuota caso Leasing ============================================================
 			OperacionesFinancieras::TiposDeOperacion opera = OperacionesFinancieras::MapOperationString (okJson.object ().value ("planDePagos").toObject ().value ("tipoOperacion").toString ());
-			if (cuota.toObject ().value ("numeroDeCuota").toInt () == 1 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
+			if ((cuota.toObject ().value ("numeroDeCuota").toInt () == 1 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) || (cuota.toObject ().value ("numeroDeCuota").toInt () == 0 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack)) {
 				saldoCapital -= okJson.object ().value ("planDePagos").toObject ().value ("iva").toDouble ();
 			}
 
@@ -318,7 +318,7 @@ void PagosEfectivos::loadSelectedPlan (int id) {
 				ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 5, new QTableWidgetItem (QString::number (cuota.toObject ().value ("pagoDeIva").toDouble (), 'f', 2)));
 			}
 			else {
-				ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 5, new QTableWidgetItem (""));
+				ui.effectiveFee->setItem (ui.effectiveFee->rowCount () - 1, 5, new QTableWidgetItem ("0.00"));
 			}
 
 			saldoCapital -= cuota.toObject ().value ("pagoDeCapital").toDouble ();
@@ -326,7 +326,7 @@ void PagosEfectivos::loadSelectedPlan (int id) {
 
 			//====================================== primera cuota caso Leasing ============================================================
 			OperacionesFinancieras::TiposDeOperacion opera = OperacionesFinancieras::MapOperationString (okJson.object ().value ("planDePagos").toObject ().value ("tipoOperacion").toString ());
-			if (cuota.toObject ().value ("numeroDeCuota").toInt () == 1 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
+			if ((cuota.toObject ().value ("numeroDeCuota").toInt () == 1 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) || (cuota.toObject ().value ("numeroDeCuota").toInt () == 0 && opera == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack)) {
 				saldoCapital -= okJson.object ().value ("planDePagos").toObject ().value ("iva").toDouble ();
 			}
 

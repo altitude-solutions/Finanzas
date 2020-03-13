@@ -111,7 +111,6 @@ void OperacionLeaseBack::save (QString targetURL, QString token) {
 		connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
 			QJsonDocument response = QJsonDocument::fromJson (reply->readAll ());
 			if (reply->error ()) {
-				qDebug () << "response error " << reply->error ();
 				if (response.object ().value ("err").toObject ().contains ("message")) {
 					// If there is a known error
 					emit notifyValidationStatus (OperationValidationErros::SERVER_SIDE_ERROR, QString::fromLatin1 (response.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
@@ -128,9 +127,7 @@ void OperacionLeaseBack::save (QString targetURL, QString token) {
 			}
 			else {
 				this->id = response.object ().value ("planDePagos").toObject ().value ("id").toInt ();
-				if (this->getInitialDue () != 0) {
-					createFirstDue (targetAddress_2, token_ID_2);
-				}
+				createFirstDue (targetAddress_2, token_ID_2);
 				emit notifyValidationStatus (OperationValidationErros::NO_ERROR);
 			}
 			reply->deleteLater ();
@@ -186,7 +183,83 @@ void OperacionLeaseBack::save (QString targetURL, QString token) {
 }
 
 void OperacionLeaseBack::update (QString targetURL, QString token) {
+	if (validate ()) {
+		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+		QNetworkRequest request;
+		request.setUrl (QUrl (targetURL + "/planDePagos/" + QString::number (this->getID ())));
+		request.setRawHeader ("Content-Type", "application/json");
+		request.setRawHeader ("token", token.toUtf8 ());
 
+		connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+			QJsonDocument response = QJsonDocument::fromJson (reply->readAll ());
+			if (reply->error ()) {
+				if (response.object ().value ("err").toObject ().contains ("message")) {
+					// If there is a known error
+					emit notifyValidationStatus (OperationValidationErros::SERVER_SIDE_ERROR, QString::fromLatin1 (response.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
+				}
+				else {
+					if (reply->error () == QNetworkReply::ConnectionRefusedError) {
+						emit notifyValidationStatus (OperationValidationErros::SERVER_SIDE_ERROR, QString::fromLatin1 ("No se pudo establecer conexión con el servidor"));
+					}
+					else {
+						// If there is a server error
+						emit notifyValidationStatus (OperationValidationErros::SERVER_SIDE_ERROR, QString::fromStdString (response.toJson ().toStdString ()));
+					}
+				}
+			}
+			else {
+				emit notifyValidationStatus (OperationValidationErros::NO_ERROR);
+			}
+			reply->deleteLater ();
+			});
+
+		QJsonDocument body;
+		QJsonObject bodyContent;
+
+		bodyContent.insert ("tipoOperacion", OperacionesFinancieras::MapOperationEnum (this->operationType));
+		bodyContent.insert ("numeroDeContratoOperacion", this->contractNumber);
+		bodyContent.insert ("fechaFirma", QDateTime (this->signDate).toMSecsSinceEpoch ());
+		bodyContent.insert ("concepto", this->concept);
+		bodyContent.insert ("detalle", this->detail);
+		bodyContent.insert ("moneda", OperacionesFinancieras::MapMonedaEnum (this->currency));
+		bodyContent.insert ("monto", this->ammount);
+		bodyContent.insert ("iva", this->iva);
+		bodyContent.insert ("cuotaInicial", this->initialDue);
+		bodyContent.insert ("tipoDeTasa", OperacionesFinancieras::MapTipoTasaEnum (this->rateType));
+		bodyContent.insert ("interesFijo", this->staticRate);
+		if (this->rateType == OperacionesFinancieras::TipoTasa::Variable) {
+			bodyContent.insert ("interesVariable", this->dynamicRate);
+		}
+		bodyContent.insert ("plazo", this->term);
+		bodyContent.insert ("frecuenciaDePagos", OperacionesFinancieras::MapFrecuenciaEnum (this->frequency));
+		bodyContent.insert ("fechaVencimiento", QDateTime (this->expirationDate).toMSecsSinceEpoch ());
+		if (!this->isEntity_ImpuestosNacionales) {
+			bodyContent.insert ("fechaDesembolso_1", QDateTime (this->fechaDesem_1).toMSecsSinceEpoch ());
+			bodyContent.insert ("montoDesembolso_1", this->montoDesem_1);
+		}
+		if (this->montoDesem_2 != 0) {
+			bodyContent.insert ("fechaDesembolso_2", QDateTime (this->fechaDesem_2).toMSecsSinceEpoch ());
+			bodyContent.insert ("montoDesembolso_2", this->montoDesem_2);
+		}
+		if (this->montoDesem_3 != 0) {
+			bodyContent.insert ("fechaDesembolso_3", QDateTime (this->fechaDesem_3).toMSecsSinceEpoch ());
+			bodyContent.insert ("montoDesembolso_3", this->montoDesem_3);
+		}
+		if (this->montoDesem_4 != 0) {
+			bodyContent.insert ("fechaDesembolso_4", QDateTime (this->fechaDesem_4).toMSecsSinceEpoch ());
+			bodyContent.insert ("montoDesembolso_4", this->montoDesem_4);
+		}
+		if (this->montoDesem_5 != 0) {
+			bodyContent.insert ("fechaDesembolso_5", QDateTime (this->fechaDesem_5).toMSecsSinceEpoch ());
+			bodyContent.insert ("montoDesembolso_5", this->montoDesem_5);
+		}
+		bodyContent.insert ("empresaGrupo", this->enterprise);
+		bodyContent.insert ("entidadFinanciera", this->entity);
+
+
+		body.setObject (bodyContent);
+		nam->put (request, body.toJson ());
+	}
 }
 
 
@@ -197,7 +270,7 @@ void OperacionLeaseBack::createFirstDue (QString targetURL, QString token) {
 	QString aux = QString::number (this->getInitialDue () - capital, 'f', 2);
 	double iva = aux.toDouble ();
 
-	currentDue->setDueNumber (1);
+	currentDue->setDueNumber (0);
 	currentDue->setDueDate (this->getSignDate ());
 	currentDue->setTotal (this->getInitialDue ());
 	currentDue->setCapital (capital);
@@ -206,5 +279,36 @@ void OperacionLeaseBack::createFirstDue (QString targetURL, QString token) {
 
 	currentDue->setParentID (this->getID ());
 
+
 	currentDue->save (targetURL, token);
+
+	//===============================================================================================================
+	// Network manager and request
+	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+	QNetworkRequest request;
+	request.setUrl (QUrl (targetURL + "/cuotaEfectiva"));
+	request.setRawHeader ("Content-Type", "application/json");
+	request.setRawHeader ("token", token.toUtf8 ());
+
+	// On response lambda
+	connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+		QJsonDocument jsonReply = QJsonDocument::fromJson (reply->readAll ());
+		reply->deleteLater ();
+		});
+
+	// Request body
+	QJsonDocument body;
+	QJsonObject bodyContent;
+
+	bodyContent.insert ("numeroDeCuota", 0);
+	bodyContent.insert ("fechaDePago", QDateTime (this->getSignDate ()).toMSecsSinceEpoch ());
+	bodyContent.insert ("montoTotalDelPago", this->getInitialDue ());
+	bodyContent.insert ("pagoDeCapital", capital);
+	bodyContent.insert ("pagoDeInteres", 0);
+	bodyContent.insert ("pagoDeIva", iva);
+
+	bodyContent.insert ("parent", this->getID ());
+
+	body.setObject (bodyContent);
+	nam->post (request, body.toJson ());
 }

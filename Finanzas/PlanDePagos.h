@@ -82,6 +82,8 @@ private:
 	void unlockField ();
 	// after plan saved enable dues
 	void enableDueButtons ();
+	// unlock plan editing
+	void makePlanEditable ();
 	//======================================================
 	//======================= button =======================
 	// new button clicked event
@@ -94,6 +96,12 @@ private:
 	void onAddDue ();
 	// delete plan clicked
 	void onDeletePlan ();
+	// update plan clicked
+	void onUpdatePlan ();
+	// update due clicked
+	void onUpdateDue ();
+	// delete due clicked
+	void onDeleteDue ();
 	//======================================================
 
 	// setup callback(buttons) connections
@@ -129,4 +137,5 @@ private:
 	double creditoFiscal;
 
 	bool loadedFromLeftlist;
+	bool editingPlan;
 };

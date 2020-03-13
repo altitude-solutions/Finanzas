@@ -18,6 +18,7 @@ public:
 	CuotasPlanDePagos(QObject *parent);
 	~CuotasPlanDePagos();
 
+	void setID (int id);
 	void setDueNumber (int dueNumber);
 	void setDueDate (QDate date);
 	void setTotal (double ammount);
@@ -37,6 +38,8 @@ public:
 
 	void save (QString targetUrl, QString token);
 	void update (QString targetUrl, QString token);
+
+	static bool deleteRes (QString targetURL, QString token, int id, QObject *parent= nullptr);
 
 signals:
 	void notifyValidationStatus (DueValidationError errorCode, QString errorMessage = "");

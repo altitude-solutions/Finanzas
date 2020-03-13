@@ -9,6 +9,7 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
+#include <QEventLoop>
 
 CuotasPlanDePagos::CuotasPlanDePagos(QObject *parent): QObject(parent) {
 	id = 0;
@@ -24,6 +25,10 @@ CuotasPlanDePagos::CuotasPlanDePagos(QObject *parent): QObject(parent) {
 
 CuotasPlanDePagos::~CuotasPlanDePagos() {
 
+}
+
+void CuotasPlanDePagos::setID (int id) {
+	this->id = id;
 }
 
 //==================================================================================================================================
@@ -141,5 +146,87 @@ void CuotasPlanDePagos::save (QString targetUrl, QString token) {
 
 
 void CuotasPlanDePagos::update (QString targetUrl, QString token) {
+	QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+	QNetworkRequest request;
+	request.setUrl (QUrl (targetUrl + "/cuotaPlanDePagos/" + QString::number (this->getID ())));
+	request.setRawHeader ("Content-Type", "application/json");
+	request.setRawHeader ("token", token.toUtf8 ());
 
+	connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+		QJsonDocument response = QJsonDocument::fromJson (reply->readAll ());
+		if (reply->error ()) {
+			if (response.object ().value ("err").toObject ().contains ("message")) {
+				// If there is a known error
+				emit notifyValidationStatus (DueValidationError::SERVER_SIDE_ERROR, QString::fromLatin1 (response.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
+			}
+			else {
+				if (reply->error () == QNetworkReply::ConnectionRefusedError) {
+					emit notifyValidationStatus (DueValidationError::SERVER_SIDE_ERROR, QString::fromLatin1 ("No se pudo establecer conexión con el servidor"));
+				}
+				else {
+					// If there is a server error
+					emit notifyValidationStatus (DueValidationError::SERVER_SIDE_ERROR, QString::fromStdString (response.toJson ().toStdString ()));
+				}
+			}
+		}
+		else {
+			emit notifyValidationStatus (DueValidationError::NO_ERROR);
+		}
+		reply->deleteLater ();
+		});
+
+
+	QJsonDocument body;
+	QJsonObject bodyContent;
+
+	bodyContent.insert ("numeroDeCuota", this->dueNumber);
+	bodyContent.insert ("fechaDePago", QDateTime (this->dueDate).toMSecsSinceEpoch ());
+	bodyContent.insert ("montoTotalDelPago", this->totalAmmount);
+	bodyContent.insert ("pagoDeCapital", this->capitalDue);
+	bodyContent.insert ("pagoDeInteres", this->interestDue);
+	if (this->ivaDue != 0) {
+		bodyContent.insert ("pagoDeIva", this->ivaDue);
+	}
+	bodyContent.insert ("parent", this->parent_ID);
+
+	body.setObject (bodyContent);
+	nam->put (request, body.toJson ());
+}
+
+bool CuotasPlanDePagos::deleteRes (QString targetURL, QString token, int id, QObject *parent) {
+	QNetworkAccessManager* nam = new QNetworkAccessManager (parent);
+
+	bool returnValue = false;
+
+	QNetworkRequest request;
+	request.setUrl (QUrl (targetURL + "/cuotaPlanDePagos/" + QString::number (id)));
+
+	request.setRawHeader ("token", token.toUtf8 ());
+	request.setRawHeader ("Content-Type", "application/json");
+	QNetworkReply* reply = nam->deleteResource (request);
+
+	QEventLoop eventLoop;
+	connect (reply, SIGNAL (finished ()), &eventLoop, SLOT (quit ()));
+	eventLoop.exec ();
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	QByteArray resBin = reply->readAll ();
+	if (reply->error ()) {
+		QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+		returnValue = false;
+	}
+	else {
+		returnValue = true;
+	}
+
+	reply->deleteLater ();
+
+
+	nam->deleteLater ();
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	return returnValue;
 }

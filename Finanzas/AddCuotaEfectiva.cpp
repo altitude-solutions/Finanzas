@@ -32,7 +32,7 @@ AddCuotaEfectiva::~AddCuotaEfectiva() {
 
 }
 
-void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, OperacionesFinancieras::TiposDeOperacion caso, OperacionesFinancieras::FrecuenciaDePagos freq, int parentID, int editingID, bool editing) {
+void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, OperacionesFinancieras::TiposDeOperacion caso, OperacionesFinancieras::FrecuenciaDePagos freq, int parentID, QDate currentDate, double total, double cap, double inte, double  iva, int editingID, bool editing) {
 	this->targetUrl = targetUrl;
 	this->token = token;
 	ui.numeroCuota->setValue (cuota);
@@ -72,6 +72,13 @@ void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuot
 	ui.label->setText (QString::fromLatin1 ((this->editing ? "Editar Cuota" : "Añadir Cuota")));
 	ui.addButton->setText (QString::fromLatin1 (this->editing ? "Actualizar" : "Registrar"));
 
+	if(editing) {
+		ui.fechaPago->setDate (currentDate);
+		ui.pagoMonto->setValue (total);
+		ui.pagoCapital->setValue (cap);
+		ui.pagoInteres->setValue (inte);
+		ui.pagoIva->setValue (iva);
+	}
 
 	connect (ui.pagoCapital, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onPagoCapitalChanged);
 

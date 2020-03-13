@@ -131,7 +131,62 @@ void OperacionLeasing::save (QString targetURL, QString token) {
 }
 
 void OperacionLeasing::update (QString targetURL, QString token) {
+	if (validate ()) {
+		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+		QNetworkRequest request;
+		request.setUrl (QUrl (targetURL + "/planDePagos/" + QString::number (this->getID ())));
+		request.setRawHeader ("Content-Type", "application/json");
+		request.setRawHeader ("token", token.toUtf8 ());
 
+		connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+			QJsonDocument response = QJsonDocument::fromJson (reply->readAll ());
+			if (reply->error ()) {
+				if (response.object ().value ("err").toObject ().contains ("message")) {
+					// If there is a known error
+					emit notifyValidationStatus (OperationValidationErros::SERVER_SIDE_ERROR, QString::fromLatin1 (response.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
+				}
+				else {
+					if (reply->error () == QNetworkReply::ConnectionRefusedError) {
+						emit notifyValidationStatus (OperationValidationErros::SERVER_SIDE_ERROR, QString::fromLatin1 ("No se pudo establecer conexión con el servidor"));
+					}
+					else {
+						// If there is a server error
+						emit notifyValidationStatus (OperationValidationErros::SERVER_SIDE_ERROR, QString::fromStdString (response.toJson ().toStdString ()));
+					}
+				}
+			}
+			else {
+				emit notifyValidationStatus (OperationValidationErros::NO_ERROR);
+			}
+			reply->deleteLater ();
+			});
+
+		QJsonDocument body;
+		QJsonObject bodyContent;
+
+		bodyContent.insert ("tipoOperacion", OperacionesFinancieras::MapOperationEnum (this->operationType));
+		bodyContent.insert ("numeroDeContratoOperacion", this->contractNumber);
+		bodyContent.insert ("fechaFirma", QDateTime (this->signDate).toMSecsSinceEpoch ());
+		bodyContent.insert ("concepto", this->concept);
+		bodyContent.insert ("detalle", this->detail);
+		bodyContent.insert ("moneda", OperacionesFinancieras::MapMonedaEnum (this->currency));
+		bodyContent.insert ("monto", this->ammount);
+		bodyContent.insert ("iva", this->iva);
+		bodyContent.insert ("cuotaInicial", this->initialDue);
+		bodyContent.insert ("tipoDeTasa", OperacionesFinancieras::MapTipoTasaEnum (this->rateType));
+		bodyContent.insert ("interesFijo", this->staticRate);
+		if (this->rateType == OperacionesFinancieras::TipoTasa::Variable) {
+			bodyContent.insert ("interesVariable", this->dynamicRate);
+		}
+		bodyContent.insert ("plazo", this->term);
+		bodyContent.insert ("frecuenciaDePagos", OperacionesFinancieras::MapFrecuenciaEnum (this->frequency));
+		bodyContent.insert ("fechaVencimiento", QDateTime (this->expirationDate).toMSecsSinceEpoch ());
+		bodyContent.insert ("empresaGrupo", this->enterprise);
+		bodyContent.insert ("entidadFinanciera", this->entity);
+
+		body.setObject (bodyContent);
+		nam->put (request, body.toJson ());
+	}
 }
 
 void OperacionLeasing::createFirstDue (QString targetURL,  QString token) {
