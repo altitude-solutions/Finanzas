@@ -124,7 +124,7 @@ void AddCuotaEfectiva::onSaveClicked () {
 		return;
 	}
 	//if (!capital_ok || capital <= 0) {
-	if (capital <= 0) {
+	if (capital < 0) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El capital de la cuota debe ser mayor a cero"));
 		ui.addButton->setEnabled (true);
 		return;
@@ -135,7 +135,7 @@ void AddCuotaEfectiva::onSaveClicked () {
 		ui.addButton->setEnabled (true);
 		return;
 	}
-	if ((this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) && iva <= 0) {
+	if ((this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) && iva < 0) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 (""));
 		ui.addButton->setEnabled (true);
 		return;

@@ -140,8 +140,8 @@ void AddCuotaDelPlan::onSaveClicked () {
 				ui.addButton->setEnabled (true);
 				return;
 			}
-			if (ui.pagoCapital->getValue () <= 0) {
-				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El pago de capital debe ser mayor a cero"));
+			if (ui.pagoCapital->getValue () < 0) {
+				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El pago de capital debe ser mayor o igual que cero"));
 				ui.pagoMonto->setFocus ();
 				ui.addButton->setEnabled (true);
 				return;
@@ -152,7 +152,7 @@ void AddCuotaDelPlan::onSaveClicked () {
 				ui.addButton->setEnabled (true);
 				return;
 			}
-			if (ui.pagoIva->getValue () <= 0 && (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) ) {
+			if (ui.pagoIva->getValue () < 0 && (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) ) {
 				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El pago de IVA debe ser mayor a cero"));
 				ui.pagoMonto->setFocus ();
 				ui.addButton->setEnabled (true);

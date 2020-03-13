@@ -3,8 +3,8 @@
 NumberInput::NumberInput (QWidget* parent) : QLineEdit (parent) {
 	connect (this, &QLineEdit::textChanged, this, &NumberInput::validateNumber);
 	connect (this, &QLineEdit::editingFinished, this, &NumberInput::updateForPrecision);
-	this->value = 0;
-	previous = "0";
+	this->value = -1;
+	previous = "-1";
 	precision = 2;
 }
 
