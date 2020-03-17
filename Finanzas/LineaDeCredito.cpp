@@ -18,6 +18,13 @@
 #include <QDebug>
 
 
+// clipboard to excel
+#include <QClipboard>
+#include <QApplication>
+#include <QAction>
+#include <QKeySequence>
+
+
 LineaDeCredito::LineaDeCredito(QWidget *parent): QWidget(parent) {
 	ui.setupUi(this);
 	// ===============================================
@@ -40,7 +47,7 @@ LineaDeCredito::LineaDeCredito(QWidget *parent): QWidget(parent) {
 	ui.fechaFirma->setDisplayFormat ("dd/MM/yyyy");
 	ui.fechaVencimiento->setDisplayFormat ("dd/MM/yyyy");
 
-	// TODO: Debe existir otra forma de hacer que no se pueda editar
+	// Debe existir otra forma de hacer que no se pueda editar
 	ui.tableWidget->setEditTriggers ( NULL );
 
 	// ===============================================
@@ -129,6 +136,10 @@ LineaDeCredito::LineaDeCredito(QWidget *parent): QWidget(parent) {
 
 	editing = false;
 	editingID = 0;
+
+
+	// setup table clipboard
+	setupTableClipboard ();
 }
 
 LineaDeCredito::~LineaDeCredito() {
@@ -448,11 +459,11 @@ void LineaDeCredito::refreshTable (QJsonDocument data) {
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 6, new QTableWidgetItem (row.toObject ().value ("moneda").toString ()));
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 7, new QTableWidgetItem (QString::number (row.toObject ().value ("monto").toDouble (), 'f', 2)));
 		
-		ui.tableWidget->item (ui.tableWidget->rowCount () - 1, 7)->setTextAlignment (Qt::AlignmentFlag::AlignRight);	// Align monto to the right
+		ui.tableWidget->item (ui.tableWidget->rowCount () - 1, 7)->setTextAlignment (Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignVCenter);	// Align monto to the right and vertical center
 
 		ui.tableWidget->setItem (ui.tableWidget->rowCount () - 1, 8, new QTableWidgetItem (QString::number (row.toObject ().value ("id").toInt ())));
 
-		// TODO: color the ones that have reached its limit
+		// color the ones that have reached its limit
 		if (!row.toObject ().value ("estado").toBool ()) {
 			for (int col = 0; col < 7; col++) {
 				ui.tableWidget->item (ui.tableWidget->rowCount () - 1, col)->setBackgroundColor ("#ff0000");
@@ -516,4 +527,33 @@ void LineaDeCredito::clearFields () {
 
 	editing = false;
 	editingID = 0;
+}
+
+void LineaDeCredito::setupTableClipboard () {
+	QAction* copyPlan = new QAction (ui.tableWidget);
+
+	copyPlan->setShortcut (QKeySequence::Copy);
+	copyPlan->setShortcutContext (Qt::ShortcutContext::WidgetShortcut);
+
+	connect (copyPlan, &QAction::triggered, this, [&]() {
+		if (ui.tableWidget->selectedItems ().length () > 0) {
+			QClipboard* clipboard = QApplication::clipboard ();
+
+			int currentRow = ui.tableWidget->selectedItems ().at (0)->row ();
+			QString toClipboard = "";
+			foreach (QTableWidgetItem * itm, ui.tableWidget->selectedItems ()) {
+				if (currentRow == itm->row ()) {
+					toClipboard += itm->text () + "\t";
+				}
+				else {
+					toClipboard += "\n" + itm->text () + "\t";
+				}
+				currentRow = itm->row ();
+			}
+
+			clipboard->setText (toClipboard);
+		}
+		});
+
+	ui.tableWidget->addAction (copyPlan);
 }

@@ -4,6 +4,7 @@
 #include "ui_PlanDePagos.h"
 // Other imports
 #include <QHash>
+#include <QDate>
 
 // Json imports
 #include <QJsonDocument>
@@ -11,13 +12,19 @@
 #include <QJsonArray>
 #include <QJsonValue>
 
-enum CasosPlanDePagos_enum {
-	CasoCredito = 0,
-	CasoLineaDeCredito = 1,
-	CasoLeasing = 2,
-	CasoLeaseBack = 3,
-	CasoSeguro = 4
-};
+// Operation namespace, utility functions
+#include "OperacionesFinancieras.h"
+
+// Clases imports
+#include "Operacion.h"		// abstract
+#include "OperacionCredito.h"
+#include "OperacionLineaDeCredito.h"
+#include "OperacionLeasing.h"
+#include "OperacionLeaseBack.h"
+
+
+#include "AddCuotaDelPlan.h"
+
 
 class PlanDePagos : public QWidget {
 	Q_OBJECT
@@ -34,103 +41,82 @@ public slots:
 	void onTabSelected ();
 
 private slots:
-	// Operation type changed slot
-	void onOperationTypeChanged (int type);
-	// Datepickers slots
-	void fechaFirmaChanged (QDate date);
-	void fechaDesem1Changed (QDate date);
-	void fechaDesem2Changed (QDate date);
-	void fechaDesem3Changed (QDate date);
-	void fechaDesem4Changed (QDate date);
-	// Monto operación changed
-	void montoChanged (QString monto);
-	// Tipo tasa changed slot
-	void tipoTasaChanged (int type);
-	// Interés fijo changed
-	void interesFijoChanged (QString interes);
-	// Interés variable changed
-	void interesVariableChanged (QString interes);
-	// iva and pago iva autofill
-	void ivaAutoFill (QString monto);
-	void pagoIvaAutofill (QString monto);
-	// cuota inicial changed
-	void cuotaInicialChanged (QString cuotaInicial);
-	// Pago interes changed
-	void pagoInteresChanged (QString interes);
-	// plazo changed slot
-	void onPlazoChanged (int value);
-	// Montos desembolso changed
-	void onDesem1Changed (QString desem1);
-	void onDesem2Changed (QString desem2);
-	void onDesem3Changed (QString desem3);
-	void onDesem4Changed (QString desem4);
-	void onDesem5Changed (QString desem5);
-	// Frecuencia de pagos changed
-	void onFrecuenciaDePagosChanged (QString frecuencia);
-	// codigo linea de credito changed, needs to be verified
-	void lookForLineaCredito (QString codigo);
-	// numero cuota changed
-	void numeroCuotaChanged (int value);
-	// Pago cuota changed
-	void pagoCuotaChanged (QString pago);
-	// Pagp capital changed
-	void pagoCapitalChanged (QString capital);
-	// Pago iva changed
-	void pagoIvaChanged (QString iva);
-	// Save slots
-	void onSavePlan ();
-	void onSaveCuota ();
-	// New operation
-	void onNewOperation ();
+	// operation type selected
+	void operationTypeSelected (QString operation);
+	// currency selected
+	void currencySelected (QString currency);
+	// interest rate type selected
+	void rateTypeSelected (QString rateType);
+	// enable and diable desembolsos
+	void desem_1_changed (QString desem1);
+	void desem_2_changed (QString desem2);
+	void desem_3_changed (QString desem3);
+	void desem_4_changed (QString desem4);
+	// catch model validation errors
+	void catchErrors (OperationValidationErros error, QString errorMessage);
+	// load selected plan from left list
+	void loadClickedPlan (QListWidgetItem *itm);
+	// plazo changed, update expiration date
+	void termChanged (int value);
+	// expiration date  changed, update term
+	void expirationDateChanged (QDate date);
+	// sign date changed, update expiration date
+	void signDateChanged (QDate date);
+
+
 private:
 	// data loaders
+	void loadEmpresasGrupo ();
 	void loadEntidadesFinancieras ();
 	void loadTiposDeEntidad ();
-	void loadLineasDeCredito ( int entidad_id );
-	void loadEmpresasGrupo ();
-
-	// reset validators
-	void resetPlanValidators ();
-	void resetCuotaValidators ();
-
+	void loadLineasDeCredito (int entidad_ID, int empresa_ID);
+	void loadPlanesDePago (QString query = "");
+	void reloadSelectedPlan ();
 	// table operations
 	void setTableHeaders ();
-	void refreshTable (QJsonDocument data);
-
-	// Clear fields
+	// clear fields and block them
 	void clearFields ();
+	void blockFields ();
+	void resetFields ();
+	// unlock fields
+	void unlockField ();
+	// after plan saved enable dues
+	void enableDueButtons ();
+	// unlock plan editing
+	void makePlanEditable ();
+	//======================================================
+	//======================= button =======================
+	// new button clicked event
+	void onNewClicked ();
+	// clear clicked event: resetFiels
+	void onClearClicked ();
+	// save button clicked
+	void onSaveClicked ();
+	// add due clicked
+	void onAddDue ();
+	// delete plan clicked
+	void onDeletePlan ();
+	// update plan clicked
+	void onUpdatePlan ();
+	// update due clicked
+	void onUpdateDue ();
+	// delete due clicked
+	void onDeleteDue ();
+	//======================================================
 
-	// App cases
-	void casoCredito ();
-	void casoLineaDeCredito ();
-	void casoLeasing ();
-	void casoLeaseBack ();
-	void casoSeguro ();
-	
-	// App cases setup
-	void casoCreditoSetup ();
-	void casoLineaDeCreditoSetup ();
-	void casoLeasingSetup ();
-	void casoLeaseBackSetup ();
+	// setup callback(buttons) connections
+	void setupConnections ();
+	// setup ui connections (autofills, number checkers, some validators and desembolsos enable/disable behavior)
+	void setupUiConnections ();
+	// setup table clipboard
+	void setupTableClipboard ();
 
-	// App cases validators
-	bool checkCasoCredito ();
-	bool checkCasoLineaDeCredito ();
-	bool checkCasoLeasing ();
-	bool checkCasoLeaseBack ();
-	bool checkCasoSeguro ();
-	bool checkGeneral ();
+	//======================================================
+	//================== update operation ==================
+	void updateModel ();
+	//======================================================
 
-	// moneda changed
-	void onMonedaChanged (QString moneda);
-
-	// Cuota validator
-	bool checkCuota ();
-	
-	// Swap fields
-	void lockGeneraInfoEnableCuotaInfo ();
-
-
+	// window
 	Ui::PlanDePagos ui;
 
 	// Auth data
@@ -143,17 +129,15 @@ private:
 	QHash <QString, QString> listaTiposEntidades;
 	QHash <QString, QHash <QString, QString>> lineasDeCredito;
 	QHash <QString, QString> listaEmpresas;
+	QHash <QString, QString> listaOperaciones;
+
+	Operacion *currentOperation;
 
 	// Current plan data
-	int planID;
 	double saldoCapital;
 	double saldoCapitalReal;
 	double creditoFiscal;
-	QList<int> paidCuotas;
-	QDate lastDate;
-	QHash<QString, QString> temporalVariables;
 
-	// Validation flags
-	bool* planDataIsCorrect;
-	bool* cuotaDataIsCorrect;
+	bool loadedFromLeftlist;
+	bool editingPlan;
 };

@@ -88,11 +88,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddCuotaDelPlan.cpp" />
     <ClCompile Include="AddCuotaEfectiva.cpp" />
     <ClCompile Include="AppHeader.cpp" />
+    <ClCompile Include="CuotasEfectivas.cpp" />
+    <ClCompile Include="CuotasPlanDePagos.cpp" />
     <ClCompile Include="LineaDeCredito.cpp" />
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NumberInput.cpp" />
+    <ClCompile Include="Operacion.cpp" />
+    <ClCompile Include="OperacionCredito.cpp" />
+    <ClCompile Include="OperacionLeaseBack.cpp" />
+    <ClCompile Include="OperacionLeasing.cpp" />
+    <ClCompile Include="OperacionLineaDeCredito.cpp" />
     <ClCompile Include="PagosEfectivos.cpp" />
     <ClCompile Include="PlanDePagos.cpp" />
     <ClCompile Include="TabsWindow.cpp" />
@@ -101,6 +110,7 @@
     <QtMoc Include="Login.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="AddCuotaDelPlan.ui" />
     <QtUic Include="AddCuotaEfectiva.ui" />
     <QtUic Include="AppHeader.ui" />
     <QtUic Include="LineaDeCredito.ui" />
@@ -129,6 +139,16 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AddCuotaEfectiva.h" />
+    <QtMoc Include="Operacion.h" />
+    <QtMoc Include="OperacionCredito.h" />
+    <QtMoc Include="CuotasPlanDePagos.h" />
+    <QtMoc Include="CuotasEfectivas.h" />
+    <QtMoc Include="NumberInput.h" />
+    <QtMoc Include="AddCuotaDelPlan.h" />
+    <ClInclude Include="OperacionesFinancieras.h" />
+    <QtMoc Include="OperacionLineaDeCredito.h" />
+    <QtMoc Include="OperacionLeasing.h" />
+    <QtMoc Include="OperacionLeaseBack.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

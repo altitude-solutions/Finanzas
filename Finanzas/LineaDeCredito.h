@@ -39,6 +39,9 @@ private:
 	// reset fields
 	void clearFields ();
 
+	// setup table clipboard
+	void setupTableClipboard ();
+
 
 	Ui::LineaDeCredito ui;
 

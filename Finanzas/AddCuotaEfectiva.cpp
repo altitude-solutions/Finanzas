@@ -22,25 +22,44 @@ AddCuotaEfectiva::AddCuotaEfectiva(QWidget *parent): QDialog(parent) {
 	connect (ui.cancelButton, &QPushButton::clicked, this, &AddCuotaEfectiva::reject);
 	connect (ui.addButton, &QPushButton::clicked, this, &AddCuotaEfectiva::onSaveClicked);
 
-	connect (ui.pagoMonto, &QLineEdit::textChanged, this, &AddCuotaEfectiva::onMontoCuotaChanged);
-	connect (ui.pagoCapital, &QLineEdit::textChanged, this, &AddCuotaEfectiva::onPagoCapitalChanged);
-	connect (ui.pagoInteres, &QLineEdit::textChanged, this, &AddCuotaEfectiva::onPagoInteresChanged);
-
 	connect (ui.pagoCapital, &QLineEdit::returnPressed, ui.addButton, &QPushButton::click);
 	connect (ui.pagoInteres, &QLineEdit::returnPressed, ui.addButton, &QPushButton::click);
+
+	//connect (ui.pagoMonto, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onMontoCuotaChanged);
 }
 
 AddCuotaEfectiva::~AddCuotaEfectiva() {
 
 }
 
-void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, CasosPlanDePagos_enum caso, int parentID, int editingID, bool editing) {
+void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuota, QDate minDate, OperacionesFinancieras::TiposDeOperacion caso, OperacionesFinancieras::FrecuenciaDePagos freq, int parentID, QDate currentDate, double total, double cap, double inte, double  iva, int editingID, bool editing) {
 	this->targetUrl = targetUrl;
 	this->token = token;
 	ui.numeroCuota->setValue (cuota);
 	//ui.numeroCuota->setEnabled (false);
 	ui.fechaPago->setMinimumDate (minDate);
-	ui.fechaPago->setDate (minDate.addMonths (1));
+
+	int addedMonths = 0;
+	switch (freq) {
+	case OperacionesFinancieras::FrecuenciaDePagos::Mensual:
+		addedMonths = 1;
+		break;
+	case OperacionesFinancieras::FrecuenciaDePagos::Bimensual:
+		addedMonths = 2;
+		break;
+	case OperacionesFinancieras::FrecuenciaDePagos::Trimestral:
+		addedMonths = 3;
+		break;
+	case OperacionesFinancieras::FrecuenciaDePagos::Semestral:
+		addedMonths = 6;
+		break;
+	case OperacionesFinancieras::FrecuenciaDePagos::Anual:
+		addedMonths = 12;
+		break;
+	case OperacionesFinancieras::FrecuenciaDePagos::NONE:
+		break;
+	}
+	ui.fechaPago->setDate (minDate.addMonths (addedMonths));
 	this->caso = caso;
 
 	// default editing = false and editingID = 0		so default is new
@@ -52,82 +71,79 @@ void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuot
 	setWindowTitle (QString::fromLatin1 ((this->editing ? "Editar Cuota" : "Añadir Cuota")));
 	ui.label->setText (QString::fromLatin1 ((this->editing ? "Editar Cuota" : "Añadir Cuota")));
 	ui.addButton->setText (QString::fromLatin1 (this->editing ? "Actualizar" : "Registrar"));
+
+	if(editing) {
+		ui.fechaPago->setDate (currentDate);
+		ui.pagoMonto->setValue (total);
+		ui.pagoCapital->setValue (cap);
+		ui.pagoInteres->setValue (inte);
+		ui.pagoIva->setValue (iva);
+	}
+
+	connect (ui.pagoCapital, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onPagoCapitalChanged);
+
+	//connect (ui.pagoInteres, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onPagoInteresChanged);
 }
 
-void AddCuotaEfectiva::onMontoCuotaChanged (QString monto) {
-	bool isNumber = false;
-	double ammount = monto.toDouble (&isNumber);
-	if (!isNumber) {
-		monto.truncate (monto.length () - 1);
-		ui.pagoMonto->setText (monto);
-	}
-
-	if (this->caso == CasosPlanDePagos_enum::CasoLeaseBack) {
-		ui.pagoIva->setText (QString::number (0.13 * ammount, 'f', 2));
-	}
+void AddCuotaEfectiva::onMontoCuotaChanged (double monto) {
+	//if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
+	//	ui.pagoIva->setValue (0.13 * monto);
+	//}
 }
 
-void AddCuotaEfectiva::onPagoCapitalChanged (QString capital) {
-	bool isNumber = false;
-	double ammount = capital.toDouble (&isNumber);
-	if (!isNumber) {
-		capital.truncate (capital.length () - 1);
-		ui.pagoCapital->setText (capital);
+void AddCuotaEfectiva::onPagoCapitalChanged (double capital) {
+	if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+		ui.pagoIva->setValue (0.13 * capital / 0.87);
 	}
-
-	double total = ui.pagoMonto->text ().toDouble (),
-		iva = ui.pagoIva->text ().toDouble ();
-
-	ui.pagoInteres->setText (QString::number (total - ammount - iva, 'f', 2));
+	ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 }
 
-void AddCuotaEfectiva::onPagoInteresChanged (QString interes) {
-	bool isNumber = false;
-	double ammount = interes.toDouble (&isNumber);
-	if (!isNumber) {
-		interes.truncate (interes.length () - 1);
-		ui.pagoInteres->setText (interes);
-	}
-
-	double total = ui.pagoMonto->text ().toDouble (),
-		iva = ui.pagoIva->text ().toDouble ();
-
-	ui.pagoCapital->setText (QString::number (total - ammount - iva, 'f', 2));
+void AddCuotaEfectiva::onPagoInteresChanged (double interes) {
+	//ui.pagoCapital->setValue (ui.pagoMonto->getValue () - interes - ui.pagoIva->getValue ());
 }
 
 void AddCuotaEfectiva::onSaveClicked () {
 	ui.addButton->setEnabled (false);
-	bool total_ok = false;
-	double total = ui.pagoMonto->text ().toDouble (&total_ok);
-	bool capital_ok = false;
-	double capital = ui.pagoCapital->text ().toDouble (&capital_ok);
-	bool interes_ok = false;
-	double interes = ui.pagoInteres->text ().toDouble (&interes_ok);
-	bool iva_ok = false;
-	double iva = ui.pagoIva->text ().toDouble (&iva_ok);
+	//bool total_ok = false;
+	//double total = ui.pagoMonto->text ().toDouble (&total_ok);
+	double total = ui.pagoMonto->getValue ();
+	//bool capital_ok = false;
+	//double capital = ui.pagoCapital->text ().toDouble (&capital_ok);
+	double capital = ui.pagoCapital->getValue ();
+	//bool interes_ok = false;
+	//double interes = ui.pagoInteres->text ().toDouble (&interes_ok);
+	double interes = ui.pagoInteres->getValue ();
+	//bool iva_ok = false;
+	//double iva = ui.pagoIva->text ().toDouble (&iva_ok);
+	double iva = ui.pagoIva->getValue ();
 
-	if (!total_ok || total <= 0) {
+	//if (!total_ok || total <= 0) {
+	if (total <= 0) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto total de la cuota debe ser mayor a cero"));
 		ui.addButton->setEnabled (true);
 		return;
 	}
-	if (!capital_ok || capital <= 0) {
+	//if (!capital_ok || capital <= 0) {
+	if (capital < 0) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El capital de la cuota debe ser mayor a cero"));
 		ui.addButton->setEnabled (true);
 		return;
 	}
-	if (!interes_ok || interes <= 0) {
+	//if (!interes_ok || interes <= 0) {
+	if (interes <= 0) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El interés de la cuota debe ser mayor a cero"));
 		ui.addButton->setEnabled (true);
 		return;
 	}
-	if ( this->caso == CasosPlanDePagos_enum::CasoLeaseBack && (!total_ok || total <= 0)) {
+	if ((this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) && iva < 0) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 (""));
 		ui.addButton->setEnabled (true);
 		return;
 	}
 
-	if (total != (capital + interes + iva)) {
+	double diff = abs (total - (capital + interes + iva));
+
+	if (diff > 1e-9) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La suma del capital, interés e iva (cuando aplica) debe ser igual al monto de la cuota"));
 		ui.addButton->setEnabled (true);
 		return;
@@ -175,7 +191,7 @@ void AddCuotaEfectiva::onSaveClicked () {
 		bodyContent.insert ("montoTotalDelPago", ui.pagoMonto->text ().toDouble ());
 		bodyContent.insert ("pagoDeCapital", ui.pagoCapital->text ().toDouble ());
 		bodyContent.insert ("pagoDeInteres", ui.pagoInteres->text ().toDouble ());
-		if (ui.pagoIva->text () != "") {
+		if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
 			bodyContent.insert ("pagoDeIva", ui.pagoIva->text ().toDouble ());
 		}
 		bodyContent.insert ("parent", this->parentID);
@@ -226,7 +242,7 @@ void AddCuotaEfectiva::onSaveClicked () {
 		bodyContent.insert ("montoTotalDelPago", ui.pagoMonto->text ().toDouble ());
 		bodyContent.insert ("pagoDeCapital", ui.pagoCapital->text ().toDouble ());
 		bodyContent.insert ("pagoDeInteres", ui.pagoInteres->text ().toDouble ());
-		if (ui.pagoIva->text () != "") {
+		if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
 			bodyContent.insert ("pagoDeIva", ui.pagoIva->text ().toDouble ());
 		}
 		bodyContent.insert ("parent", this->parentID);
