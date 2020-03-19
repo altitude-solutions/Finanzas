@@ -133,7 +133,7 @@ void AddCuotaDelPlan::onSaveClicked () {
 	ui.addButton->setEnabled (false);
 	if (currentDue != nullptr) {
 		double diff = ui.pagoMonto->getValue () - (ui.pagoCapital->getValue () + ui.pagoInteres->getValue () + ui.pagoIva->getValue ());
-		if (abs (diff) < 1e-9) {
+		if (abs (diff) < 1e-2) {
 			if (ui.pagoMonto->getValue () <= 0) {
 				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El monto total del pago debe ser mayor a cero"));
 				ui.pagoMonto->setFocus ();

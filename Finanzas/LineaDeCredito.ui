@@ -413,6 +413,9 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
 
 </string>
           </property>
+          <property name="displayFormat">
+           <string>dd/MM/yyyy</string>
+          </property>
           <property name="calendarPopup">
            <bool>true</bool>
           </property>
@@ -663,6 +666,9 @@ QCalendarWidget QWidget#qt_calendar_navigationbar {
 }
 
 </string>
+          </property>
+          <property name="displayFormat">
+           <string>dd/MM/yyyy</string>
           </property>
           <property name="calendarPopup">
            <bool>true</bool>

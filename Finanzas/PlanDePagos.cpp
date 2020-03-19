@@ -141,17 +141,21 @@ void PlanDePagos::desem_4_changed (QString desem4) {
 //==================================================================
 
 void PlanDePagos::termChanged (int value) {
-	ui.fechaVencimiento->setDate (ui.fechaFirma->date ().addMonths (value));
+	if (ui.plazo->hasFocus ()) {
+		ui.fechaVencimiento->setDate (ui.fechaFirma->date ().addMonths (value));
+	}
 }
 
 void PlanDePagos::expirationDateChanged (QDate date) {
-	QDate auxDate = ui.fechaFirma->date ();
-	int diff = 0;
-	while (auxDate < date) {
-		auxDate = auxDate.addMonths (1);
-		diff++;
+	if (ui.fechaVencimiento->hasFocus ()) {
+		QDate auxDate = ui.fechaFirma->date ();
+		int diff = 0;
+		while (auxDate < date) {
+			auxDate = auxDate.addMonths (1);
+			diff++;
+		}
+		ui.plazo->setValue (diff);
 	}
-	ui.plazo->setValue (diff);
 }
 
 void PlanDePagos::signDateChanged (QDate date) {
@@ -1183,8 +1187,10 @@ void PlanDePagos::setupUiConnections () {
 	//=====================================================================================================
 	//======================================= credit line selected ========================================
 	connect (ui.lineaDeCredito, &QComboBox::currentTextChanged, this, [&](QString creditLine) {
-		if (currentOperation->getOperationType () == OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito) {
-			ui.moneda->setCurrentText (lineasDeCredito[creditLine]["moneda"]);
+		if (this->currentOperation != nullptr) {
+			if (currentOperation->getOperationType () == OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito) {
+				ui.moneda->setCurrentText (lineasDeCredito[creditLine]["moneda"]);
+			}
 		}
 		});
 	//=====================================================================================================

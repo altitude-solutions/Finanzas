@@ -143,7 +143,7 @@ void AddCuotaEfectiva::onSaveClicked () {
 
 	double diff = abs (total - (capital + interes + iva));
 
-	if (diff > 1e-9) {
+	if (diff > 1e-2) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La suma del capital, interés e iva (cuando aplica) debe ser igual al monto de la cuota"));
 		ui.addButton->setEnabled (true);
 		return;
