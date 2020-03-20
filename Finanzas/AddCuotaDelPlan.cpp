@@ -108,9 +108,6 @@ void AddCuotaDelPlan::setValidationParams (QString targetURL, QString token, Ope
 
 		currentDue->setID (due->getID ());
 
-		qDebug () << "current due id inner =" << due->getID ();
-		qDebug () << "second ID =" << currentDue->getID();
-
 		ui.label->setText (QString::fromLatin1 ("Editar Cuota"));
 		setWindowTitle (QString::fromLatin1 (("Editar Cuota")));
 		ui.addButton->setText (QString::fromLatin1 ("Actualizar"));
