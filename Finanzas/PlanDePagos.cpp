@@ -148,12 +148,18 @@ void PlanDePagos::termChanged (int value) {
 
 void PlanDePagos::expirationDateChanged (QDate date) {
 	if (ui.fechaVencimiento->hasFocus ()) {
-		QDate auxDate = ui.fechaFirma->date ();
-		int diff = 0;
-		while (auxDate < date) {
-			auxDate = auxDate.addMonths (1);
-			diff++;
-		}
+		qint64 diff = QDateTime (date).toMSecsSinceEpoch () - QDateTime (ui.fechaFirma->date ()).toMSecsSinceEpoch ();
+
+		diff /= 3600000;	// 1000 to secs 3600 to hours
+		diff /= 24;			// to days
+		diff /= 30;			// to months
+
+		//QDate auxDate = ui.fechaFirma->date ();
+		//int diff = 0;
+		//while (auxDate < date) {
+		//	auxDate = auxDate.addMonths (1);
+		//	diff++;
+		//}
 		ui.plazo->setValue (diff);
 	}
 }
@@ -201,11 +207,11 @@ void PlanDePagos::catchErrors (OperationValidationErros error, QString errorMess
 		ui.tipoTasa->setFocus ();
 		break;
 	case OperationValidationErros::S_RATE_ERROR:
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El interés fijo debe ser mayor que cero"));
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El interés fijo debe ser mayor que cero y menor que 100%"));
 		ui.interesFijo->setFocus ();
 		break;
 	case OperationValidationErros::D_RATE_ERROR:
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El interés variable debe ser mayor que cero"));
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El interés variable debe ser mayor que cero y menor que 100%"));
 		ui.interesVariable->setFocus ();
 		break;
 	case OperationValidationErros::TERM_ERROR:
@@ -229,7 +235,7 @@ void PlanDePagos::catchErrors (OperationValidationErros error, QString errorMess
 		ui.montoDesem_1->setFocus ();
 		break;
 	case OperationValidationErros::INITIAL_DUE_ERROR:
-		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La cuota inicial debe ser mayor que cero y menor que el monto de la operación"));
+		QMessageBox::critical (this, "Error", QString::fromLatin1 ("La cuota inicial debe ser mayor o igual que cero y menor que el monto de la operación"));
 		ui.cuotaInicial->setFocus ();
 		break;
 	case OperationValidationErros::SERVER_SIDE_ERROR:
@@ -870,7 +876,7 @@ void PlanDePagos::makePlanEditable () {
 	ui.savePlan->setEnabled (true);
 	ui.clearButton->setEnabled (true);
 	//====================== first column except  credit line ======================
-	ui.tipoOperacion->setEnabled (true);
+	//ui.tipoOperacion->setEnabled (true);
 	ui.numeroContrato->setEnabled (true);
 	ui.fechaFirma->setEnabled (true);
 	ui.empresa->setEnabled (true);
@@ -923,8 +929,47 @@ void PlanDePagos::onSaveClicked () {
 	if (currentOperation != nullptr) {
 		ui.savePlan->setEnabled (false);
 		updateModel ();
+
+		double desemTotal = 0;
+		desemTotal += ui.montoDesem_1->getValue ();
+		desemTotal += ui.montoDesem_2->getValue ();
+		desemTotal += ui.montoDesem_3->getValue ();
+		desemTotal += ui.montoDesem_4->getValue ();
+		desemTotal += ui.montoDesem_5->getValue ();
+
+		// ask for confirmation when desemTotal is less than ammount
+		if (desemTotal < ui.monto->getValue () && (currentOperation->getOperationType () == OperacionesFinancieras::TiposDeOperacion::CasoCredito || currentOperation->getOperationType () == OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito)) {
+			QMessageBox::StandardButton answer = QMessageBox::question (this, "Advertencia", QString::fromLatin1 ("La suma de los desembolsos es menor que el monto de la operación\n%1 %2 < %3 %4\n¿Desea continuar?").arg (desemTotal).arg (OperacionesFinancieras::MapMonedaEnum_Short (currentOperation->getCurrency ())).arg (ui.monto->getValue ()).arg (OperacionesFinancieras::MapMonedaEnum_Short (currentOperation->getCurrency ())));
+			if (answer != QMessageBox::StandardButton::Yes) {
+				ui.montoDesem_1->setFocus ();
+				ui.savePlan->setEnabled (true);
+				return;
+			}
+		}
+
+		// ask for confirmation for interest rates greather than 20%
+		if (ui.interesFijo->getValue () > 20) {
+			QMessageBox::StandardButton answer = QMessageBox::question (this, "Advertencia", QString::fromLatin1 ("El interés fijo es mayor al 20%\n¿Desea continuar?"));
+			if (answer != QMessageBox::StandardButton::Yes) {
+				ui.interesFijo->setFocus ();
+				ui.savePlan->setEnabled (true);
+				return;
+			}
+		}
+
+		// ask for confirmation when initial Due (Leasing and LeaseBack ONLY) is greather than 20% of ammount
+		if ((currentOperation->getOperationType () == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack || currentOperation->getOperationType () == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) && (ui.cuotaInicial->getValue () > 0.2 * ui.monto->getValue ())) {
+			QMessageBox::StandardButton answer = QMessageBox::question (this, "Advertencia", QString::fromLatin1 ("La cuota inicial es mayor al 20% del monto de la operación\n¿Desea continuar?"));
+			if (answer != QMessageBox::StandardButton::Yes) {
+				ui.cuotaInicial->setFocus ();
+				ui.savePlan->setEnabled (true);
+				return;
+			}
+		}
+
+
 		if (!editingPlan) {
-			currentOperation->save (this->targetAddress, this->token);		// Validation is inside this method. If there are errores object will notify through signal notifyValidationStatus
+			currentOperation->save (this->targetAddress, this->token);			// Validation is inside this method. If there are errores object will notify through signal notifyValidationStatus
 		}
 		else {
 			currentOperation->update (this->targetAddress, this->token);		// Validation is inside this method. If there are errores object will notify through signal notifyValidationStatus

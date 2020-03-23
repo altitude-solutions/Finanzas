@@ -26,6 +26,8 @@ private slots:
 	void capitalChanged (double capital);
 	void interestChanged (double interest);
 
+	void ivaChanged (double iva);
+
 private:
 	Ui::AddCuotaDelPlan ui;
 

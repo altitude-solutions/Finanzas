@@ -39,11 +39,11 @@ bool OperacionLineaDeCredito::validate () {
 		emit notifyValidationStatus (OperationValidationErros::RATE_TYPE_ERROR);
 		return  false;
 	}
-	if (this->staticRate <= 0) {
+	if (this->staticRate <= 0 || this->staticRate > 100) {
 		emit notifyValidationStatus (OperationValidationErros::S_RATE_ERROR);
 		return  false;
 	}
-	if (this->rateType == OperacionesFinancieras::TipoTasa::Variable && this->dynamicRate <= 0) {
+	if (this->rateType == OperacionesFinancieras::TipoTasa::Variable && (this->dynamicRate <= 0 || this->dynamicRate > 100)) {
 		emit notifyValidationStatus (OperationValidationErros::D_RATE_ERROR);
 		return  false;
 	}
@@ -81,7 +81,7 @@ bool OperacionLineaDeCredito::validate () {
 	desemTotal += montoDesem_3;
 	desemTotal += montoDesem_4;
 	desemTotal += montoDesem_5;
-	if (this->ammount != desemTotal) {
+	if (abs (this->ammount - desemTotal) > 1e-2 && this->ammount < desemTotal) {
 		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, QString::fromLatin1 ("La suma de los desembolsos debe ser igual al monto de la operación"));
 		return  false;
 	}

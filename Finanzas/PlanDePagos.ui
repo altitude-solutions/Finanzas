@@ -496,11 +496,6 @@ QComboBox::disabled {
                       <string>Lease Back</string>
                      </property>
                     </item>
-                    <item>
-                     <property name="text">
-                      <string>Seguro</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item row="1" column="0">

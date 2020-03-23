@@ -48,11 +48,11 @@ bool OperacionLeaseBack::validate () {
 		emit notifyValidationStatus (OperationValidationErros::RATE_TYPE_ERROR);
 		return  false;
 	}
-	if (this->staticRate <= 0) {
+	if (this->staticRate <= 0 || this->staticRate > 100) {
 		emit notifyValidationStatus (OperationValidationErros::S_RATE_ERROR);
 		return  false;
 	}
-	if (this->rateType == OperacionesFinancieras::TipoTasa::Variable && this->dynamicRate <= 0) {
+	if (this->rateType == OperacionesFinancieras::TipoTasa::Variable && (this->dynamicRate <= 0 || this->dynamicRate > 100)) {
 		emit notifyValidationStatus (OperationValidationErros::D_RATE_ERROR);
 		return  false;
 	}

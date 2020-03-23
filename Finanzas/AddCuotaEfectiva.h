@@ -21,6 +21,8 @@ public slots:
 	void onPagoCapitalChanged (double capital);
 	void onPagoInteresChanged (double interes);
 
+	void onIvaChanged (double iva);
+
 private:
 	Ui::AddCuotaEfectiva ui;
 

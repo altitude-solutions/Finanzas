@@ -62,6 +62,14 @@ void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuot
 	ui.fechaPago->setDate (minDate.addMonths (addedMonths));
 	this->caso = caso;
 
+	// enable iva editing for Leasing and Lease back, otherwise disable it
+	if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+		ui.pagoIva->setEnabled (true);
+	}
+	else {
+		ui.pagoIva->setEnabled (false);
+	}
+
 	// default editing = false and editingID = 0		so default is new
 	this->parentID = parentID;
 	this->editing = editing;
@@ -82,6 +90,8 @@ void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuot
 
 	connect (ui.pagoCapital, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onPagoCapitalChanged);
 
+	connect (ui.pagoIva, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onIvaChanged);
+
 	//connect (ui.pagoInteres, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onPagoInteresChanged);
 }
 
@@ -92,14 +102,24 @@ void AddCuotaEfectiva::onMontoCuotaChanged (double monto) {
 }
 
 void AddCuotaEfectiva::onPagoCapitalChanged (double capital) {
-	if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
-		ui.pagoIva->setValue (0.13 * capital / 0.87);
+	if (ui.pagoCapital->hasFocus ()) {
+		if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+			ui.pagoIva->setValue (0.13 * capital / 0.87);
+		}
+		ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 	}
-	ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 }
 
 void AddCuotaEfectiva::onPagoInteresChanged (double interes) {
 	//ui.pagoCapital->setValue (ui.pagoMonto->getValue () - interes - ui.pagoIva->getValue ());
+}
+
+void AddCuotaEfectiva::onIvaChanged (double iva) {
+	if (ui.pagoIva->hasFocus ()) {
+		if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+			ui.pagoInteres->setValue (ui.pagoMonto->getValue () - ui.pagoCapital->getValue () - iva);
+		}
+	}
 }
 
 void AddCuotaEfectiva::onSaveClicked () {

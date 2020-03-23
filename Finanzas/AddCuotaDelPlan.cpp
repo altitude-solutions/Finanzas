@@ -43,6 +43,15 @@ void AddCuotaDelPlan::setValidationParams (QString targetURL, QString token, Ope
 	operationType = op->getOperationType ();
 	// set operation id
 	this->parentOp_ID = op->getID ();
+
+	// enable iva editing for Leasing and Lease back, otherwise disable it
+	if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+		ui.pagoIva->setEnabled (true);
+	}
+	else {
+		ui.pagoIva->setEnabled (false);
+	}
+
 	if (lastDue == nullptr) {
 		ui.fechaPago->setMinimumDate (op->getSignDate ());
 		int addedMonths = 0;
@@ -124,6 +133,8 @@ void AddCuotaDelPlan::setValidationParams (QString targetURL, QString token, Ope
 	connect (ui.pagoCapital, &NumberInput::valueChanged, this, &AddCuotaDelPlan::capitalChanged);
 
 	//connect (ui.pagoInteres, &NumberInput::valueChanged, this, &AddCuotaDelPlan::interestChanged);
+
+	connect (ui.pagoIva, &NumberInput::valueChanged, this, &AddCuotaDelPlan::ivaChanged);
 }
 
 void AddCuotaDelPlan::onSaveClicked () {
@@ -204,14 +215,24 @@ void AddCuotaDelPlan::catchError (DueValidationError errorCode, QString message)
 }
 
 void AddCuotaDelPlan::capitalChanged (double capital) {
-	if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
-		ui.pagoIva->setValue (0.13 * capital / 0.87);
+	if (ui.pagoCapital->hasFocus ()) {
+		if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+			ui.pagoIva->setValue (0.13 * capital / 0.87);
+		}
+		ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 	}
-	ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 }
 
 void AddCuotaDelPlan::interestChanged (double interest) {
 	//ui.pagoIva->setValue (ui.pagoMonto->getValue () - interest - ui.pagoCapital->getValue ());
 
 	//ui.pagoCapital->setValue (ui.pagoMonto->getValue () - interest - ui.pagoIva->getValue ());
+}
+
+void AddCuotaDelPlan::ivaChanged (double iva) {
+	if (ui.pagoIva->hasFocus ()) {
+		if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+			ui.pagoInteres->setValue (ui.pagoMonto->getValue () - ui.pagoCapital->getValue () - iva);
+		}
+	}
 }
