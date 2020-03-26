@@ -5,6 +5,7 @@
 #include "OperacionLineaDeCredito.h"
 #include "OperacionLeasing.h"
 #include "OperacionLeaseBack.h"
+#include "OperacionImpuestosNacionales.h"
 
 #include <QEventLoop>
 
@@ -40,8 +41,11 @@ Operacion::Operacion(QObject *parent): QObject(parent) {
 	montoDesem_4 = 0;
 	fechaDesem_5 = QDate::currentDate ();
 	montoDesem_5 = 0;
+	fechaDesem_6 = QDate::currentDate ();
+	montoDesem_6 = 0;
 
 	initialDue = 0;
+	warranty = 0;
 }
 
 Operacion::~Operacion() {
@@ -91,6 +95,9 @@ Operacion* Operacion::load (int id, QString targetURL, QString token, QObject* p
 			break;
 		case OperacionesFinancieras::TiposDeOperacion::CasoSeguro:
 			break;
+		case OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales:
+			op = new OperacionImpuestosNacionales (parent);
+			break;
 		case OperacionesFinancieras::TiposDeOperacion::NONE:
 			break;
 		}
@@ -104,10 +111,12 @@ Operacion* Operacion::load (int id, QString targetURL, QString token, QObject* p
 		if (!okJson.object ().value ("planDePagos").toObject ().value ("iva").isNull ()) {
 			op->setIVA (okJson.object ().value ("planDePagos").toObject ().value ("iva").toDouble ());
 		}
-		op->setRateType (OperacionesFinancieras::MapTipoTasaString (okJson.object ().value ("planDePagos").toObject ().value ("tipoDeTasa").toString ()));
-		op->setStaticRate (okJson.object ().value ("planDePagos").toObject ().value ("interesFijo").toDouble ());
-		if (!okJson.object ().value ("planDePagos").toObject ().value ("interesVariable").isNull ()) {
-			op->setDynamicRate (okJson.object ().value ("planDePagos").toObject ().value ("interesVariable").toDouble ());
+		if (!okJson.object ().value ("planDePagos").toObject ().value ("tipoDeTasa").isNull ()) {
+			op->setRateType (OperacionesFinancieras::MapTipoTasaString (okJson.object ().value ("planDePagos").toObject ().value ("tipoDeTasa").toString ()));
+			op->setStaticRate (okJson.object ().value ("planDePagos").toObject ().value ("interesFijo").toDouble ());
+			if (!okJson.object ().value ("planDePagos").toObject ().value ("interesVariable").isNull ()) {
+				op->setDynamicRate (okJson.object ().value ("planDePagos").toObject ().value ("interesVariable").toDouble ());
+			}
 		}
 		op->setTerm (okJson.object ().value ("planDePagos").toObject ().value ("plazo").toInt ());
 		op->setFrequency (OperacionesFinancieras::MapFrecuenciaString (okJson.object ().value ("planDePagos").toObject ().value ("frecuenciaDePagos").toString ()));
@@ -119,6 +128,10 @@ Operacion* Operacion::load (int id, QString targetURL, QString token, QObject* p
 		}
 		if (!okJson.object ().value ("planDePagos").toObject ().value ("cuotaInicial").isNull ()) {
 			op->setInitialDue (okJson.object ().value ("planDePagos").toObject ().value ("cuotaInicial").toDouble ());
+		}
+
+		if (!okJson.object ().value ("planDePagos").toObject ().value ("garantia").isNull ()) {
+			op->setWarranty (okJson.object ().value ("planDePagos").toObject ().value ("garantia").toDouble ());
 		}
 
 		if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_1").isNull ()) {
@@ -150,6 +163,12 @@ Operacion* Operacion::load (int id, QString targetURL, QString token, QObject* p
 		}
 		if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_5").isNull ()) {
 			op->setFechaDesem_5 (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_5").toVariant ().toLongLong ()).date ());
+		}
+		if (!okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_6").isNull ()) {
+			op->setMontoDesem_6 (okJson.object ().value ("planDePagos").toObject ().value ("montoDesembolso_6").toDouble ());
+		}
+		if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_6").isNull ()) {
+			op->setFechaDesem_6 (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_6").toVariant ().toLongLong ()).date ());
 		}
 	}
 
@@ -310,9 +329,22 @@ void Operacion::setMontoDesem_5 (double ammount) {
 	this->montoDesem_5 = ammount;
 }
 
+void Operacion::setFechaDesem_6 (QDate date) {
+	this->fechaDesem_6 = date;
+}
+
+void Operacion::setMontoDesem_6 (double ammount) {
+	this->montoDesem_6 = ammount;
+}
+
 void Operacion::setInitialDue (double ammount) {
 	this->initialDue = ammount;
 }
+
+void Operacion::setWarranty (double warranty) {
+	this->warranty = warranty;
+}
+
 //===========================================================================================================================
 //======================================================== getters ==========================================================
 int Operacion::getID () {
@@ -419,8 +451,20 @@ double Operacion::getMontoDesem_5 () {
 	return this->montoDesem_5;
 }
 
+QDate Operacion::getFechaDesem_6 () {
+	return this->fechaDesem_6;
+}
+
+double Operacion::getMontoDesem_6 () {
+	return this->montoDesem_6;
+}
+
 double Operacion::getInitialDue () {
 	return this->initialDue;
+}
+
+double Operacion::getWarranty () {
+	return this->warranty;
 }
 
 void Operacion::setID (int id) {

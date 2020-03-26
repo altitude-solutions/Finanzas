@@ -21,7 +21,7 @@ public:
 
 private slots:
 	void onSaveClicked ();
-	void ivaAutofill (double ammount);
+	void capitalAutofill (double ammount);
 	void catchError (DueValidationError errorCode, QString message);
 	void capitalChanged (double capital);
 	void interestChanged (double interest);

@@ -90,8 +90,13 @@ public:
 	void setMontoDesem_4 (double ammount);
 	void setFechaDesem_5 (QDate date);
 	void setMontoDesem_5 (double ammount);
+	void setFechaDesem_6 (QDate date);
+	void setMontoDesem_6 (double ammount);
 
 	void setInitialDue (double ammount);
+
+	void setWarranty (double warranty);
+
 
 	int getID ();
 	QString getContractNumber ();
@@ -119,8 +124,12 @@ public:
 	double getMontoDesem_4 ();
 	QDate getFechaDesem_5 ();
 	double getMontoDesem_5 ();
+	QDate getFechaDesem_6 ();
+	double getMontoDesem_6 ();
 
 	double getInitialDue ();
+
+	double getWarranty ();
 
 signals:
 	void operacionUpdated ();
@@ -158,6 +167,10 @@ protected:
 	double montoDesem_4;
 	QDate fechaDesem_5;
 	double montoDesem_5;
+	QDate fechaDesem_6;
+	double montoDesem_6;
 	// initial due
 	double initialDue;
+	// warranty, impuestos nacionales
+	double warranty;
 };

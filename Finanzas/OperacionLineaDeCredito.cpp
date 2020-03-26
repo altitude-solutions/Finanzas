@@ -75,12 +75,18 @@ bool OperacionLineaDeCredito::validate () {
 		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, "El desembolso 5 debe ser mayor a cero");
 		return  false;
 	}
+	if (this->montoDesem_6 < 0) {
+		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, "El desembolso 6 debe ser mayor a cero");
+		return  false;
+	}
+
 	double desemTotal = 0;
 	desemTotal += montoDesem_1;
 	desemTotal += montoDesem_2;
 	desemTotal += montoDesem_3;
 	desemTotal += montoDesem_4;
 	desemTotal += montoDesem_5;
+	desemTotal += montoDesem_6;
 	if (abs (this->ammount - desemTotal) > 1e-2 && this->ammount < desemTotal) {
 		emit notifyValidationStatus (OperationValidationErros::DESEM_ERROR, QString::fromLatin1 ("La suma de los desembolsos debe ser igual al monto de la operación"));
 		return  false;
@@ -160,6 +166,10 @@ void OperacionLineaDeCredito::save (QString targetURL, QString token) {
 		if (this->montoDesem_5 != 0) {
 			bodyContent.insert ("fechaDesembolso_5", QDateTime (this->fechaDesem_5).toMSecsSinceEpoch ());
 			bodyContent.insert ("montoDesembolso_5", this->montoDesem_5);
+		}
+		if (this->montoDesem_6 != 0) {
+			bodyContent.insert ("fechaDesembolso_6", QDateTime (this->fechaDesem_6).toMSecsSinceEpoch ());
+			bodyContent.insert ("montoDesembolso_6", this->montoDesem_6);
 		}
 		bodyContent.insert ("lineaDeCredito", this->creditLine);
 		bodyContent.insert ("empresaGrupo", this->enterprise);

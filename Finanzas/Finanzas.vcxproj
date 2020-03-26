@@ -99,6 +99,7 @@
     <ClCompile Include="NumberInput.cpp" />
     <ClCompile Include="Operacion.cpp" />
     <ClCompile Include="OperacionCredito.cpp" />
+    <ClCompile Include="OperacionImpuestosNacionales.cpp" />
     <ClCompile Include="OperacionLeaseBack.cpp" />
     <ClCompile Include="OperacionLeasing.cpp" />
     <ClCompile Include="OperacionLineaDeCredito.cpp" />
@@ -149,6 +150,7 @@
     <QtMoc Include="OperacionLineaDeCredito.h" />
     <QtMoc Include="OperacionLeasing.h" />
     <QtMoc Include="OperacionLeaseBack.h" />
+    <QtMoc Include="OperacionImpuestosNacionales.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

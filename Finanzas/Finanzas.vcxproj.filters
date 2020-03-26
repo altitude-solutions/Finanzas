@@ -76,6 +76,9 @@
     <ClCompile Include="OperacionLeaseBack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OperacionImpuestosNacionales.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Login.h">
@@ -124,6 +127,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="OperacionLeaseBack.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="OperacionImpuestosNacionales.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

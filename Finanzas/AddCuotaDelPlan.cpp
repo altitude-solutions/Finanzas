@@ -27,7 +27,7 @@ AddCuotaDelPlan::AddCuotaDelPlan (QWidget* parent): QDialog (parent) {
 	connect (ui.pagoCapital, &QLineEdit::returnPressed, ui.addButton, &QPushButton::click);
 	connect (ui.pagoInteres, &QLineEdit::returnPressed, ui.addButton, &QPushButton::click);
 
-	//connect (ui.pagoMonto, &NumberInput::valueChanged, this, &AddCuotaDelPlan::ivaAutofill);
+	connect (ui.pagoMonto, &NumberInput::valueChanged, this, &AddCuotaDelPlan::capitalAutofill);
 }
 
 AddCuotaDelPlan::~AddCuotaDelPlan () {
@@ -50,6 +50,13 @@ void AddCuotaDelPlan::setValidationParams (QString targetURL, QString token, Ope
 	}
 	else {
 		ui.pagoIva->setEnabled (false);
+	}
+
+	if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales) {
+		ui.pagoCapital->setEnabled (false);
+	}
+	else {
+		ui.pagoCapital->setEnabled (true);
 	}
 
 	if (lastDue == nullptr) {
@@ -154,7 +161,7 @@ void AddCuotaDelPlan::onSaveClicked () {
 				ui.addButton->setEnabled (true);
 				return;
 			}
-			if (ui.pagoInteres->getValue () <= 0) {
+			if (this->operationType != OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales && ui.pagoInteres->getValue () <= 0 || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales && ui.pagoInteres->getValue () < 0) {
 				QMessageBox::critical (this, "Error", QString::fromLatin1 ("El pago de interés debe ser mayor a cero"));
 				ui.pagoMonto->setFocus ();
 				ui.addButton->setEnabled (true);
@@ -193,10 +200,10 @@ void AddCuotaDelPlan::onSaveClicked () {
 	}
 }
 
-void AddCuotaDelPlan::ivaAutofill (double ammount) {
-	//if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
-	//	ui.pagoIva->setValue (0.13 * ammount);
-	//}
+void AddCuotaDelPlan::capitalAutofill (double ammount) {
+	if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales) {
+		ui.pagoCapital->setValue (ammount);
+	}
 }
 
 void AddCuotaDelPlan::catchError (DueValidationError errorCode, QString message) {
@@ -216,10 +223,12 @@ void AddCuotaDelPlan::catchError (DueValidationError errorCode, QString message)
 
 void AddCuotaDelPlan::capitalChanged (double capital) {
 	if (ui.pagoCapital->hasFocus ()) {
-		if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
-			ui.pagoIva->setValue (0.13 * capital / 0.87);
+		if (this->operationType != OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales) {
+			if (this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->operationType == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+				ui.pagoIva->setValue (0.13 * capital / 0.87);
+			}
+			ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 		}
-		ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 	}
 }
 

@@ -21,6 +21,7 @@
 #include "OperacionLineaDeCredito.h"
 #include "OperacionLeasing.h"
 #include "OperacionLeaseBack.h"
+#include "OperacionImpuestosNacionales.h"
 
 
 #include "AddCuotaDelPlan.h"
@@ -52,6 +53,7 @@ private slots:
 	void desem_2_changed (QString desem2);
 	void desem_3_changed (QString desem3);
 	void desem_4_changed (QString desem4);
+	void desem_5_changed (QString desem5);
 	// catch model validation errors
 	void catchErrors (OperationValidationErros error, QString errorMessage);
 	// load selected plan from left list

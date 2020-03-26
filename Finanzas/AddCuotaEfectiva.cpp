@@ -25,7 +25,7 @@ AddCuotaEfectiva::AddCuotaEfectiva(QWidget *parent): QDialog(parent) {
 	connect (ui.pagoCapital, &QLineEdit::returnPressed, ui.addButton, &QPushButton::click);
 	connect (ui.pagoInteres, &QLineEdit::returnPressed, ui.addButton, &QPushButton::click);
 
-	//connect (ui.pagoMonto, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onMontoCuotaChanged);
+	connect (ui.pagoMonto, &NumberInput::valueChanged, this, &AddCuotaEfectiva::capitalAutoFill);
 }
 
 AddCuotaEfectiva::~AddCuotaEfectiva() {
@@ -70,6 +70,13 @@ void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuot
 		ui.pagoIva->setEnabled (false);
 	}
 
+	if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales) {
+		ui.pagoCapital->setEnabled (false);
+	}
+	else {
+		ui.pagoCapital->setEnabled (true);
+	}
+
 	// default editing = false and editingID = 0		so default is new
 	this->parentID = parentID;
 	this->editing = editing;
@@ -93,20 +100,24 @@ void AddCuotaEfectiva::setWindowData (QString targetUrl, QString token, int cuot
 	connect (ui.pagoIva, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onIvaChanged);
 
 	//connect (ui.pagoInteres, &NumberInput::valueChanged, this, &AddCuotaEfectiva::onPagoInteresChanged);
+
+	ui.pagoMonto->setFocus ();
 }
 
-void AddCuotaEfectiva::onMontoCuotaChanged (double monto) {
-	//if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing) {
-	//	ui.pagoIva->setValue (0.13 * monto);
-	//}
+void AddCuotaEfectiva::capitalAutoFill (double monto) {
+	if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales) {
+		ui.pagoCapital->setValue (monto);
+	}
 }
 
 void AddCuotaEfectiva::onPagoCapitalChanged (double capital) {
 	if (ui.pagoCapital->hasFocus ()) {
-		if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
-			ui.pagoIva->setValue (0.13 * capital / 0.87);
+		if (this->caso != OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales) {
+			if (this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeasing || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack) {
+				ui.pagoIva->setValue (0.13 * capital / 0.87);
+			}
+			ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 		}
-		ui.pagoInteres->setValue (ui.pagoMonto->getValue () - capital - ui.pagoIva->getValue ());
 	}
 }
 
@@ -150,7 +161,7 @@ void AddCuotaEfectiva::onSaveClicked () {
 		return;
 	}
 	//if (!interes_ok || interes <= 0) {
-	if (interes <= 0) {
+	if (this->caso != OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales && interes <= 0 || this->caso == OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales && interes < 0) {
 		QMessageBox::critical (this, "Error", QString::fromLatin1 ("El interés de la cuota debe ser mayor a cero"));
 		ui.addButton->setEnabled (true);
 		return;

@@ -31,6 +31,7 @@ namespace OperacionesFinancieras {
 		CasoLeasing,
 		CasoLeaseBack,
 		CasoSeguro,
+		CasoImpuestosNacionales,
 		NONE
 	};
 
@@ -62,6 +63,9 @@ OperacionesFinancieras::TiposDeOperacion OperacionesFinancieras::MapOperationStr
 	if (op == QString::fromLatin1 ("Seguro")) {
 		return OperacionesFinancieras::TiposDeOperacion::CasoSeguro;
 	}
+	if (op == QString::fromLatin1 ("Impuestos Nacionales")) {
+		return OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales;
+	}
 	return OperacionesFinancieras::TiposDeOperacion::NONE;
 }
 
@@ -80,6 +84,9 @@ QString OperacionesFinancieras::MapOperationEnum (TiposDeOperacion op) {
 	}
 	if (op == OperacionesFinancieras::TiposDeOperacion::CasoSeguro) {
 		return QString::fromLatin1 ("Seguro");
+	}
+	if (op == OperacionesFinancieras::TiposDeOperacion::CasoImpuestosNacionales) {
+		return QString::fromLatin1 ("Impuestos Nacionales");
 	}
 	return QString::fromLatin1 ("-");
 }

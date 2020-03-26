@@ -31,6 +31,8 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 	planesDePagoModel = new QStringListModel (this);
 	ui.planesList->setModel (planesDePagoModel);
 	ui.planesList->setEditTriggers (NULL);
+	ui.plannedFee->setEditTriggers (NULL);
+	ui.effectiveFee->setEditTriggers (NULL);
 
 	connect (ui.planesList, &QListView::doubleClicked, this, [&](QModelIndex index) {
 		this->currentPlan = planesDePagoData[ui.planesList->model ()->itemData (index)[0].toString ()];
@@ -48,30 +50,14 @@ PagosEfectivos::PagosEfectivos (QWidget* parent) : QWidget (parent) {
 	// ==================================================================
 	connect (ui.addCuota, &QPushButton::clicked, this, [&]() {
 		if (planLoaded) {
-			OperacionesFinancieras::TiposDeOperacion caso = OperacionesFinancieras::TiposDeOperacion::CasoCredito;
-
-			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Crédito")) {
-				caso = OperacionesFinancieras::TiposDeOperacion::CasoCredito;
-			}
-			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Operación de Línea de Crédito")) {
-				caso = OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito;
-			}
-			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Leasing")) {
-				caso = OperacionesFinancieras::TiposDeOperacion::CasoLeasing;
-			}
-			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Lease Back")) {
-				caso = OperacionesFinancieras::TiposDeOperacion::CasoLeaseBack;
-			}
-			if (ui.tipoOperacion->text () == QString::fromLatin1 ("Seguro")) {
-				caso = OperacionesFinancieras::TiposDeOperacion::CasoSeguro;
-			}
+			OperacionesFinancieras::TiposDeOperacion caso = OperacionesFinancieras::MapOperationString (ui.tipoOperacion->text ());
 
 			AddCuotaEfectiva addWindow (this);
 			if (ui.effectiveFee->rowCount () == 0) {
 				addWindow.setWindowData (this->targetAddress, this->token, 1, QDate::fromString (ui.fechaFirma->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan, QDate::currentDate ());
 			}
 			else {
-				addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->rowCount () + 1, QDate::fromString (ui.effectiveFee->item (ui.effectiveFee->rowCount () - 1, 1)->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan, QDate::currentDate ());
+				addWindow.setWindowData (this->targetAddress, this->token, ui.effectiveFee->item (ui.effectiveFee->rowCount () - 1, 0)->text ().toInt ()+1, QDate::fromString (ui.effectiveFee->item (ui.effectiveFee->rowCount () - 1, 1)->text (), "dd/MM/yyyy"), caso, OperacionesFinancieras::MapFrecuenciaString (ui.frecuencia->text ()), this->currentPlan, QDate::currentDate ());
 			}
 
 			connect (&addWindow, &AddCuotaEfectiva::accepted, this, [&]() {

@@ -412,43 +412,57 @@ QListView::item:hover {
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
+              <item row="3" column="0">
                <widget class="QLabel" name="label_24">
                 <property name="text">
                  <string>Tipo Tasa:</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="3" column="1">
                <widget class="QLabel" name="tipoTasa">
                 <property name="text">
                  <string/>
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
+              <item row="4" column="0">
                <widget class="QLabel" name="label_22">
                 <property name="text">
                  <string>Interés  Fijo:</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
+              <item row="4" column="1">
                <widget class="QLabel" name="interesFijo">
                 <property name="text">
                  <string/>
                 </property>
                </widget>
               </item>
-              <item row="4" column="0">
+              <item row="5" column="0">
                <widget class="QLabel" name="label_25">
                 <property name="text">
                  <string>Interés Variable</string>
                 </property>
                </widget>
               </item>
-              <item row="4" column="1">
+              <item row="5" column="1">
                <widget class="QLabel" name="interesVariable">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Garantía:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="warranty">
                 <property name="text">
                  <string/>
                 </property>
@@ -974,6 +988,15 @@ QScrollBar::handle::hover {
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>addCuota</tabstop>
+  <tabstop>editCuota</tabstop>
+  <tabstop>deleteCuota</tabstop>
+  <tabstop>search</tabstop>
+  <tabstop>planesList</tabstop>
+  <tabstop>plannedFee</tabstop>
+  <tabstop>effectiveFee</tabstop>
+ </tabstops>
  <resources>
   <include location="Login.qrc"/>
  </resources>

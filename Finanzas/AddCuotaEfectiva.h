@@ -17,7 +17,7 @@ public:
 
 public slots:
 	void onSaveClicked ();
-	void onMontoCuotaChanged (double monto);
+	void capitalAutoFill (double monto);
 	void onPagoCapitalChanged (double capital);
 	void onPagoInteresChanged (double interes);
 
