@@ -369,38 +369,40 @@ void PlanDePagos::loadTiposDeEntidad () {
 }
 
 void PlanDePagos::loadLineasDeCredito (int entidad_id, int empresa_ID) {
-	lineasDeCredito.clear ();
-	ui.lineaDeCredito->clear ();
-	if (entidad_id != 0 && empresa_ID != 0) {
-		QNetworkAccessManager* nam = new QNetworkAccessManager (this);
-		connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
-			QByteArray resBin = reply->readAll ();
-			if (reply->error ()) {
-				QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
-				QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
-				return;
-			}
-			QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+	if (!loadedFromLeftlist) {
+		lineasDeCredito.clear ();
+		ui.lineaDeCredito->clear ();
+		if (entidad_id != 0 && empresa_ID != 0) {
+			QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+			connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+				QByteArray resBin = reply->readAll ();
+				if (reply->error ()) {
+					QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+					QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+					return;
+				}
+				QJsonDocument okJson = QJsonDocument::fromJson (resBin);
 
-			foreach (QJsonValue linea, okJson.object ().value ("lineasDeCredito").toArray ()) {
-				ui.lineaDeCredito->addItem (linea.toObject ().value ("codigo").toString ());
-				QHash <QString, QString> current;
-				current.insert ("id", QString::number (linea.toObject ().value ("id").toInt ()));
-				current.insert ("monto", QString::number (linea.toObject ().value ("monto").toDouble (), 'f', 2));
-				current.insert ("empresa", linea.toObject ().value ("empresas_grupo").toObject ().value ("empresa").toString ());
-				current.insert ("entidad", linea.toObject ().value ("entidades_financiera").toObject ().value ("nombreEntidad").toString ());
-				current.insert ("moneda", linea.toObject ().value ("moneda").toString ());
-				lineasDeCredito.insert (linea.toObject ().value ("codigo").toString (), current);
-			}
+				foreach (QJsonValue linea, okJson.object ().value ("lineasDeCredito").toArray ()) {
+					ui.lineaDeCredito->addItem (linea.toObject ().value ("codigo").toString ());
+					QHash <QString, QString> current;
+					current.insert ("id", QString::number (linea.toObject ().value ("id").toInt ()));
+					current.insert ("monto", QString::number (linea.toObject ().value ("monto").toDouble (), 'f', 2));
+					current.insert ("empresa", linea.toObject ().value ("empresas_grupo").toObject ().value ("empresa").toString ());
+					current.insert ("entidad", linea.toObject ().value ("entidades_financiera").toObject ().value ("nombreEntidad").toString ());
+					current.insert ("moneda", linea.toObject ().value ("moneda").toString ());
+					lineasDeCredito.insert (linea.toObject ().value ("codigo").toString (), current);
+				}
 
-			ui.lineaDeCredito->setCurrentIndex (-1);
-			reply->deleteLater ();
-			});
-		QNetworkRequest request;
-		request.setUrl (QUrl (targetAddress + "/lineaDeCredito?status=1&entidad=" + QString::number (entidad_id) + "&empresa=" + QString::number (empresa_ID)));
-		request.setRawHeader ("token", this->token.toUtf8 ());
-		request.setRawHeader ("Content-Type", "application/json");
-		nam->get (request);
+				ui.lineaDeCredito->setCurrentIndex (-1);
+				reply->deleteLater ();
+				});
+			QNetworkRequest request;
+			request.setUrl (QUrl (targetAddress + "/lineaDeCredito?status=1&entidad=" + QString::number (entidad_id) + "&empresa=" + QString::number (empresa_ID)));
+			request.setRawHeader ("token", this->token.toUtf8 ());
+			request.setRawHeader ("Content-Type", "application/json");
+			nam->get (request);
+		}
 	}
 }
 
@@ -522,6 +524,32 @@ void PlanDePagos::reloadSelectedPlan () {
 			if (!okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_6").isNull ()) {
 				ui.fechaDesem_6->setDate (QDateTime::fromMSecsSinceEpoch (okJson.object ().value ("planDePagos").toObject ().value ("fechaDesembolso_6").toVariant ().toLongLong ()).date ());
 			}
+
+			///////////================================///////////////////////// no esta cargando esta parte
+			if (okJson.object().value("planDePagos").toObject().contains("lineas_de_credito")) {
+				lineasDeCredito.clear();
+				ui.lineaDeCredito->clear();
+
+				QJsonValue linea = okJson.object().value("planDePagos").toObject().value("lineas_de_credito");
+
+				ui.lineaDeCredito->addItem(linea.toObject().value("codigo").toString());
+				QHash <QString, QString> current;
+				current.insert("id", QString::number(linea.toObject().value("id").toInt()));
+				current.insert("monto", QString::number(linea.toObject().value("monto").toDouble(), 'f', 2));
+				current.insert("empresa", linea.toObject().value("empresas_grupo").toObject().value("empresa").toString());
+				current.insert("entidad", linea.toObject().value("entidades_financiera").toObject().value("nombreEntidad").toString());
+				current.insert("moneda", linea.toObject().value("moneda").toString());
+				lineasDeCredito.insert(linea.toObject().value("codigo").toString(), current);
+
+
+				ui.lineaDeCredito->setCurrentText(okJson.object().value("planDePagos").toObject().value("lineas_de_credito").toObject().value("codigo").toString());
+
+
+				//qDebug() << okJson.object().value("planDePagos").toObject().value("lineas_de_credito");
+				//qDebug() << okJson.object().value("planDePagos").toObject().value("lineas_de_credito").toObject().value("codigo").toString();
+			}
+
+			///////////================================///////////////////////// no esta cargando esta parte
 
 			ui.plannedFee->setRowCount (0);
 
@@ -684,7 +712,7 @@ void PlanDePagos::operationTypeSelected (QString operation) {
 				ui.montoDesem_1->setEnabled (true);
 				ui.iva->setText ("");
 				ui.lineaDeCredito->setEnabled (true);
-				ui.lineaDeCredito->setCurrentIndex (-1);
+				//ui.lineaDeCredito->setCurrentIndex (-1);
 				ui.moneda->setEnabled (false);
 				ui.cuotaInicial->setEnabled (false);
 				ui.warranty->setEnabled (false);

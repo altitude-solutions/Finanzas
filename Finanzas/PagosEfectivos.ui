@@ -170,6 +170,43 @@ QListView::item:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);
 	color: #333333;
+}
+
+
+
+/* Scroll bar stylesheet */
+QScrollBar:vertical {
+	border: 0px solid #a7a7a7;
+	background: #b7b7b7;
+	width:16px;
+	margin: 0px 0px 0px 0px;
+	border-radius: 8px;
+}
+QScrollBar::handle:vertical {
+	background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+	stop: 0 rgb(16, 148, 145), stop: 0.5 rgb(29, 134, 128), stop:1 rgb(16, 148, 145));
+	min-height: 0px;
+	border-radius: 7px;
+}
+QScrollBar::add-line:vertical {
+	background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+	stop: 0 rgb(167, 167, 167), stop: 0.5 rgb(255, 255, 255), stop:1 rgb(167, 167, 167));
+	height: 16px;
+	subcontrol-position: bottom;
+	subcontrol-origin: margin;
+	border-radius: 8px;
+}
+QScrollBar::sub-line:vertical {
+	background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+	stop: 0 rgb(167, 167, 167), stop: 0.5 rgb(255, 255, 255), stop:1 rgb(167, 167, 167));
+	height: 16 px;
+	subcontrol-position: top;
+	subcontrol-origin: margin;
+	border-radius: 8px;
+}
+
+QScrollBar::handle::hover {
+	background-color: #109491;
 }</string>
            </property>
           </widget>
