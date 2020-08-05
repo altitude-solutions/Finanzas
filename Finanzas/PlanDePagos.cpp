@@ -369,7 +369,7 @@ void PlanDePagos::loadTiposDeEntidad () {
 }
 
 void PlanDePagos::loadLineasDeCredito (int entidad_id, int empresa_ID) {
-	if (!loadedFromLeftlist) {
+	if (!loadedFromLeftlist || (loadedFromLeftlist && editingPlan)) {
 		lineasDeCredito.clear ();
 		ui.lineaDeCredito->clear ();
 		if (entidad_id != 0 && empresa_ID != 0) {
@@ -1008,6 +1008,11 @@ void PlanDePagos::makePlanEditable () {
 	//============================== extra row ====================================
 	ui.concepto->setEnabled (true);
 	ui.detalle->setEnabled (true);
+	//============================== operacion linea de credito case ====================================
+	if (currentOperation->getOperationType() == OperacionesFinancieras::TiposDeOperacion::CasoLineaDeCredito) {
+		ui.lineaDeCredito->setEnabled(true);
+	}
+
 }
 //==================================================================
 
